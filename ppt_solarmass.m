@@ -76,7 +76,7 @@ ylim([0, inf]);
 
 % Energy budget per 1 km traverse
 speeds    = [0.005, 0.010, 0.015, 0.020, 0.025];
-P_base    = 25.0;
+P_base    = 25;
 t_trav    = (1000 ./ speeds) / 3600;   % hours
 E_solar   = P_avg  .* t_trav;
 E_base    = P_base .* t_trav;
