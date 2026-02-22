@@ -32,8 +32,8 @@ I_illum = 0.3543;               % illumination factor
 
 panel_number = 4;
 
-panel_width  = 0.35;            % meters
-panel_height = 0.6;             % meters
+panel_width  = 0.45;            % meters
+panel_height = 0.15;             % meters
 
 panel_area_single = panel_width * panel_height;
 
@@ -137,14 +137,14 @@ speeds = [0.005, 0.010, 0.015, 0.020, 0.025];   % m/s
 
 P_base = 25.0; % W
 
-t_trav = (1000 ./ speeds) / 3600;
+t_trav = min((1000 ./ speeds) / 3600);
 
 E_base = P_base .* t_trav;
 
 E_avionics_travel = 10*t_trav;
 E_avionics_rest = 1.5*(t_mission-t_trav);
 E_heaters = 0.2*t_mission;
-E_payloads = 4*15*t_mission;
+E_payloads = 1*15*t_mission;
 E_motors = min(E_base);
 
 E_total = E_avionics_travel + E_avionics_rest + E_heaters + E_payloads + E_motors
