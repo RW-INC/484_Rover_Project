@@ -28,8 +28,8 @@ I_illum = 0.3543;
 %% PANEL PROPERTIES
 
 panel_number  = 3;
-panel_widths = [0.40, .45, .45];
-panel_heights = 0.15:0.01:2;
+panel_widths = [.4, .45, .45];
+panel_heights = 0.31:0.01:0.31;
 
 panel_eff   = 0.28;
 inc_derate  = 0.95;
@@ -70,7 +70,7 @@ for j = 1:length(payload_counts)
     payload_num = payload_counts(j);
 
     % Update total energy requirement for this payload count
-    E_payloads = payload_num * 15 * t_mission
+    E_payloads = 15 * t_mission
 
     E_total = E_avionics_travel + ...
               E_avionics_rest   + ...
@@ -175,7 +175,7 @@ xline(0.45, 'r--', 'LineWidth', 3, 'DisplayName', '0.45 m Height Limit');
 
 xlabel('Solar Panel Height [m]')
 ylabel('Required Battery Mass [kg]')
-title('Battery Mass vs Solar Panel Height for Different Payload Counts')
+title('Battery Mass vs Solar Panel Height')
 
 legend show
 grid on
