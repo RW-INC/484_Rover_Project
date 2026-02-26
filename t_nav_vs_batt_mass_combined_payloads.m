@@ -29,7 +29,7 @@ I_illum = 0.3543;
 
 panel_number  = 3;
 panel_widths  = [0.4, 0.45, 0.45];
-panel_height  = 0.35;
+panel_height  = 0.45 - 0.0059 - 0.05;
 
 panel_eff   = 0.28;
 inc_derate  = 0.95;
