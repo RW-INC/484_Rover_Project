@@ -2,8 +2,8 @@ clear; clc; close all;
 
 %% USER PARAMETERS
 
-battery_mass_guess = 1.66;          % kg (test value)
-batt_specific_energy = 248.6;      % Wh/kg
+battery_mass_guess = 2;          % kg (test value)
+batt_specific_energy = 269;      % Wh/kg
 E_batt_capacity = battery_mass_guess * batt_specific_energy;
 
 initial_SOC_fraction = 0.90;     % 90% charged at landing
@@ -16,13 +16,13 @@ P_heaters = 0.2;                 % W
 payload_total_power = 15;        % W 
 num_of_payloads = 4;
 
-payload_drop_distances = [500 1250 1500 2000];
+payload_drop_distances = [500 1000 1500 2000];
 nav_interval = 10;                % meters
 nav_duration = 5/60;              % hours (5 minutes)
-charge_start_fraction = 0.10;      % Start charging at 10%
-charge_stop_fraction  = 0.90;     % Stop charging at 80%
+charge_start_fraction = 0.1;      % Start charging at 10%
+charge_stop_fraction  = 0.80;     % Stop charging at 80%
 
-total_distance_goal = 30000;       % meters
+total_distance_goal = 10000;       % meters
 
 %% TIME + SOLAR CONSTANTS
 
