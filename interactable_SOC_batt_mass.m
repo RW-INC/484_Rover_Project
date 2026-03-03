@@ -19,10 +19,10 @@ num_of_payloads = 4;
 payload_drop_distances = [500 1000 1500 2000];
 nav_interval = 10;                % meters
 nav_duration = 5/60;              % hours (5 minutes)
-charge_start_fraction = 0.10;     % Start charging at 10%
+charge_start_fraction = 0.1;      % Start charging at 10%
 charge_stop_fraction  = 0.80;     % Stop charging at 80%
 
-total_distance_goal = 5000;       % meters
+total_distance_goal = 3500;       % meters
 
 %% TIME + SOLAR CONSTANTS
 
@@ -55,7 +55,7 @@ panel_number  = 3;
 panel_widths  = [0.4, 0.45, 0.45];
 panel_height  = 0.31;
 
-panel_eff   = 0.28;
+panel_eff   = 0.32;
 inc_derate  = 0.95;
 
 azi_p = linspace(0,360,panel_number+1);
