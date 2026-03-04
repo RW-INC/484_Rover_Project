@@ -10,19 +10,19 @@ initial_SOC_fraction = 0.90;     % 90% charged at landing
 
 speed = 0.02;                    % m/s
 P_motors = 25;                   % W
-P_av_travel = 10;                % W
+P_av_travel = 19;                % W
 P_av_rest = 1.5;                 % W
 P_heaters = 0.2;                 % W
 payload_total_power = 15;        % W 
 num_of_payloads = 4;
 
-payload_drop_distances = [500 1250 1500 2000];
+payload_drop_distances = [100 250 1500 2000];
 nav_interval = 10;                % meters
 nav_duration = 5/60;              % hours (5 minutes)
 charge_start_fraction = 0.10;      % Start charging at 10%
-charge_stop_fraction  = 0.90;     % Stop charging at 80%
+charge_stop_fraction  = 0.80;     % Stop charging at 80%
 
-total_distance_goal = 30000;       % meters
+total_distance_goal = 5000;       % meters
 
 %% TIME + SOLAR CONSTANTS
 
