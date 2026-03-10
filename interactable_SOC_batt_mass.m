@@ -14,15 +14,15 @@ P_av_travel = 19;                % W
 P_av_rest = 1.5;                 % W
 P_heaters = 0.2;                 % W
 payload_total_power = 15;        % W 
-num_of_payloads = 4;
+num_of_payloads = 2;
 
-payload_drop_distances = [100 250 1500 2000];
+payload_drop_distances = [500 10000];
 nav_interval = 10;                % meters
 nav_duration = 5/60;              % hours (5 minutes)
-charge_start_fraction = 0.10;      % Start charging at 10%
+charge_start_fraction = 0.10;     % Start charging at 10%
 charge_stop_fraction  = 0.80;     % Stop charging at 80%
 
-total_distance_goal = 5000;       % meters
+total_distance_goal = 25000;       % meters
 
 %% TIME + SOLAR CONSTANTS
 
@@ -47,12 +47,12 @@ E      = deg2rad(90);
 %% SOLAR CONSTANTS
 
 G_sc    = 1361;
-I_illum = 0.3543;
+I_illum = 1;
 
 %% PANEL PROPERTIES
 
 panel_number  = 3;
-panel_widths  = [0.4, 0.45, 0.45];
+panel_widths  = [0.25, 0.3, 0.3];
 panel_height  = 0.31;
 
 panel_eff   = 0.32;
