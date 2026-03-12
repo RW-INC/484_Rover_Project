@@ -16,13 +16,24 @@ P_heaters = 0.2;                 % W
 payload_total_power = 15;        % W 
 num_of_payloads = 2;
 
-payload_drop_distances = [500 10000];
+payload_drop_distances = [10000 10000];
 nav_interval = 10;                % meters
 nav_duration = 5/60;              % hours (5 minutes)
 charge_start_fraction = 0.10;     % Start charging at 10%
 charge_stop_fraction  = 0.80;     % Stop charging at 80%
 
-total_distance_goal = 25000;       % meters
+total_distance_goal = 10000;       % meters
+
+%% PANEL PROPERTIES
+
+panel_number  = 3;
+panel_widths  = [0.25, 0.3, 0.3];
+panel_height  = 0.31;
+
+lidar_cutout = 0.06*0.06; % 60mm by 60mm square
+
+panel_eff   = 0.32;
+inc_derate  = 0.95;
 
 %% TIME + SOLAR CONSTANTS
 
@@ -49,21 +60,13 @@ E      = deg2rad(90);
 G_sc    = 1361;
 I_illum = 1;
 
-%% PANEL PROPERTIES
 
-panel_number  = 3;
-panel_widths  = [0.25, 0.3, 0.3];
-panel_height  = 0.31;
 
-panel_eff   = 0.32;
-inc_derate  = 0.95;
+%% SOLAR POWER MODEL
 
 azi_p = linspace(0,360,panel_number+1);
 azi_p(end) = [];
 azi_p = deg2rad(azi_p);
-
-%% SOLAR POWER MODEL
-
 
 theta_dip = acos(R_moon/(R_moon + panel_height));
 P_solar = zeros(1,N);
@@ -95,7 +98,7 @@ for i = 1:N
             if cos_theta > 0
 
                 G_panel = G_sc * cos_theta * I_illum;
-                panel_area = panel_widths(p) * panel_height;
+                panel_area = panel_widths(p) * panel_height - lidar_cutout;
 
                 P_panel = G_panel ...
                         * panel_area ...
