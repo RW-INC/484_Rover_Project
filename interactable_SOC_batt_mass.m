@@ -2,9 +2,9 @@ clear; clc; close all;
 
 %% USER PARAMETERS
 
-battery_mass_guess = 1.66;          % kg (test value)
+battery_mass = 1.66;               % kg 
 batt_specific_energy = 248.6;      % Wh/kg
-E_batt_capacity = battery_mass_guess * batt_specific_energy;
+E_batt_capacity = battery_mass * batt_specific_energy;
 
 initial_SOC_fraction = 0.90;     % 90% charged at landing
 
@@ -60,8 +60,6 @@ E      = deg2rad(90);
 G_sc    = 1361;
 I_illum = 1;
 
-
-
 %% SOLAR POWER MODEL
 
 azi_p = linspace(0,360,panel_number+1);
@@ -76,7 +74,10 @@ for i = 1:N
     ti = t(i);
 
     delta = Tau * sin(deg2rad(360/Y * (n + ti/24 - t_0)));
-    H     = deg2rad(omega * (T_total/2 - ti));
+
+    t_lunar_offset = (n - 2831) * 24;   % Earth days -> hours
+
+    H = deg2rad(omega * (T_total/2 - (ti + t_lunar_offset)));
 
     B = asin(cos(L)*cos(delta)*cos(H) + sin(L)*sin(delta));
     cosB = cos(B);
