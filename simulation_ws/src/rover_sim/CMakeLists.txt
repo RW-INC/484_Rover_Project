@@ -26,6 +26,6 @@ endif()
 ament_package()
 
 install(
-  DIRECTORY launch urdf config
+  DIRECTORY launch urdf config world
   DESTINATION share/rover_sim
 )

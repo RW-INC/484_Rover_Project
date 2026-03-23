@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<robot name="simple_rover">
+<robot name="rover">
 
-  <!-- rover body -->
+  <!-- CHASSIS -->
   <link name="base_link">
     <visual>
       <geometry>
@@ -19,7 +19,7 @@
     </collision>
 
     <inertial>
-      <mass value="10.0"/>
+      <mass value="5.0"/>
       <origin xyz="0 0 0"/>
       <inertia
         ixx="0.2" iyy="0.2" izz="0.2"
@@ -27,7 +27,8 @@
     </inertial>
   </link>
 
-  <!-- formatting 4 wheels for now -->
+  <!-- WHEELS -->
+
   <!-- Front Left -->
   <link name="wheel_fl">
     <visual>
@@ -45,6 +46,14 @@
       <geometry>
         <cylinder radius="0.05" length="0.03"/>
       </geometry>
+      <surface>
+        <friction>
+          <ode>
+            <mu>1.0</mu>
+            <mu2>0.2</mu2>   <!-- KEY: low sideways friction -->
+          </ode>
+        </friction>
+      </surface>
     </collision>
 
     <inertial>
@@ -76,6 +85,15 @@
       <geometry>
         <cylinder radius="0.05" length="0.03"/>
       </geometry>
+
+      <surface>
+        <friction>
+          <ode>
+            <mu>1.0</mu>
+            <mu2>0.2</mu2>   <!-- KEY: low sideways friction -->
+          </ode>
+        </friction>
+      </surface>
     </collision>
 
     <inertial>
@@ -90,7 +108,7 @@
     <parent link="base_link"/>
     <child link="wheel_fr"/>
     <origin xyz="0.2 -0.15 -0.05"/>
-    <axis xyz="0 1 0"/>
+    <axis xyz="0 -1 0"/>
   </joint>
 
   <!-- Rear Left -->
@@ -107,6 +125,16 @@
       <geometry>
         <cylinder radius="0.05" length="0.03"/>
       </geometry>
+
+      <!-- add friction! -->
+      <surface>
+        <friction>
+          <ode>
+            <mu>1.0</mu>
+            <mu2>0.2</mu2>   <!-- low sideways friction -->
+          </ode>
+        </friction>
+      </surface>
     </collision>
 
     <inertial>
@@ -138,6 +166,15 @@
       <geometry>
         <cylinder radius="0.05" length="0.03"/>
       </geometry>
+
+      <surface>
+        <friction>
+          <ode>
+            <mu>1.0</mu>
+            <mu2>0.2</mu2>   <!-- low sideways friction for skid steer? -->
+          </ode>
+        </friction>
+      </surface>
     </collision>
 
     <inertial>
@@ -148,36 +185,44 @@
     </inertial>
   </link>
 
-<joint name="wheel_rr_joint" type="continuous">
-  <parent link="base_link"/>
-  <child link="wheel_rr"/>
-  <origin xyz="-0.2 -0.15 -0.05"/>
-  <axis xyz="0 1 0"/>
-</joint>
+  <joint name="wheel_rr_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="wheel_rr"/>
+    <origin xyz="-0.2 -0.15 -0.05"/>
+    <axis xyz="0 -1 0"/>
+  </joint>
 
-  <!-- trying the diff drive plugin instead-->
+
+  <!--have to change diff plugin for gazebo fortress-->
   <gazebo>
-    <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
+    <plugin
+      filename="libignition-gazebo-diff-drive-system.so"
+      name="ignition::gazebo::systems::DiffDrive">
 
+      <!-- LEFT SIDE -->
+      <left_joint>wheel_fl_joint</left_joint>
       <left_joint>wheel_rl_joint</left_joint>
+
+      <!-- RIGHT SIDE -->
+      <right_joint>wheel_fr_joint</right_joint>
       <right_joint>wheel_rr_joint</right_joint>
 
-      <wheel_separation>1.8</wheel_separation>
+      <!-- KINEMATICS -->
+      <wheel_separation>0.3</wheel_separation>
       <wheel_radius>0.05</wheel_radius>
-      <wheel_diameter>0.1</wheel_diameter>
 
-      <!-- outputs -->
-      <topicName>cmd_vel</topicName>
-      <odometryTopic>odom</odometryTopic>
-      <robotBaseFrame>base_link</robotBaseFrame>
+      <!-- TOPICS (Ignition transport) -->
+      <topic>/cmd_vel</topic>
+      <odom_topic>/odom</odom_topic>
 
-      <!-- limits, we can add max torque and other constraints later -->
-      <!--max_wheel_torque>20</max_wheel_torque>
-      <max_wheel_acceleration>1.0</max_wheel_acceleration -->
+      <!-- FRAMES -->
+      <frame_id>odom</frame_id>
+      <child_frame_id>base_link</child_frame_id>
 
-
-      <updateRate>50</updateRate>
+      <!-- UPDATE -->
+      <update_rate>50</update_rate>
 
     </plugin>
   </gazebo>
+
 </robot>

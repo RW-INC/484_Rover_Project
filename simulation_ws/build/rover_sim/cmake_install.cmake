@@ -106,6 +106,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
     "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim/launch"
     "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim/urdf"
     "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim/config"
+    "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim/world"
     )
 endif()
 
