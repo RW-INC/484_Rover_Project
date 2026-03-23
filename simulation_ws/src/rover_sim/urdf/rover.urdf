@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<robot name="simple_rover">
+
+  <!-- rover body -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.5 0.3 0.1"/>
+      </geometry>
+      <material name="gray">
+        <color rgba="0.7 0.7 0.7 1.0"/>
+      </material>
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size="0.5 0.3 0.1"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="10.0"/>
+      <origin xyz="0 0 0"/>
+      <inertia
+        ixx="0.2" iyy="0.2" izz="0.2"
+        ixy="0.0" ixz="0.0" iyz="0.0"/>
+    </inertial>
+  </link>
+
+  <!-- formatting 4 wheels for now -->
+  <!-- Front Left -->
+  <link name="wheel_fl">
+    <visual>
+      <origin rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.03"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1.0"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.03"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="1.0"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.001" iyy="0.001" izz="0.001"
+              ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="wheel_fl_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="wheel_fl"/>
+    <origin xyz="0.2 0.15 -0.05"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <!-- Front Right -->
+  <link name="wheel_fr">
+    <visual>
+      <origin rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.03"/>
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.03"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="1.0"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.001" iyy="0.001" izz="0.001"
+              ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="wheel_fr_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="wheel_fr"/>
+    <origin xyz="0.2 -0.15 -0.05"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <!-- Rear Left -->
+  <link name="wheel_rl">
+    <visual>
+      <origin rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.03"/>
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.03"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="1.0"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.001" iyy="0.001" izz="0.001"
+              ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="wheel_rl_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="wheel_rl"/>
+    <origin xyz="-0.2 0.15 -0.05"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <!-- Rear Right -->
+  <link name="wheel_rr">
+    <visual>
+      <origin rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.03"/>
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.03"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="1.0"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.001" iyy="0.001" izz="0.001"
+              ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+<joint name="wheel_rr_joint" type="continuous">
+  <parent link="base_link"/>
+  <child link="wheel_rr"/>
+  <origin xyz="-0.2 -0.15 -0.05"/>
+  <axis xyz="0 1 0"/>
+</joint>
+
+  <!-- trying the diff drive plugin instead-->
+  <gazebo>
+    <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
+
+      <left_joint>wheel_rl_joint</left_joint>
+      <right_joint>wheel_rr_joint</right_joint>
+
+      <wheel_separation>1.8</wheel_separation>
+      <wheel_radius>0.05</wheel_radius>
+      <wheel_diameter>0.1</wheel_diameter>
+
+      <!-- outputs -->
+      <topicName>cmd_vel</topicName>
+      <odometryTopic>odom</odometryTopic>
+      <robotBaseFrame>base_link</robotBaseFrame>
+
+      <!-- limits, we can add max torque and other constraints later -->
+      <!--max_wheel_torque>20</max_wheel_torque>
+      <max_wheel_acceleration>1.0</max_wheel_acceleration -->
+
+
+      <updateRate>50</updateRate>
+
+    </plugin>
+  </gazebo>
+</robot>
