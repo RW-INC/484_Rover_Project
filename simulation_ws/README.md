@@ -42,11 +42,12 @@ poentially other helpful cmds:
 	ros2 topic echo /odom			# echos odometry
 	ros2 control list_controllers	# lists active ros2 controllers
 
-dont't run this on fortress:
+don't run this on fortress:
+
 	killall -9 gazebo & killall -9 gzserver & killall -9 gzclient	# kills all gazebo processes
 
-if classic gazebo starts throwing hands this clears the keyrings: 
-(don't run on fortress)
+if classic gazebo starts throwing hands this clears the keyrings: (don't run on fortress)
+
 	sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg # fixes gpg key errors
 
 if spawn msg not sending
