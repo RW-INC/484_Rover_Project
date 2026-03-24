@@ -87,7 +87,9 @@ for t_start = 0:window_size:(T_mission - window_size)
 
         delta = tau * sin(deg2rad((360/Y_period)*(n + ti/24 - t0)));
 
-        H = deg2rad(omega * (T_mission/2 - ti));
+        t_lunar_offset = (n - 2831) * 24;   % Earth days -> hours
+
+        H = deg2rad(omega * (T_mission/2 - (ti + t_lunar_offset)));
 
         beta = asin( cos(L)*cos(delta)*cos(H) + sin(L)*sin(delta) );
 
