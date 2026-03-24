@@ -26,7 +26,7 @@
               <uri>file:///home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim/world/media/heightmaps/heightmap_fixed.png</uri>
 
               <!-- SCALE -->
-              <size> 100 100 10</size>
+              <size> 100 100 30 </size>
 
               <!-- Position offset -->
               <pos>0 0 0</pos>
