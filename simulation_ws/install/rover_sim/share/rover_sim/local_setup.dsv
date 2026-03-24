@@ -1,2 +1,1 @@
-source;share/rover_sim/environment/ament_prefix_path.sh
-source;share/rover_sim/environment/path.sh
+/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.dsv

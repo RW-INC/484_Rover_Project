@@ -12,13 +12,15 @@ def generate_launch_description():
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
 
     urdf_file = os.path.join(pkg_rover, 'urdf', 'rover.urdf')
+    world_file = os.path.join(pkg_rover, 'world', 'world.sdf')
 
     # start gazebo (changed for gazebo fortress)
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
         ),
-        launch_arguments={'gz_args': '-r empty.sdf'}.items(),
+        launch_arguments={'gz_args': f'-r {world_file}'
+        }.items(),
     )
 
     # spawn rover from URDF file 
@@ -30,7 +32,7 @@ def generate_launch_description():
             '-file', urdf_file,
             '-x', '0',
             '-y', '0',
-            '-z', '0.5'
+            '-z', '2.0'
         ],
         output='screen'
     )

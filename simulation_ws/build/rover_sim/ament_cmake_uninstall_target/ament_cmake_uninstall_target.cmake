@@ -55,3 +55,6 @@ endforeach()
 message(STATUS "Execute custom uninstall script")
 
 # begin of custom uninstall code
+
+# uninstall files installed using the symlink install functions
+include("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_symlink_install/ament_cmake_symlink_install_uninstall_script.cmake")
