@@ -1,19 +1,19 @@
 <h2>Run and drive simulation (edited for gazebo fortress)</h2>
 BEFORE RUNNING ANYTHING FOLLOW DIRECTIONS <br>
-inside simulation_ws
+inside simulation_ws <br>
 
-1. if you pulled from git, DELETE build, install, and log folders before continuing
+If you pulled from git, DELETE build, install, and log folders before continuing
 
 	rm -rf build install log
 
-2. now you may build and source your package again
+Now you may build and source your package again
 
 	colcon build rover_sim
 	source install/setup.bash
 
-3. for continuous errors at this step see potentially helpful debugging section
+For continuous errors at this step see potentially helpful debugging section
 
-4. open 3 terminals (tmux recommended) <br>
+Open 3 terminals (tmux recommended) <br>
 in one terminal run:
 
 	ros2 launch rover_sim sim.launch.py
@@ -32,11 +32,9 @@ in the last run (change linear and angular as needed)
 	z: 0.3
 	"
 
-5. to key the robot around run instead of step 4:
+to key the robot around run instead of step 4:
 
 	ros2 run teleop_twist_keyboard teleop_twist_keyboard
-
-
 
 <h2>Image Editing for Heightmaps</h2>
 
