@@ -1,4 +1,4 @@
-<h3>Run and drive simulation (edited for gazebo fortress)</h3>
+<h2>Run and drive simulation (edited for gazebo fortress)</h2>
 
 open 3 terminals (tmux recommended)
 in one terminal run:
@@ -25,11 +25,12 @@ to key the robot around run instead of step 4:
 
 
 
-<h3>Image Editing for Heightmaps</h3>
-- Using Imagemagick: https://imagemagick.org/script/command-line-processing.php#gsc.tab=0 
-- HEIGHTMAPS RENDERED MUST TAKE THE SIZE OF 2^n+1
+<h2>Image Editing for Heightmaps</h2>
 
-<h3>Debugging</h3>
+1. Using Imagemagick: https://imagemagick.org/script/command-line-processing.php#gsc.tab=0 
+2. HEIGHTMAPS RENDERED MUST TAKE THE SIZE OF 2^n+1 x 2^n+1
+
+<h2>Debugging</h2>
 
 source the setup files for ros if run/launch commands not working
 
