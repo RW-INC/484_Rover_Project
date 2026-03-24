@@ -1,4 +1,4 @@
-<u>Run and drive simulation (edited for gazebo fortress)</u>
+<h3>Run and drive simulation (edited for gazebo fortress)</h3>
 
 open 3 terminals (tmux recommended)
 in one terminal run:
@@ -24,21 +24,25 @@ to key the robot around run instead of step 4:
 	ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
 
-<u>Image Editing for Heightmaps</u>
+
+<h3>Image Editing for Heightmaps</h3>
 - Using Imagemagick: https://imagemagick.org/script/command-line-processing.php#gsc.tab=0 
 - HEIGHTMAPS RENDERED MUST TAKE THE SIZE OF 2^n+1
 
-<u>Debug</u>
-potentially useful cmds:
+<h3>Debugging</h3>
+
+source the setup files for ros if run/launch commands not working
 
 	source /opt/ros/humble/setup.bash	# source the setup file for ros2 if cmds not found
+
+poentially other helpful cmds:
 
 	ros2 topic list					# check active topics
 	ros2 topic echo /cmd_vel		# check velocity commands published
 	ros2 topic echo /odom			# echos odometry
 	ros2 control list_controllers	# lists active ros2 controllers
 
-dont't run this on fortress
+dont't run this on fortress:
 	killall -9 gazebo & killall -9 gzserver & killall -9 gzclient	# kills all gazebo processes
 
 if classic gazebo starts throwing hands this clears the keyrings: 
