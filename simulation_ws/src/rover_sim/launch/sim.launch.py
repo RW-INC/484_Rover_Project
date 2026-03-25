@@ -13,6 +13,7 @@ def generate_launch_description():
 
     urdf_file = os.path.join(pkg_rover, 'urdf', 'rover.urdf')
     world_file = os.path.join(pkg_rover, 'world', 'world.sdf')
+    obstacle_file = os.path.join(pkg_rover, 'world', 'obstacles.sdf')
 
     # start gazebo (changed for gazebo fortress)
     gz_sim = IncludeLaunchDescription(
@@ -20,10 +21,10 @@ def generate_launch_description():
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
         ),
         # uncomment here to use the world
-        #launch_arguments={'gz_args': f'-r {world_file}'
-        #}.items(),
-        launch_arguments={'gz_args': '-r empty.sdf'
+        launch_arguments={'gz_args': f'-r {obstacle_file}'
         }.items(),
+        #launch_arguments={'gz_args': '-r empty.sdf'
+        #}.items(),
     )
 
     # spawn rover from URDF file 
@@ -46,7 +47,18 @@ def generate_launch_description():
         actions=[spawn_robot]
     )
 
+    # add LiDAR bridge
+    lidar_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=[
+            '/lidar@sensor_msgs/msg/LaserScan@ignition.msgs.LaserScan'
+        ],
+        output='screen'
+    )
+
     return LaunchDescription([
         gz_sim,
-        spawn_robot_delayed
+        spawn_robot_delayed,
+        lidar_bridge 
     ])

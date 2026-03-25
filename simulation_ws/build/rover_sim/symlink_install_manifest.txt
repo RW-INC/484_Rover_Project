@@ -18,4 +18,5 @@
 /home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/config/controllers.yaml
 /home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/media/heightmaps/heightmap_100_m.png
 /home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/media/heightmaps/heightmap_fixed.png
+/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/obstacles.sdf
 /home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/world.sdf

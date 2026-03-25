@@ -225,4 +225,75 @@
     </plugin>
   </gazebo>
 
+
+<!-- LiDAR Plugin -->
+  <link name="lidar_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.05" radius="0.05"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0.2 0.2 0.8 1.0"/>
+      </material>
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder length="0.05" radius="0.05"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="1e-4" iyy="1e-4" izz="1e-4"
+               ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <!-- mounted above chassis for now -->
+    <origin xyz="0 0 0.08" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Gazebo Fortress LiDAR -->
+  <gazebo reference="lidar_link">
+    <sensor name="lidar_sensor" type="gpu_lidar">
+      <pose>0 0 0 0 0 0</pose>
+      <update_rate>10</update_rate>
+
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159</min_angle>
+            <max_angle>3.14159</max_angle>
+          </horizontal>
+        </scan>
+
+        <range>
+          <min>0.1</min>
+          <max>10.0</max>   <!-- change accordingly ith it's in meters lol -->
+          <resolution>0.01</resolution>
+        </range>
+
+        <!-- change later to reflect realistic operational noise -->
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </lidar>
+
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+
+      <!-- ignition topic -->
+      <topic>/lidar</topic>
+    </sensor>
+  </gazebo>
+
 </robot>

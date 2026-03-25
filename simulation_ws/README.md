@@ -32,9 +32,20 @@ in the last run (change linear and angular as needed)
 	z: 0.3
 	"
 
-to key the robot around run instead of step 4:
+to key the robot around run instead:
 
 	ros2 run teleop_twist_keyboard teleop_twist_keyboard
+
+<h2>Visualizing Point Cloud Using Lidar Plugin<h2>
+You can see the LiDAR data in a few ways <br>
+In a seperate, sourced terminal run: <br> <br>
+Option 1: Echo topic
+
+	ros2 topic echo /lidar
+
+Option 2: Use Rviz
+
+	rviz2
 
 <h2>Image Editing for Heightmaps</h2>
 
