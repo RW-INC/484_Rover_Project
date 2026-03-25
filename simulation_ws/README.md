@@ -36,7 +36,8 @@ to key the robot around run instead:
 
 	ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
-<h2>Visualizing Point Cloud Using Lidar Plugin<h2>
+<h2>Visualizing Point Cloud Using Lidar Plugin</h2>
+
 You can see the LiDAR data in a few ways <br>
 In a seperate, sourced terminal run: <br> <br>
 Option 1: Echo topic
