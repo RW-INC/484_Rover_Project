@@ -11,8 +11,6 @@ Now you may build and source your package again
 	colcon build rover_sim
 	source install/setup.bash
 
-For continuous errors at this step see potentially helpful debugging section
-
 Open 3 terminals (tmux recommended) <br>
 in one terminal run:
 
@@ -69,25 +67,28 @@ source the setup files for ros if run/launch commands not working
 
 	source /opt/ros/humble/setup.bash	# source the setup file for ros2 if cmds not found
 
-poentially other helpful cmds:
+checking topics and controllers: 
 
 	ros2 topic list					# check active topics
 	ros2 topic echo /cmd_vel		# check velocity commands published
 	ros2 topic echo /odom			# echos odometry
 	ros2 control list_controllers	# lists active ros2 controllers
 
-don't run this on fortress:
-
-	killall -9 gazebo & killall -9 gzserver & killall -9 gzclient	# kills all gazebo processes
-
-if classic gazebo starts throwing hands this clears the keyrings: (don't run on fortress)
-
-	sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg # fixes gpg key errors
-
-if spawn msg not sending
-manually spawn the rover in:
+if spawn msg not sending, you can manually spawn the rover in:
 
 	ros2 run ros_gz_sim create \
   	-file rover.urdf \
   	-name rover
+
+<h4>DO NOT RUN FOLLOWING ON GAZEBO FORTRESS </h4>
+for classic gazebo debugging only
+<br> <br>
+if for some reason gazebo doesn't fully shut down, the client won't relaunch until it does. Run:
+
+	killall -9 gazebo & killall -9 gzserver & killall -9 gzclient	# kills all gazebo processes
+
+if classic gazebo starts throwing hands this clears the keyrings: 
+
+	sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg # fixes gpg key errors
+
 
