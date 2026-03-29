@@ -23,7 +23,7 @@ function(ament_cmake_symlink_install_directory cmake_current_source_dir)
 
   # make destination absolute path and ensure that it exists
   if(NOT IS_ABSOLUTE "${ARG_DESTINATION}")
-    set(ARG_DESTINATION "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/install/rover_sim/${ARG_DESTINATION}")
+    set(ARG_DESTINATION "/home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/${ARG_DESTINATION}")
   endif()
   if(NOT EXISTS "${ARG_DESTINATION}")
     file(MAKE_DIRECTORY "${ARG_DESTINATION}")
@@ -128,7 +128,7 @@ function(ament_cmake_symlink_install_files cmake_current_source_dir)
 
   # make destination an absolute path and ensure that it exists
   if(NOT IS_ABSOLUTE "${ARG_DESTINATION}")
-    set(ARG_DESTINATION "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/install/rover_sim/${ARG_DESTINATION}")
+    set(ARG_DESTINATION "/home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/${ARG_DESTINATION}")
   endif()
   if(NOT EXISTS "${ARG_DESTINATION}")
     file(MAKE_DIRECTORY "${ARG_DESTINATION}")
@@ -186,7 +186,7 @@ function(ament_cmake_symlink_install_programs cmake_current_source_dir)
 
   # make destination an absolute path and ensure that it exists
   if(NOT IS_ABSOLUTE "${ARG_DESTINATION}")
-    set(ARG_DESTINATION "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/install/rover_sim/${ARG_DESTINATION}")
+    set(ARG_DESTINATION "/home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/${ARG_DESTINATION}")
   endif()
   if(NOT EXISTS "${ARG_DESTINATION}")
     file(MAKE_DIRECTORY "${ARG_DESTINATION}")
@@ -256,7 +256,7 @@ function(ament_cmake_symlink_install_targets)
 
     # make destination an absolute path and ensure that it exists
     if(NOT IS_ABSOLUTE "${destination}")
-      set(destination "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/install/rover_sim/${destination}")
+      set(destination "/home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/${destination}")
     endif()
     if(NOT EXISTS "${destination}")
       file(MAKE_DIRECTORY "${destination}")
@@ -315,47 +315,47 @@ message(STATUS "Execute custom install script")
 
 # begin of custom install code
 
-# install(FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/rover_sim" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
-ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/rover_sim" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
+# install(FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/rover_sim" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
+ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/rover_sim" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
 
-# install(FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/rover_sim" "DESTINATION" "share/ament_index/resource_index/parent_prefix_path")
-ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/rover_sim" "DESTINATION" "share/ament_index/resource_index/parent_prefix_path")
+# install(FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/rover_sim" "DESTINATION" "share/ament_index/resource_index/parent_prefix_path")
+ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/rover_sim" "DESTINATION" "share/ament_index/resource_index/parent_prefix_path")
 
 # install(FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh" "DESTINATION" "share/rover_sim/environment")
-ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh" "DESTINATION" "share/rover_sim/environment")
+ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh" "DESTINATION" "share/rover_sim/environment")
 
-# install(FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/ament_prefix_path.dsv" "DESTINATION" "share/rover_sim/environment")
-ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/ament_prefix_path.dsv" "DESTINATION" "share/rover_sim/environment")
+# install(FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/ament_prefix_path.dsv" "DESTINATION" "share/rover_sim/environment")
+ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/ament_prefix_path.dsv" "DESTINATION" "share/rover_sim/environment")
 
 # install(FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh" "DESTINATION" "share/rover_sim/environment")
-ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh" "DESTINATION" "share/rover_sim/environment")
+ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/opt/ros/humble/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh" "DESTINATION" "share/rover_sim/environment")
 
-# install(FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/path.dsv" "DESTINATION" "share/rover_sim/environment")
-ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/path.dsv" "DESTINATION" "share/rover_sim/environment")
+# install(FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/path.dsv" "DESTINATION" "share/rover_sim/environment")
+ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/path.dsv" "DESTINATION" "share/rover_sim/environment")
 
-# install(FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.bash" "DESTINATION" "share/rover_sim")
-ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.bash" "DESTINATION" "share/rover_sim")
+# install(FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.bash" "DESTINATION" "share/rover_sim")
+ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.bash" "DESTINATION" "share/rover_sim")
 
-# install(FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.sh" "DESTINATION" "share/rover_sim")
-ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.sh" "DESTINATION" "share/rover_sim")
+# install(FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.sh" "DESTINATION" "share/rover_sim")
+ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.sh" "DESTINATION" "share/rover_sim")
 
-# install(FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.zsh" "DESTINATION" "share/rover_sim")
-ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.zsh" "DESTINATION" "share/rover_sim")
+# install(FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.zsh" "DESTINATION" "share/rover_sim")
+ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.zsh" "DESTINATION" "share/rover_sim")
 
-# install(FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.dsv" "DESTINATION" "share/rover_sim")
-ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.dsv" "DESTINATION" "share/rover_sim")
+# install(FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.dsv" "DESTINATION" "share/rover_sim")
+ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/local_setup.dsv" "DESTINATION" "share/rover_sim")
 
-# install(FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/package.dsv" "DESTINATION" "share/rover_sim")
-ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/package.dsv" "DESTINATION" "share/rover_sim")
+# install(FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/package.dsv" "DESTINATION" "share/rover_sim")
+ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_environment_hooks/package.dsv" "DESTINATION" "share/rover_sim")
 
-# install(FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_index/share/ament_index/resource_index/packages/rover_sim" "DESTINATION" "share/ament_index/resource_index/packages")
-ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_index/share/ament_index/resource_index/packages/rover_sim" "DESTINATION" "share/ament_index/resource_index/packages")
+# install(FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_index/share/ament_index/resource_index/packages/rover_sim" "DESTINATION" "share/ament_index/resource_index/packages")
+ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_index/share/ament_index/resource_index/packages/rover_sim" "DESTINATION" "share/ament_index/resource_index/packages")
 
-# install(FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_core/rover_simConfig.cmake" "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_core/rover_simConfig-version.cmake" "DESTINATION" "share/rover_sim/cmake")
-ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_core/rover_simConfig.cmake" "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_core/rover_simConfig-version.cmake" "DESTINATION" "share/rover_sim/cmake")
+# install(FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_core/rover_simConfig.cmake" "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_core/rover_simConfig-version.cmake" "DESTINATION" "share/rover_sim/cmake")
+ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_core/rover_simConfig.cmake" "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_core/rover_simConfig-version.cmake" "DESTINATION" "share/rover_sim/cmake")
 
-# install(FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim/package.xml" "DESTINATION" "share/rover_sim")
-ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim/package.xml" "DESTINATION" "share/rover_sim")
+# install(FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim/package.xml" "DESTINATION" "share/rover_sim")
+ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim/package.xml" "DESTINATION" "share/rover_sim")
 
 # install(DIRECTORY "launch" "urdf" "config" "world" "DESTINATION" "share/rover_sim")
-ament_cmake_symlink_install_directory("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim" DIRECTORY "launch" "urdf" "config" "world" "DESTINATION" "share/rover_sim")
+ament_cmake_symlink_install_directory("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" DIRECTORY "launch" "urdf" "config" "world" "DESTINATION" "share/rover_sim")

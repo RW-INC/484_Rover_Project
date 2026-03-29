@@ -53,6 +53,16 @@ Option 2: Use Rviz
 1. Using Imagemagick: https://imagemagick.org/script/command-line-processing.php#gsc.tab=0 
 2. HEIGHTMAPS RENDERED MUST TAKE THE SIZE OF 2^n+1 x 2^n+1
 
+<br>
+reformat images to be viable sizes:
+
+	# This forces it to 513x513 and Grayscale
+	convert heightmap_fixed.png -resize 513x513! -colorspace gray heightmap_final.png
+
+and smooth gradients so it's not blocky:
+
+	convert heightmap_fixed.png -blur 0x8 heightmap_smooth.png
+
 <h2>Debugging</h2>
 
 source the setup files for ros if run/launch commands not working
@@ -80,3 +90,4 @@ manually spawn the rover in:
 	ros2 run ros_gz_sim create \
   	-file rover.urdf \
   	-name rover
+

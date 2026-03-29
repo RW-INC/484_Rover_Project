@@ -1,8 +1,8 @@
-# Install script for directory: /home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim
+# Install script for directory: /home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/install/rover_sim")
+  set(CMAKE_INSTALL_PREFIX "/home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -42,8 +42,8 @@ if(NOT DEFINED CMAKE_OBJDUMP)
   set(CMAKE_OBJDUMP "/usr/bin/objdump")
 endif()
 
-if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  include("/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_symlink_install/ament_cmake_symlink_install.cmake")
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  include("/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_symlink_install/ament_cmake_symlink_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -54,5 +54,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/build/rover_sim/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

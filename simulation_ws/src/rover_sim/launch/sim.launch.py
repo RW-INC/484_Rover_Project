@@ -21,7 +21,7 @@ def generate_launch_description():
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
         ),
         # uncomment here to use the world
-        launch_arguments={'gz_args': f'-r {obstacle_file}'
+        launch_arguments={'gz_args': f'-r {world_file}'
         }.items(),
         #launch_arguments={'gz_args': '-r empty.sdf'
         #}.items(),

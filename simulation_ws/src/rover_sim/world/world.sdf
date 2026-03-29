@@ -1,8 +1,15 @@
 <?xml version="1.0" ?>
 <sdf version="1.7">
-  <world name="lunar_world">
+  <world name="south_pole_world">
 
-    <!-- Lighting -->
+    <!-- Scene Settings -->
+    <scene>
+      <grid>false</grid>
+      <shadows>true</shadows>
+      <origin_visual>false</origin_visual>
+    </scene>
+
+    <!-- Global Light -->
     <light name="sun" type="directional">
       <cast_shadows>true</cast_shadows>
       <pose>0 0 1000 0 0 0</pose>
@@ -11,30 +18,22 @@
       <direction>-0.5 0.1 -1</direction>
     </light>
 
-    <!-- Lunar terrain -->
-    <model name="lunar_surface">
+    <!-- Terrain Model -->
+    <model name="south_pole_terrain">
       <static>true</static>
-
+      <!-- X Y Z Roll Pitch Yaw -->
+      <pose>0 0 0 0 0 0</pose> 
       <link name="terrain_link">
-
-        <!-- COLLISION (physics) -->
         <collision name="collision">
           <geometry>
-            <heightmap>
-
-            <!-- ADD HEIGHMAT URI HERE-->
-              <uri>file:///home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim/world/media/heightmaps/heightmap_fixed.png</uri>
-
-              <!-- SCALE -->
-              <size> 100 100 30 </size>
-
-              <!-- Position offset -->
-              <pos>0 0 0</pos>
-            </heightmap>
+            <mesh>
+              <uri>file:///home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim/world/meshes/south_pole.obj</uri>
+            </mesh>
           </geometry>
-
-          <!-- surface friction -->
           <surface>
+            <contact>
+              <collide_bitmask>0xffff</collide_bitmask>
+            </contact>
             <friction>
               <ode>
                 <mu>1.2</mu>
@@ -44,25 +43,18 @@
           </surface>
         </collision>
 
-        <!-- VISUAL -->
-        
         <visual name="visual">
           <geometry>
-            <heightmap>
-            <!-- ADD HEIGHMAT URI HERE-->
-              <uri>file:///home/pearluva/Documents/484_Rover_Project/484_Rover_Project/simulation_ws/src/rover_sim/world/media/heightmaps/heightmap_fixed.png</uri>
-              <size>100 100 10</size>
-            </heightmap>
+            <mesh>
+              <uri>file:///home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim/world/meshes/south_pole.obj</uri>
+            </mesh>
           </geometry>
-
-          <!-- just gray for now -->
           <material>
             <ambient>0.6 0.6 0.6 1</ambient>
             <diffuse>0.7 0.7 0.7 1</diffuse>
+            <specular>0 0 0 1</specular>
           </material>
         </visual>
-      
-
       </link>
     </model>
 
