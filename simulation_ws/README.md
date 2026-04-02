@@ -35,7 +35,7 @@ to key the robot around run instead:
 	ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
 <h2>Visualizing Point Cloud Using Lidar Plugin</h2>
-
+The LiDAR is simulated using ray tracing through the provided laserscan topic in gazebo fortress <br> <br>
 You can see the LiDAR data in a few ways <br>
 In a seperate, sourced terminal run: <br> <br>
 Option 1: Echo topic
@@ -47,6 +47,7 @@ Option 2: Use Rviz
 	rviz2
 
 <h2>Image Editing for Heightmaps</h2>
+<h3> NOTE: heightmap rendering NOT used for the final version of this sim </h3>
 
 1. Using Imagemagick: https://imagemagick.org/script/command-line-processing.php#gsc.tab=0 
 2. HEIGHTMAPS RENDERED MUST TAKE THE SIZE OF 2^n+1 x 2^n+1

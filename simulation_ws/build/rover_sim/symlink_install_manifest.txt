@@ -14,8 +14,11 @@
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/cmake/rover_simConfig-version.cmake
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/package.xml
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/launch/sim.launch.py
+/home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/launch/sim.test.py
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/urdf/rover.urdf
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/config/controllers.yaml
+/home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/30m_path.mtl
+/home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/30m_path.obj
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/south_pole.mtl
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/south_pole.obj
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/obstacles.sdf

@@ -13,6 +13,7 @@ def generate_launch_description():
 
     urdf_file = os.path.join(pkg_rover, 'urdf', 'rover.urdf')
     world_file = os.path.join(pkg_rover, 'world', 'world.sdf')
+
     obstacle_file = os.path.join(pkg_rover, 'world', 'obstacles.sdf')
 
     # start gazebo (changed for gazebo fortress)
@@ -20,14 +21,16 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
         ),
-        # uncomment here to use the world
+        # uncomment here to use the lunar terrain
         launch_arguments={'gz_args': f'-r {world_file}'
         }.items(),
+
+        # uncomment here to spawn in empty world
         #launch_arguments={'gz_args': '-r empty.sdf'
         #}.items(),
     )
 
-    # spawn rover from URDF file 
+    # spawn rover
     spawn_robot = Node(
         package='ros_gz_sim',
         executable='create',
@@ -36,7 +39,7 @@ def generate_launch_description():
             '-file', urdf_file,
             '-x', '0',
             '-y', '0',
-            '-z', '2.0'
+            '-z', '1.0' # add some height so the rover doesn't spawn inside the terrain
         ],
         output='screen'
     )

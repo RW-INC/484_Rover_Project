@@ -38,6 +38,7 @@
 -- Installing: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/package.xml
 -- Installing: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/launch
 -- Installing: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/launch/sim.launch.py
+-- Installing: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/launch/sim.test.py
 -- Installing: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/urdf
 -- Installing: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/urdf/rover.urdf
 -- Installing: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/config
@@ -45,6 +46,8 @@
 -- Installing: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world
 -- Installing: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/obstacles.sdf
 -- Installing: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes
+-- Installing: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/30m_path.obj
 -- Installing: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/south_pole.obj
 -- Installing: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/south_pole.mtl
+-- Installing: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/30m_path.mtl
 -- Installing: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/world.sdf

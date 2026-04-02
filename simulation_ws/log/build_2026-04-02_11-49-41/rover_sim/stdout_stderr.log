@@ -26,8 +26,11 @@
 -- Symlinking: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/cmake/rover_simConfig-version.cmake
 -- Symlinking: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/package.xml
 -- Symlinking: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/launch/sim.launch.py
+-- Symlinking: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/launch/sim.test.py
 -- Symlinking: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/urdf/rover.urdf
 -- Symlinking: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/config/controllers.yaml
+-- Symlinking: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/30m_path.mtl
+-- Symlinking: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/30m_path.obj
 -- Symlinking: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/south_pole.mtl
 -- Symlinking: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/south_pole.obj
 -- Symlinking: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/obstacles.sdf
