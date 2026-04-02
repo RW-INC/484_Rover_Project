@@ -22,12 +22,12 @@
     <model name="south_pole_terrain">
       <static>true</static>
       <!-- X Y Z Roll Pitch Yaw -->
-      <pose>0 0 0 0 0 0</pose> 
+      <pose>0 0 8 0 0 0</pose> <!-- change z here to move the terrain up and down -->
       <link name="terrain_link">
         <collision name="collision">
           <geometry>
             <mesh>
-              <uri>file:///home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim/world/meshes/30m_path.obj</uri>
+              <uri>model://src/rover_sim/world/meshes/30m_path.obj</uri>
               <scale>10 10 10</scale>
             </mesh>
           </geometry>
@@ -47,7 +47,7 @@
         <visual name="visual">
           <geometry>
             <mesh>
-              <uri>file:///home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim/world/meshes/30m_path.obj</uri>
+              <uri>model://src/rover_sim/world/meshes/30m_path.obj</uri>
               <scale>10 10 10</scale>
             </mesh>
           </geometry>
