@@ -1,0 +1,18 @@
+[StartTime]
+CS - Chassis-Static 2.MFC=33s
+[SolverState]
+CS - Chassis-Static 2.MFC=2
+[MainFrame]
+CS - Chassis-Static 2.MFC=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPBKCAAAAAMKBAAAAAJAEAAAAAPHCAAAAA
+[ShowMin]
+CS - Chassis-Static 2.MFC=No
+[SolverType]
+CS - Chassis-Static 2.MFC=Linear Analysis
+[StudyType]
+CS - Chassis-Static 2.MFC=0
+[StudyName]
+CS - Chassis-Static 2.MFC=Static 2
+[Solver]
+CS - Chassis-Static 2.MFC=Iterative
+[Dynamic]
+CS - Chassis-Static 2.MFC=0
