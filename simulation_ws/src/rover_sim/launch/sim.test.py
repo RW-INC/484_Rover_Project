@@ -12,24 +12,13 @@ def generate_launch_description():
 
     urdf_file = os.path.join(pkg_rover, 'urdf', 'rover.urdf')
     world_file = os.path.join(pkg_rover, 'world', 'world.sdf')
+    sdf_file = os.path.join(pkg_rover, 'rover', 'rover_model.sdf')
     
-    # adding a state published to /odom topic for rviz visualization
-    with open(urdf_file, 'r') as infp:
-        robot_desc = infp.read()
+    # Read URDF for Robot State Publisher
+    with open(sdf_file, 'r') as infp:
+        robot_description_config = infp.read()
 
-    robot_state_publisher = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        name='robot_state_publisher',
-        output='screen',
-        parameters=[{
-            'use_sim_time': True,
-            'robot_description': robot_desc
-        }]
-    )
-
-    # start gazebo fortress 
-    # NOTE: fortress uses gz_sim, classic uses gz or gazebo
+    # 1. Start Gazebo Fortress
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
@@ -37,38 +26,53 @@ def generate_launch_description():
         launch_arguments={'gz_args': f'-r {world_file}'}.items(),
     )
 
-    # spawn rover
+    # 2. Robot State Publisher (Broadcasts TFs for RViz)
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='screen',
+        parameters=[{'robot_description': robot_description_config}]
+    )
+
+    # 3. Spawn Rover
     spawn_robot = Node(
         package='ros_gz_sim',
         executable='create',
         arguments=[
             '-name', 'rover',
-            '-file', urdf_file,
-            '-z', '0' # add some height if the rover spawns inside the terrain
+            '-file', sdf_file,
+            '-x', '0', '-y', '0', '-z', '1.0'
         ],
         output='screen'
     )
 
-    # expanded bridge to add tf and clock 
-    # this maps rover pose to the /tf topic
+    # 4. Expanded Bridge (LiDAR + TF + Joint States)
+    # Note: 'ignition' in the bridge string is used for Fortress; 
+    # 'gz' is used for newer versions (Harmonic+).
     bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
         arguments=[
             '/lidar@sensor_msgs/msg/LaserScan@ignition.msgs.LaserScan',
-            '/model/rover/pose@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V',
-            '/world/default/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock'
+            '/model/rover/pose@tf2_msgs/msg/TFMessage@ignition.msgs.Pose_V',
+            '/world/lunar_world/model/rover/joint_state@sensor_msgs/msg/JointState[ignition.msgs.Model',
+            '/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock'
+        ],
+        remappings=[
+            ('/model/rover/pose', '/tf'),
+            ('/world/lunar_world/model/rover/joint_state', '/joint_states')
         ],
         output='screen'
     )
 
-    # static transform for fixed 'map' frame
-    # links the 'map' frame to the odom or rover frame
-    static_tf = Node(
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        arguments=['0', '0', '0', '0', '0', '0', 'map', 'rover/odom'],
-        output='screen'
+    # 5. RViz2
+    rviz = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen',
+        # Optional: Add arguments=['-d', rviz_config_path] if you have a saved config
     )
 
     return LaunchDescription([
@@ -76,5 +80,5 @@ def generate_launch_description():
         robot_state_publisher,
         TimerAction(period=2.0, actions=[spawn_robot]),
         bridge,
-        static_tf
+        rviz
     ])

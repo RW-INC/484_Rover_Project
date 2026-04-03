@@ -1,0 +1,29 @@
+[0.008s] Invoking command in '/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim -- -j28 -l28
+[0.040s] Invoked command in '/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim -- -j28 -l28
+[0.047s] Invoking command in '/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim
+[0.052s] -- Install configuration: ""
+[0.052s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/ament_index/resource_index/package_run_dependencies/rover_sim
+[0.053s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/ament_index/resource_index/parent_prefix_path/rover_sim
+[0.053s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/environment/ament_prefix_path.sh
+[0.053s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/environment/ament_prefix_path.dsv
+[0.053s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/environment/path.sh
+[0.053s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/environment/path.dsv
+[0.053s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/local_setup.bash
+[0.053s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/local_setup.sh
+[0.053s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/local_setup.zsh
+[0.053s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/local_setup.dsv
+[0.053s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/package.dsv
+[0.053s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/ament_index/resource_index/packages/rover_sim
+[0.053s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/cmake/rover_simConfig.cmake
+[0.053s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/cmake/rover_simConfig-version.cmake
+[0.053s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/package.xml
+[0.054s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/launch
+[0.054s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/launch/sim.launch.py
+[0.054s] -- Up-to-date: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/launch/sim.test.py
+[0.054s] [31mCMake Error at cmake_install.cmake:105 (file):
+[0.054s]   file INSTALL cannot find
+[0.054s]   "/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim/urdf":
+[0.054s]   No such file or directory.
+[0.054s] 
+[0.054s] [0m
+[0.055s] Invoked command in '/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim' returned '1': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim

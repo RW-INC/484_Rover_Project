@@ -357,5 +357,5 @@ ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/si
 # install(FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim/package.xml" "DESTINATION" "share/rover_sim")
 ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim/package.xml" "DESTINATION" "share/rover_sim")
 
-# install(DIRECTORY "launch" "urdf" "config" "world" "DESTINATION" "share/rover_sim")
-ament_cmake_symlink_install_directory("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" DIRECTORY "launch" "urdf" "config" "world" "DESTINATION" "share/rover_sim")
+# install(DIRECTORY "launch" "rover" "config" "world" "DESTINATION" "share/rover_sim")
+ament_cmake_symlink_install_directory("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" DIRECTORY "launch" "rover" "config" "world" "DESTINATION" "share/rover_sim")

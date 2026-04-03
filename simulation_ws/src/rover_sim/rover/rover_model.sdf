@@ -1,0 +1,368 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <model name="rover">
+    <self_collide>false</self_collide>
+
+    <!-- CHASSIS -->
+    <link name="base_link">
+      <pose>0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>5.0</mass>
+        <inertia>
+          <ixx>0.2</ixx>
+          <iyy>0.2</iyy>
+          <izz>0.2</izz>
+        </inertia>
+      </inertial>
+      <visual name="visual">
+        <pose>0 0 0 1.5708 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://src/rover_sim/rover/meshes/chassis.STL</uri>
+            <!-- Scale to 1 1 1 if STL is already in meters -->
+            <scale>0.001 0.001 0.001</scale> 
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.7 0.7 0.7 1</ambient>
+          <diffuse>0.7 0.7 0.7 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+
+      <collision name="collision">
+        <pose>0 0 0 1.5708 0 0</pose>
+        <geometry>
+            <mesh>
+            <uri>model://src/rover_sim/rover/meshes/chassis.STL</uri>
+            <scale>0.001 0.001 0.001</scale>
+            </mesh>
+        </geometry>
+      </collision>
+      
+      
+      <!-- LiDAR Sensor Definition -->
+      <sensor name="lidar_sensor" type="gpu_lidar">
+        <pose>0 0 0 0 0 0</pose> <!-- change later -->
+        <update_rate>10</update_rate>
+        <lidar>
+          <scan>
+            <horizontal>
+              <samples>360</samples>
+              <resolution>1</resolution>
+              <min_angle>-3.14159</min_angle>
+              <max_angle>3.14159</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.1</min>
+            <max>10.0</max>
+          </range>
+        </lidar>
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <topic>/lidar</topic>
+      </sensor>
+    </link>
+
+    <!-- FRONT LEFT MOUNT -->
+    <link name="mount_fl">
+      <pose>0.278 -0.224 -0.062 1.5708 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://src/rover_sim/rover/meshes/mm_FL.STL</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="mount_fl_fixed" type="fixed">
+      <parent>base_link</parent>
+      <child>mount_fl</child>
+    </joint>
+
+    <!-- REAR LEFT MOUNT -->
+    <link name="mount_rl">
+      <pose>0.198 0.098 -0.062 1.5708 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://src/rover_sim/rover/meshes/mm_RL.STL</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="mount_rl_fixed" type="fixed">
+      <parent>base_link</parent>
+      <child>mount_rl</child>
+    </joint>
+
+    <!-- FRONT RIGHT MOUNT -->
+    <link name="mount_fr">
+      <pose>-00.062 -0.102 -.062 1.5708 0 0</pose> 
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://src/rover_sim/rover/meshes/mm_FR.STL</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="mount_fr_fixed" type="fixed">
+      <parent>base_link</parent>
+      <child>mount_fr</child>
+    </joint>
+
+    <!-- REAR RIGHT MOUNT -->
+    <link name="mount_rr">
+      <pose>-0.062 0.099 -0.062 1.5708 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://src/rover_sim/rover/meshes/mm_RR.STL</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="mount_rr_fixed" type="fixed">
+      <parent>base_link</parent>
+      <child>mount_rr</child>
+    </joint>
+
+
+    <!-- WHEEL MACRO -->
+    <!-- Front Left Wheel -->
+    <link name="wheel_fl">
+      <pose>0.02 -0.015 -0.04 0 0 0</pose>
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>0.001</ixx><iyy>0.001</iyy><izz>0.001</izz>
+        </inertia>
+      </inertial>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://src/rover_sim/rover/meshes/wheel.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+        </material>
+      </visual>
+
+      <!-- using a cylinder for physics since mesh is too high-poly -->
+      <collision name="collision">
+        <pose>0 0 0 0 1.5708 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.09</radius>
+            <length>0.03</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Rear Left Wheel -->
+    <link name="wheel_rl">
+      <pose>0.02 -0.3 -0.04 0 0 0</pose>
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>0.001</ixx><iyy>0.001</iyy><izz>0.001</izz>
+        </inertia>
+      </inertial>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://src/rover_sim/rover/meshes/wheel.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+        </material>
+      </visual>
+
+      <!-- using a cylinder for physics since mesh is too high-poly -->
+      <collision name="collision">
+        <pose>0 0 0 0 1.5708 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.09</radius>
+            <length>0.03</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Front Right Wheel -->
+    <link name="wheel_fr">
+      <pose>0.37 -0.015 -0.04 1.5708 0 0</pose>
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>0.001</ixx><iyy>0.001</iyy><izz>0.001</izz>
+        </inertia>
+      </inertial>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://src/rover_sim/rover/meshes/wheel.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+        </material>
+      </visual>
+
+      <!-- using a cylinder for physics since mesh is too high-poly -->
+      <collision name="collision">
+        <pose>0 0 0 0 1.5708 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.09</radius>
+            <length>0.03</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Rear Right Wheel -->
+    <link name="wheel_rr">
+      <pose>0.37 -0.3 -0.04 1.5708 0 0</pose>
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>0.001</ixx><iyy>0.001</iyy><izz>0.001</izz>
+        </inertia>
+      </inertial>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://src/rover_sim/rover/meshes/wheel.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+        </material>
+      </visual>
+
+      <!-- using a cylinder for physics since mesh is too high-poly -->
+      <collision name="collision">
+        <pose>0 0 0 0 1.5708 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.09</radius>
+            <length>0.03</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- JOINTS -->
+    <joint name="wheel_fl_joint" type="revolute">
+      <parent>mount_fl</parent>
+      <child>wheel_fl</child>
+
+      <!-- pose relative to mount -->
+      <pose>0 0 0 0 0 0</pose> 
+      <axis>
+        <xyz>1 0 0</xyz> <!-- change if the wheel spins the wrong way -->
+        <dynamics>
+          <damping>0.1</damping>   <!-- Resists velocity -->
+          <friction>0.1</friction>  <!-- Initial resistance to start spinning -->
+        </dynamics>
+        <limit><effort>100</effort><velocity>100</velocity></limit>
+      </axis>
+    </joint>
+
+    <joint name="wheel_rl_joint" type="revolute">
+      <parent>mount_rl</parent>
+      <child>wheel_rl</child>
+
+      <!-- pose relative to mount -->
+      <pose>0 0 0 0 0 0</pose> 
+      <axis>
+        <xyz>1 0 0</xyz> <!-- change if the wheel spins the wrong way -->
+        <dynamics>
+          <damping>0.1</damping>   <!-- Resists velocity -->
+          <friction>0.1</friction>  <!-- Initial resistance to start spinning -->
+        </dynamics>
+        <limit><effort>100</effort><velocity>100</velocity></limit>
+      </axis>
+    </joint>
+
+    <joint name="wheel_fr_joint" type="revolute">
+      <parent>mount_fr</parent>
+      <child>wheel_fr</child>
+
+      <!-- pose relative to mount -->
+      <pose>0 0 0 0 0 0</pose> 
+      <axis>
+        <xyz>1 0 0</xyz> <!-- change if the wheel spins the wrong way -->
+        <dynamics>
+          <damping>0.1</damping>   <!-- Resists velocity -->
+          <friction>0.1</friction>  <!-- Initial resistance to start spinning -->
+        </dynamics>
+        <limit><effort>100</effort><velocity>100</velocity></limit>
+      </axis>
+    </joint>
+
+    <joint name="wheel_rr_joint" type="revolute">
+      <parent>mount_rr</parent>
+      <child>wheel_rr</child>
+
+      <!-- pose relative to mount -->
+      <pose>0 0 0 0 0 0</pose> 
+      <axis>
+        <xyz>1 0 0</xyz> <!-- change if the wheel spins the wrong way -->
+        <dynamics>
+          <damping>0.1</damping>   <!-- Resists velocity -->
+          <friction>0.1</friction>  <!-- Initial resistance to start spinning -->
+        </dynamics>
+        <limit><effort>100</effort><velocity>100</velocity></limit>
+      </axis>
+    </joint>
+
+    <!-- [Repeat the wheel link and joint logic for FR, RL, RR changing poses] -->
+
+    <!-- PLUGINS -->
+    <plugin
+      filename="libignition-gazebo-diff-drive-system.so"
+      name="ignition::gazebo::systems::DiffDrive">
+      <left_joint>wheel_fl_joint</left_joint>
+      <left_joint>wheel_rl_joint</left_joint>
+      <right_joint>wheel_fr_joint</right_joint>
+      <right_joint>wheel_rr_joint</right_joint>
+      <wheel_separation>0.3</wheel_separation>
+      <wheel_radius>0.18</wheel_radius>
+      <topic>/cmd_vel</topic>
+      <odom_topic>/odom</odom_topic>
+      <tf_topic>/tf</tf_topic>
+      <frame_id>odom</frame_id>
+      <child_frame_id>base_link</child_frame_id>
+    </plugin>
+
+    <plugin
+      filename="libignition-gazebo-joint-state-publisher-system.so"
+      name="ignition::gazebo::systems::JointStatePublisher">
+    </plugin>
+
+  </model>
+</sdf>
