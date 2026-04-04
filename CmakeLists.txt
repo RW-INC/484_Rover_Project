@@ -1,0 +1,14 @@
+cmake_minimum_required(VERSION 3.15)
+project(SPARX_Windows)
+
+# Use C++17 for better performance/syntax
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Find all your source files
+# This assumes your folder structure is:
+# /SPARX/Watchdog/main.cpp
+# /SPARX/Planning/Planning.hpp
+file(GLOB_RECURSE SOURCES "Watchdog/*.cpp" "Planning/*.hpp")
+
+add_executable(sparx_node ${SOURCES})

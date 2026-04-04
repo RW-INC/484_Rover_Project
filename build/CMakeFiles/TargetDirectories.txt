@@ -1,0 +1,3 @@
+C:/Users/srikr/Desktop/SPARX/build/CMakeFiles/sparx_node.dir
+C:/Users/srikr/Desktop/SPARX/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/srikr/Desktop/SPARX/build/CMakeFiles/ZERO_CHECK.dir
