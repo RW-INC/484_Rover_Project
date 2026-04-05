@@ -5,10 +5,25 @@ project(SPARX_Windows)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Find all your source files
-# This assumes your folder structure is:
-# /SPARX/Watchdog/main.cpp
-# /SPARX/Planning/Planning.hpp
-file(GLOB_RECURSE SOURCES "Watchdog/*.cpp" "Planning/*.hpp")
+# 1. Find all your source (.cpp) files
+# Now it actually grabs the C++ files from your Planning folder!
+file(GLOB_RECURSE SOURCES 
+    "Watchdog/*.cpp" 
+    "Planning/*.cpp"
+)
 
-add_executable(sparx_node ${SOURCES})
+# 2. Find your headers (Optional for building, but required to see them in Visual Studio)
+file(GLOB_RECURSE HEADERS 
+    "Watchdog/*.hpp" 
+    "Planning/*.hpp"
+)
+
+# 3. Create the executable
+add_executable(sparx_node ${SOURCES} ${HEADERS})
+
+# 4. Tell the compiler where your header files live
+# This fixes "cannot open source file 'd_star.hpp'" errors
+target_include_directories(sparx_node PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/Watchdog
+    ${CMAKE_CURRENT_SOURCE_DIR}/Planning
+)
