@@ -1,0 +1,6 @@
+[31mCMake Error at cmake_install.cmake:105 (file):
+  file INSTALL cannot find
+  "/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim/urdf":
+  No such file or directory.
+
+[0m

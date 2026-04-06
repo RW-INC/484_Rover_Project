@@ -1,0 +1,111 @@
+    <!-- FRONT LEFT MOUNT -->
+    <link name="mount_fl">
+      <pose>0.278 -0.224 -0.062 1.5708 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://src/rover_sim/rover/meshes/mm_FL.STL</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <collision name="collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+            <mesh>
+            <uri>model://src/rover_sim/rover/meshes/mm_FL.STL</uri>
+            <scale>0.001 0.001 0.001</scale>
+            </mesh>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="mount_fl_fixed" type="fixed">
+      <parent>base_link</parent>
+      <child>mount_fl</child>
+    </joint>
+
+    <!-- REAR LEFT MOUNT -->
+    <link name="mount_rl">
+      <pose>0.198 0.098 -0.062 1.5708 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://src/rover_sim/rover/meshes/mm_RL.STL</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <collision name="collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+            <mesh>
+            <uri>model://src/rover_sim/rover/meshes/mm_RL.STL</uri>
+            <scale>0.001 0.001 0.001</scale>
+            </mesh>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="mount_rl_fixed" type="fixed">
+      <parent>base_link</parent>
+      <child>mount_rl</child>
+    </joint>
+
+    <!-- FRONT RIGHT MOUNT -->
+    <link name="mount_fr">
+      <pose>-00.062 -0.102 -.062 1.5708 0 0</pose> 
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://src/rover_sim/rover/meshes/mm_FR.STL</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <collision name="collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+            <mesh>
+            <uri>model://src/rover_sim/rover/meshes/mm_FR.STL</uri>
+            <scale>0.001 0.001 0.001</scale>
+            </mesh>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="mount_fr_fixed" type="fixed">
+      <parent>base_link</parent>
+      <child>mount_fr</child>
+    </joint>
+
+    <!-- REAR RIGHT MOUNT -->
+    <link name="mount_rr">
+      <pose>-0.062 0.099 -0.062 1.5708 0 0</pose>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://src/rover_sim/rover/meshes/mm_RR.STL</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <collision name="collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+            <mesh>
+            <uri>model://src/rover_sim/rover/meshes/mm_RR.STL</uri>
+            <scale>0.001 0.001 0.001</scale>
+            </mesh>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="mount_rr_fixed" type="fixed">
+      <parent>base_link</parent>
+      <child>mount_rr</child>
+    </joint>
