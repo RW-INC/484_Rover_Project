@@ -13,16 +13,12 @@ import time
 
 # TODO: THINGS
 
-# 1. adjust cost function to consider solar illumination and LOS
-# 2. ensure that waypoints are followed in a consecutive order
-# 3. do we need to limit waypoint distance traveled??? --- should depend on battery...
 # 4. maybe compare D* path with LOS considered in cost function vs without
 # 5. multiply axis values by 10 so that they're in meters!
 # 6. overall just reorganize the code 
 # 7. add legends of green = yes black = no that type of thing
 # maybe a trade study type thing of do we prioritize sunlight more or cost more
 # include a run-time check in case D* is taking too long...
-# instead of a traversability condition -- rank sites
 
 # heightmap of local terrain based on waypoints???
 
@@ -152,22 +148,19 @@ class DStarLite:
         else:
             los_penalty = 0.2
 
-        y, x = v
+        solar_penalty = 0
 
-        # solar illumination penalty
-        if self.illumination[y,x] >= 0.5:
-            solar_penalty = 0
-        else:
-            solar_penalty = 0.2
+        # y, x = v
+
+        # # solar illumination penalty
+        # if self.illumination[y,x] >= 0.5:
+        #     solar_penalty = 0
+        # else:
+        #     solar_penalty = 00
 
         return dist_cost + los_penalty + solar_penalty
 
-        # return dist_cost 
-    
-    def old_cost(self, u, v, world):
-        # if either is an obstacle, cost is infinite
-        if world.is_obstacle(*u) or world.is_obstacle(*v):
-            return INF
+        # return dist_cost
 
     def update_vertex(self, u, world):
         if u != self.goal:
@@ -207,8 +200,9 @@ def load_data(elevation_file, slope_file, region_size):
     # elevation data
     with rasterio.open(elevation_file) as src:
         window = from_bounds(-region_size, -region_size, region_size, region_size, src.transform)
-        elevation = src.read(1, window=window)
+        elevation = src.read(1, window = window)
         el_shape = elevation.shape
+        transform = transform = src.window_transform(window)
 
     # slopes data
     with rasterio.open(slope_file) as src:
@@ -244,11 +238,21 @@ def load_data(elevation_file, slope_file, region_size):
     # avg sunlight metric
     avg_sun = np.mean(sun_resampled, axis=2)
 
+    row, col = 0, 0
+    x, y = transform * (col, row)
+    print(x, y)
+
     return elevation, slopes, sun_resampled, avg_sun
     
-def traversability(elevation, slopes):
+def traversability(elevation, slopes, avg_sun):
     # traversable terrain
-    traversable = slopes < 10
+    traversable_slopes = slopes < 10
+
+    # solar illumination
+    traversable_sun = avg_sun >= 0.75
+
+    # combine traversable regions
+    traversable = traversable_slopes & traversable_sun
 
     # traversable = cv2.resize(traversable.astype(np.uint8),
     #               (400,400),
@@ -281,12 +285,12 @@ def find_landing_ellipses(binary_map, major_axis, minor_axis):
             region = binary_map[ellipse] # traversability inside ellipse
 
             trav_percent = np.sum(region)/region.size
-            if trav_percent >= 0.5: # is over 95% of terrain traversable?
-                viable_sites.append((cx, cy, float(trav_percent)))
-                print(f'Viable site #{counter}: {viable_sites[-1]})')
-                counter+=1
+            viable_sites.append((cx, cy, float(trav_percent)))
+            # print(f'Viable site #{counter}: {viable_sites[-1]})')
+            counter+=1
 
     viable_sites.sort(key=lambda x: x[2], reverse=True) # sort in descending order
+    print(f'Viable site #1: {viable_sites[0]})')
 
     top_n = min(5, len(viable_sites))
     plot = False
@@ -338,8 +342,8 @@ def choose_waypoints(traversable_grid, elevation, sun_avg, mission_site, major_a
     a = int((major_axis * 1000)/10)//2
     b = int((minor_axis * 1000)/10)//2
 
-    min_distance_m = 5000
-    max_distance_m = 7000
+    min_distance_m = 9000
+    max_distance_m = 10000
 
     min_distance_px = int(min_distance_m/10)  # convert meters to pixels
     max_distance_px = int(max_distance_m/10)
@@ -459,75 +463,70 @@ def line_of_sight(elevation, point1, point2):
 
     return True
 
+def axis_limits(full_path):
+    full_path = np.array(full_path)
 
-def axis_limits(mission_site, major_axis, minor_axis, traversable_grid):
-    cx, cy, __ = mission_site
+    y = full_path[:,0]
+    x = full_path[:,1]
 
-    a = int((major_axis * 1000)/10)//2
-    b = int((minor_axis * 1000)/10)//2
+    buffer = 15
+    
+    x_min = int(x.min() - buffer)
+    x_max = int(x.max() + buffer)
+    y_min = int(y.min() - buffer)
+    y_max = int(y.max() + buffer)
 
-    h, w = traversable_grid.shape
-    # y, x = np.ogrid[:h, :w]
-
-    # ellipse = ((x - cx)/a)**2 + ((y - cy)/b)**2 <= 1
-
-    x_min = max(0, cx - a)
-    x_max = min(w, cx + a)
-
-    y_min = max(0, cy - b)
-    y_max = min(h, cy + b)
+    # make sure limits are not negative
+    x_min = max(0, x_min)
+    y_min = max(0, y_min)
 
     return x_min, x_max, y_min, y_max
 
-
-def path_traversal_hillshade(world, full_path, waypoints):
+def path_traversal_hillshade(world, full_path, waypoints, x_min, x_max, y_min, y_max):
+    size = world.grid.shape[0]
     img = np.zeros((size, size, 3))
 
     img[world.grid] = [1,1,1] # white = traversable
     img[~world.grid] = [0,0,0] # black = obstacles, not part of world.grid
 
     for y,x in full_path:
-        img[y-5:y+5, x-5:x+5] = [0,0,1] # thicker path
+        img[y-1:y+1, x-1:x+1] = [0,0,1] # thicker path
 
     __, ax = plt.subplots(figsize=(10, 10))
     ax.imshow(img)
 
     # show start and end point
     y0, x0 = waypoints[0]
-    circle = plt.Circle((x0, y0), radius=8, color='green', fill=True)
+    circle = plt.Circle((x0, y0), radius=1, color='green', fill=True)
     ax.add_patch(circle)
     ax.text(x0 + 5, y0 + 5, f"Start", color='green', fontsize=10)
 
     yf, xf = waypoints[-1]
-    circle = plt.Circle((xf, yf), radius=8, color='red', fill=True)
+    circle = plt.Circle((xf, yf), radius=1, color='red', fill=True)
     ax.add_patch(circle)
     ax.text(xf + 5, yf + 5, f"End", color='red', fontsize=10)
 
     total_distance = calculate_path_distance(full_path)
 
-    ax.set_title(f"Lunar Rover Traverse (D*) - {total_distance} m Path")
+    ax.set_title(f"Lunar Rover Traverse (D*) - {total_distance:.3f} m Path")
     # ax.axis('off')
     plt.xlim(x_min, x_max)
     plt.ylim(y_max, y_min)   # flipped because image coordinates
     plt.show()
 
-def plot_LOS_path(world, elevation, full_path, waypoints):
+def plot_LOS_path(world, elevation, full_path, waypoints, x_min, x_max, y_min, y_max):
     size = world.grid.shape[0]
 
     fig, ax = plt.subplots(figsize=(10, 10))
 
-    # --- Base layer: solar illumination heatmap ---
-    im = ax.imshow(elevation, cmap='terrain')
+    # base layer - elevation heatmap 
+    local_elevation = elevation[y_min:y_max, x_min:x_max]
+    vmin = np.min(local_elevation)
+    vmax = np.max(local_elevation)
+
+    im = ax.imshow(elevation, cmap='terrain', vmin=vmin, vmax=vmax)
     cbar = plt.colorbar(im, ax=ax)
     cbar.set_label("Elevation")
-
-    # # base image
-    # img = np.zeros((size, size, 3))
-    # img[world.grid] = [1, 1, 1] # traversable = white
-    # img[~world.grid] = [0, 0, 0] # obstacles = black
-
-    # __, ax = plt.subplots(figsize=(10, 10))
-    # ax.imshow(img)
 
     # draw path and check LOS between point and lander
     for i in range(len(full_path) - 1):
@@ -545,16 +544,16 @@ def plot_LOS_path(world, elevation, full_path, waypoints):
     # draw waypoints
     for i, wp in enumerate(waypoints):
         y, x = wp
-        circle = plt.Circle((x, y), radius=8, color='blue', fill=True)
+        circle = plt.Circle((x, y), radius=1, color='blue', fill=True)
         ax.add_patch(circle)
         ax.text(x + 5, y + 5, f"WP{i+1}", color='blue', fontsize=10)
 
     ax.set_title("D* Path - Line of Sight")
     # ax.axis('off')
-    # ax.set_xlim(x_min, x_max)
-    # ax.set_ylim(y_max, y_min)
-    ax.set_xlim(0, elevation.shape[1])
-    ax.set_ylim(elevation.shape[0], 0)
+    ax.set_xlim(x_min, x_max)
+    ax.set_ylim(y_max, y_min)
+    # ax.set_xlim(0, elevation.shape[1])
+    # ax.set_ylim(elevation.shape[0], 0)
     plt.show()
 
 """
@@ -600,9 +599,9 @@ def plot_illumination_path(sun_data, avg_sun, full_path, waypoints, x_min, x_max
     # --- Draw waypoints ---
     for i, wp in enumerate(waypoints):
         y, x = wp
-        circle = plt.Circle((x, y), radius=10, color='cyan', fill=True)
+        circle = plt.Circle((x, y), radius=1, color='blue', fill=True)
         ax.add_patch(circle)
-        ax.text(x + 5, y + 5, f"WP{i+1}", color='cyan')
+        ax.text(x + 5, y + 5, f"WP{i+1}", color='blue')
 
     # --- Zoom into landing ellipse region ---
     ax.set_xlim(x_min, x_max)
@@ -612,59 +611,71 @@ def plot_illumination_path(sun_data, avg_sun, full_path, waypoints, x_min, x_max
     plt.show()
 
 def store_path_results(full_path, waypoints):
-    csv_file_path = "planned_path_nodes_meters.csv"
+    total_distance = calculate_path_distance(full_path)
+
+    csv_file_path = f"planned_path_nodes_meters_{total_distance:.2f}.csv"
 
     with open(csv_file_path, mode='w', newline='') as file:
         writer = csv.writer(file)
         
         # write header
-        writer.writerow("Full Path Traversed")
         writer.writerow(["x", "y"])
         
-        # write each waypoint
+        # write each part of path
         for node in full_path:
-            writer.writerow([node[0]*10, node[1]*10])
+            writer.writerow([node[1], node[0]])
+
+        total_distance = calculate_path_distance(full_path)
+    
+    print(f'Total distance traversed: {total_distance} m')
     
     print(f"The path has been stored successfully inside '{csv_file_path}'.")
 
-
 def calculate_path_distance(full_path):
-    full_path = np.array(full_path)
-    x = full_path[:,0]
-    y = full_path[:,1]
+    total_distance = 0
 
-    dx = np.diff(x)
-    dy = np.diff(y)
+    for i in range(len(full_path) - 1):
+        dx = abs(full_path[i+1][0] - full_path[i][0])
+        dy = abs(full_path[i+1][1] - full_path[i][1])
 
-    straight = 10
-    diagonal = 10*math.sqrt(2)
+        if dx == 1 and dy == 1: # diagonal movement
+            total_distance += 10 * math.sqrt(2)
+        elif dx == 1 and dy == 0: # straight movement
+            total_distance += 10
+        elif dx == 0 and dy == 1: # straight movement
+            total_distance += 10
 
-    num_straight = 0
-    num_diagonal = 0
-
-    for i in range(len(dx)):
-        dist = math.sqrt(dx[i]**2 + dy[i]**2)
-
-        if abs(dist-straight) < abs(dist - diagonal):
-            num_straight += 1
-        else:
-            num_diagonal += 1
-
-    straight_distance = 10*num_straight # 10 m per straight line movement
-    diagonal_distance = 10*math.sqrt(2)*num_diagonal # 14.142 m per diagonal movement
-
-    total_distance = straight_distance + diagonal_distance
-    print(f'The total distance traveled by the rover is {total_distance:.3f} m.')
-    
     return total_distance
 
+def read_path_results():
+    csv_file_path = "planned_path_nodes_70.0.csv"
 
-region_size = 25000 # meters
-major_axis = 20 # km
-minor_axis = 16
+    with open(csv_file_path, mode='r') as file:
+        reader = csv.reader(file)
+        full_path_x = []
+        full_path_y = []
+        
+        # skip first two lines
+        next(reader)
+        next(reader)
+        
+        # read each waypoint
+        for row in reader:
+            full_path_x.append(float(row[0]))
+            full_path_y.append(float(row[1]))
+    
+    print(f"The path has been read successfully inside '{csv_file_path}'.")
+
+    full_path = np.array([full_path_x, full_path_y]).T
+    return full_path
+
+
+region_size = 15000 # meters
+major_axis = 10 # km
+minor_axis = 5
 
 elevation, slopes, sun_data, avg_sun = load_data("data/LDEM_83S_10MPP_ADJ.tiff", "data/LDSM_83S_10MPP_ADJ.tiff", region_size)
-traversable_grid = traversability(elevation, slopes)
+traversable_grid = traversability(elevation, slopes, avg_sun)
 
 viable_sites = find_landing_ellipses(traversable_grid, major_axis, minor_axis)
 mission_site = viable_sites[0]
@@ -689,7 +700,6 @@ for i in range(0, len(waypoints) - 1):
         start = waypoints[0]
         goal = waypoints[-1]
 
-
 full_path = []
 current_start = start
 
@@ -700,18 +710,18 @@ for wp in waypoints[1:]:
 
     segment = extract_path(planner, world, current_start, wp)
 
-    full_path.extend(segment)
+    if full_path:
+        full_path.extend(segment[1:])
+    else:
+        full_path.extend(segment)
     current_start = wp
 
+x_min, x_max, y_min, y_max = axis_limits(full_path)
 
-x_min, x_max, y_min, y_max = axis_limits(mission_site, major_axis, minor_axis, traversable_grid)
+path_traversal_hillshade(world, full_path, waypoints, x_min, x_max, y_min, y_max)
 
-path_traversal_hillshade(world, full_path, waypoints)
-
-plot_LOS_path(world, elevation, full_path, waypoints)
+plot_LOS_path(world, elevation, full_path, waypoints, x_min, x_max, y_min, y_max)
 
 plot_illumination_path(sun_data, avg_sun, full_path, waypoints, x_min, x_max, y_min, y_max)
 
 store_path_results(full_path, waypoints)
-
-
