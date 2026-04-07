@@ -24,6 +24,9 @@
     <ClInclude Include="C:\Users\srikr\Desktop\SPARX\Planning\planning.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="C:\Users\srikr\Desktop\SPARX\Utils\plotter.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\srikr\Desktop\SPARX\CMakeLists.txt" />

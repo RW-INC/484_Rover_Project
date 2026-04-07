@@ -16,6 +16,7 @@ file(GLOB_RECURSE SOURCES
 file(GLOB_RECURSE HEADERS 
     "Watchdog/*.hpp" 
     "Planning/*.hpp"
+    "Utils/*.hpp"
 )
 
 # 3. Create the executable
@@ -26,4 +27,5 @@ add_executable(sparx_node ${SOURCES} ${HEADERS})
 target_include_directories(sparx_node PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Watchdog
     ${CMAKE_CURRENT_SOURCE_DIR}/Planning
+    ${CMAKE_CURRENT_SOURCE_DIR}/Utils
 )

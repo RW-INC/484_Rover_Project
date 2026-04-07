@@ -59,7 +59,8 @@ namespace planning_module
 
     using coordi = Vec2<int32_t>;
     using coordf = Vec2<float_t>;
-    inline bool float_eq(float_t a, float_t b, float_t epsilon = 1e-5) { return (a == b) || ((!std::isinf(a) && !std::isinf(b)) && std::abs(a - b) < epsilon); }
+    inline bool float_eq(float_t a, float_t b, float_t epsilon = 1e-5) { return  ((!std::isinf(a) && !std::isinf(b)) && std::abs(a - b) < epsilon) || (a == b); }
+    
     // 20 bytes :(
     struct datapoint
     {

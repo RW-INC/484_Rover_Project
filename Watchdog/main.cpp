@@ -4,29 +4,20 @@
 #include "../Planning/d_star.hpp"
 #include "../Utils/plotter.hpp"
 
-#include <random>
-
 int main()
 {
     std::cout << "--- SPARX Windows Test ---" << std::endl;
 
     // lets create some random grid2d for testing.
     // it seems i need 3 disparate arrays for this, so here we are.
-    uint32_t rows = 100, cols = 100;
+    uint32_t rows = 500, cols = 500;
 
     // easiest possible testcase. lol
     std::vector<float_t> elevation(rows * cols, 0);
-
-    std::mt19937 rng(117);
-    std::uniform_int_distribution<uint32_t> dist(0, 100);
-    for (int i = 0; i < rows * cols; ++i)
-    {
-        elevation[i] = dist(rng);
-    }
-
     std::vector<float_t> illumination(rows * cols, 0);
     std::vector<uint8_t> obstacles(rows * cols, 0);
 
+    printf("Initializing grid and planner...\n");
     // make the grid2d object on the stack
     planning_module::grid2d grid(
         rows,
@@ -36,14 +27,16 @@ int main()
         (bool *)obstacles.data() // yucky.
     );
 
+    printf("Grid initialized.\n");
     planning_module::d_star p(
         rows, cols,
         planning_module::coordi{0, 0},
-        planning_module::coordi{99, 99},
+        planning_module::coordi{200, 499},
         planning_module::coordi{0, 0},
         std::move(grid) // also yucky, but whatever we use unique_ptrs so its fast
     );
 
+    printf("Computing shortest path...\n");
     p.compute_shortest_path();
     auto [path, path_length] = p.extract_path();
 
