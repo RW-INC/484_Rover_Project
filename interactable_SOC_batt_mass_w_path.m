@@ -17,7 +17,7 @@ P_sun_sensor = 0.0759;           % W
 P_camera = 0.3135;               % W
 P_lidar = 6.5;                   % W
 lidar_use_fraction = 0.25;
-P_comp = 7;                      % W
+P_comp = 9;                      % W
 P_MCU = 0.072;                   % W
 
 P_heaters = 0.2;                 % W
@@ -28,7 +28,7 @@ P_av_rest = P_IMU + P_comp;
 payload_total_power = 15;        % W
 num_of_payloads = 2;
 
-payload_drop_distances = [10000 10000];
+payload_drop_distances = [5000 6000];
 charge_start_fraction = 0.20;
 charge_stop_fraction  = 0.80;
 
@@ -47,7 +47,7 @@ inc_derate  = 0.95;
 
 %% TIME + SOLAR CONSTANTS
 
-n       = 2836;
+n       = 2847;
 Tau     = deg2rad(-1.545);
 Y       = 346.71;
 t_0     = -1.23;
@@ -108,7 +108,8 @@ distance = zeros(1, N);
 payloads_remaining = num_of_payloads;
 next_payload_index = 1;
 
-in_charging = false;
+in_charging    = false;
+mission_failed = false;   % permanent - rover cannot recover once SOC hits 0
 
 % Tracking arrays for visualisation
 illum_log    = zeros(1, N);   % I_illum at each timestep
@@ -122,6 +123,12 @@ P_solar_log  = zeros(1, N);   % actual solar power generated
 t_lunar_offset = (n - 2831) * 24;
 
 for i = 2:N
+
+    if mission_failed
+        distance(i) = distance(i-1);
+        SOC(i)      = 0;
+        continue
+    end
 
     current_distance = distance(i-1);
 
@@ -201,7 +208,8 @@ for i = 2:N
 
     if in_charging && ...
             SOC(i-1) >= charge_stop_fraction * E_batt_capacity
-        in_charging = false;
+        in_charging    = false;
+mission_failed = false;   % permanent - rover cannot recover once SOC hits 0
     end
 
     % ---------------------------------
@@ -254,7 +262,15 @@ for i = 2:N
     % ---------------------------------
     % BATTERY LIMITS
     % ---------------------------------
-    SOC(i) = max(0, min(E_batt_capacity, SOC(i)));
+    if SOC(i) > E_batt_capacity
+        SOC(i) = E_batt_capacity;
+    end
+
+    if SOC(i) <= 0
+        SOC(i)         = 0;
+        mission_failed = true;
+        fprintf('Mission failure at t=%.2f hr, distance=%.1f m\n', t(i), distance(i));
+    end
 
 end
 
@@ -266,8 +282,12 @@ max_SOC = max(SOC);
 fprintf('Minimum SOC (Wh): %.2f\n', min_SOC);
 fprintf('Maximum SOC (Wh): %.2f\n', max_SOC);
 
-if min_SOC <= 0
-    fprintf('WARNING: Battery depleted during mission.\n');
+if mission_failed
+    failure_time = t(find(SOC == 0, 1));
+    failure_dist = distance(find(SOC == 0, 1));
+    fprintf('MISSION FAILURE: battery depleted at t=%.2f hr, d=%.1f m\n', ...
+        failure_time, failure_dist);
+    fprintf('Rover permanently non-operational after this point.\n');
 else
     fprintf('Mission feasible with this battery mass.\n');
 end
@@ -354,6 +374,6 @@ plot(t, dist_shadow, '-', 'Color', [0.35 0.35 0.55], 'LineWidth', 1.5)
 legend({'Sunlit', 'Shadow'}, 'Location', 'best')
 xlabel('Time [hr]')
 ylabel('Distance Traveled [m]')
-title('Distance vs Time  |  Amber = sunlit, Blue-grey = shadow')
+title('Distance vs Time  |  Yellow = sunlit, Blue = shadow')
 grid on
 hold off

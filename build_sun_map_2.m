@@ -57,7 +57,7 @@ Z = elevation - (X.^2 + Y.^2) / (2 * R_moon);
 %      y_south_pole_km = (grid_height_m/2 - y_tl_m) / 1000   <- flip y
 % -------------------------------------------------------------------------
 
-path_data = readmatrix('planned_path_nodes_meters (2).csv', ...
+path_data = readmatrix('planned_path_11270m.csv', ...
     'NumHeaderLines', 1);          % skip the "x,y" header row
 
 % path_data columns: [x, y]
@@ -111,7 +111,7 @@ row_idx = max(1, min(size(Z, 1), row_idx));
 %% 6. TIME VECTOR  — must match interactable_SOC_batt_mass.m exactly
 % -------------------------------------------------------------------------
 
-n_epoch = 2836;          % Oct 1, 2027  (same as SOC code uses as n=2831)
+n_epoch = 2847;          % Oct 1, 2027  (same as SOC code uses as n=2831)
 T_total  = 24 * 14;      % hours — 14-day mission window
 dt       = 0.01;         % hours (~36 sec)  — same as SOC code
 t        = 0:dt:T_total;
