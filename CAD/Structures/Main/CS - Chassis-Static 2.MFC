@@ -1,5 +1,5 @@
 [StartTime]
-CS - Chassis-Static 2.MFC=33s
+CS - Chassis-Static 2.MFC=51s
 [SolverState]
 CS - Chassis-Static 2.MFC=2
 [MainFrame]
@@ -14,5 +14,3 @@ CS - Chassis-Static 2.MFC=0
 CS - Chassis-Static 2.MFC=Static 2
 [Solver]
 CS - Chassis-Static 2.MFC=Iterative
-[Dynamic]
-CS - Chassis-Static 2.MFC=0
