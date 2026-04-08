@@ -28,4 +28,6 @@ target_include_directories(sparx_node PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Watchdog
     ${CMAKE_CURRENT_SOURCE_DIR}/Planning
     ${CMAKE_CURRENT_SOURCE_DIR}/Utils
+    ${CMAKE_CURRENT_SOURCE_DIR}/eigen
+    ${CMAKE_CURRENT_SOURCE_DIR}/spline
 )
