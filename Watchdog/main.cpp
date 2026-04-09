@@ -7,18 +7,30 @@
 #define HAVE_SSTREAM
 #include "../spline/src/spline.h"
 
+#include "../Nav/testcase.hpp"
 
 int main()
 {
-    tk::spline s;
-    std::vector<double> x = {0, 1, 2, 3, 4};
-    std::vector<double> y = {0, 1, 0, 1, 0};
-    s.set_points(x, y); // currently it is required that X is already sorted
- 
-    std::ofstream out("spline_points.csv");
-    for (double xi = s.get_x_min(); xi <= s.get_x_max(); xi += 0.01) {
-        out << xi << "," << s(xi) << "\n";
+    // make a testcase 
+    SimConfig cfg;
+    for(uint32_t i = 0; i < 100; i++)
+    {
+        cfg.t_vec.push_back((float_t)i);
     }
+
+    auto s = generate_testcases(cfg);
+
+    // push the spline points to the csv
+    std::ofstream file("spline_points.csv");
+
+    for (float_t x = s->x0; x <= s->xf; x += (s->xf - s->x0) / (s->SPLINE_NUM_POINTS - 1))
+    {
+        auto y = s->SPLINE_INTERPOLATOR(x);
+        file << x << "," << y << std::endl;
+    }
+
+    file.close();
+    return 0;
 }
 
 
