@@ -23,9 +23,13 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_package()
+install(
+  PROGRAMS scripts/path_follower.py 
+  DESTINATION lib/rover_sim)
 
 install(
-  DIRECTORY launch rover config world
+  DIRECTORY launch rover config world scripts
   DESTINATION share/rover_sim
 )
+
+ament_package()

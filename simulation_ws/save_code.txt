@@ -1,111 +1,108 @@
-    <!-- FRONT LEFT MOUNT -->
-    <link name="mount_fl">
-      <pose>0.278 -0.224 -0.062 1.5708 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <mesh>
-            <uri>model://src/rover_sim/rover/meshes/mm_FL.STL</uri>
-            <scale>0.001 0.001 0.001</scale>
-          </mesh>
-        </geometry>
-      </visual>
+#!/usr/bin/env python3
+import rclpy
+from rclpy.node import Node
+from geometry_msgs.msg import Twist
+from ament_index_python.packages import get_package_share_directory
+from nav_msgs.msg import Odometry
+import csv
+import math
+import threading
+import time
+import os
 
-      <collision name="collision">
-        <pose>0 0 0 0 0 0</pose>
-        <geometry>
-            <mesh>
-            <uri>model://src/rover_sim/rover/meshes/mm_FL.STL</uri>
-            <scale>0.001 0.001 0.001</scale>
-            </mesh>
-        </geometry>
-      </collision>
-    </link>
+class PathFollower(Node):
+    def __init__(self):
+        super().__init__('path_follower')
 
-    <joint name="mount_fl_fixed" type="fixed">
-      <parent>base_link</parent>
-      <child>mount_fl</child>
-    </joint>
+        self.cmd_pub = self.create_publisher(Twist, '/cmd_vel', 10)
+        self.odom_sub = self.create_subscription(Odometry, '/odom', self.odom_callback, 10)
 
-    <!-- REAR LEFT MOUNT -->
-    <link name="mount_rl">
-      <pose>0.198 0.098 -0.062 1.5708 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <mesh>
-            <uri>model://src/rover_sim/rover/meshes/mm_RL.STL</uri>
-            <scale>0.001 0.001 0.001</scale>
-          </mesh>
-        </geometry>
-      </visual>
+        # Configuration
+        self.pixel_scale = 10.0
+        self.img_center_x = 101.5
+        self.img_center_y = 101.0
+        self.waypoint_threshold = 2.0  # meters
 
-      <collision name="collision">
-        <pose>0 0 0 0 0 0</pose>
-        <geometry>
-            <mesh>
-            <uri>model://src/rover_sim/rover/meshes/mm_RL.STL</uri>
-            <scale>0.001 0.001 0.001</scale>
-            </mesh>
-        </geometry>
-      </collision>
-    </link>
+        # Load CSV Path
+        package_share = get_package_share_directory('rover_sim')
+        csv_path = os.path.join(package_share, 'scripts', '30m', 'cropped_path_pixels_30m.csv')
 
-    <joint name="mount_rl_fixed" type="fixed">
-      <parent>base_link</parent>
-      <child>mount_rl</child>
-    </joint>
+        self.waypoints = self.load_path_from_csv(csv_path)
+        self.get_logger().info(f"Loaded {len(self.waypoints)} waypoints.")
 
-    <!-- FRONT RIGHT MOUNT -->
-    <link name="mount_fr">
-      <pose>-00.062 -0.102 -.062 1.5708 0 0</pose> 
-      <visual name="visual">
-        <geometry>
-          <mesh>
-            <uri>model://src/rover_sim/rover/meshes/mm_FR.STL</uri>
-            <scale>0.001 0.001 0.001</scale>
-          </mesh>
-        </geometry>
-      </visual>
+        self.current_idx = 0
+        self.current_pose = None
 
-      <collision name="collision">
-        <pose>0 0 0 0 0 0</pose>
-        <geometry>
-            <mesh>
-            <uri>model://src/rover_sim/rover/meshes/mm_FR.STL</uri>
-            <scale>0.001 0.001 0.001</scale>
-            </mesh>
-        </geometry>
-      </collision>
-    </link>
+        # Thread for publishing cmd_vel
+        self.twist_msg = Twist()
+        self.publish_thread = threading.Thread(target=self.publish_loop)
+        self.publish_thread.daemon = True
+        self.subscriber_ready = False
+        self.publish_thread.start()
 
-    <joint name="mount_fr_fixed" type="fixed">
-      <parent>base_link</parent>
-      <child>mount_fr</child>
-    </joint>
+    def load_path_from_csv(self, file_path):
+        world_points = []
+        try:
+            with open(file_path, mode='r') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    px = float(row['x'])
+                    py = float(row['y'])
+                    gx = (px - self.img_center_x) * self.pixel_scale
+                    gy = (self.img_center_y - py) * self.pixel_scale
+                    world_points.append((gx, gy))
+        except Exception as e:
+            self.get_logger().error(f"Failed to read CSV: {e}")
+        return world_points
 
-    <!-- REAR RIGHT MOUNT -->
-    <link name="mount_rr">
-      <pose>-0.062 0.099 -0.062 1.5708 0 0</pose>
-      <visual name="visual">
-        <geometry>
-          <mesh>
-            <uri>model://src/rover_sim/rover/meshes/mm_RR.STL</uri>
-            <scale>0.001 0.001 0.001</scale>
-          </mesh>
-        </geometry>
-      </visual>
+    def get_yaw_from_quaternion(self, q):
+        siny_cosp = 2 * (q.w * q.z + q.x * q.y)
+        cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z)
+        return math.atan2(siny_cosp, cosy_cosp)
 
-      <collision name="collision">
-        <pose>0 0 0 0 0 0</pose>
-        <geometry>
-            <mesh>
-            <uri>model://src/rover_sim/rover/meshes/mm_RR.STL</uri>
-            <scale>0.001 0.001 0.001</scale>
-            </mesh>
-        </geometry>
-      </collision>
-    </link>
+    def odom_callback(self, msg):
+        self.current_pose = msg.pose.pose
 
-    <joint name="mount_rr_fixed" type="fixed">
-      <parent>base_link</parent>
-      <child>mount_rr</child>
-    </joint>
+        if self.current_idx >= len(self.waypoints):
+            self.twist_msg = Twist()
+            return
+
+        target_x, target_y = self.waypoints[self.current_idx]
+        curr_x = self.current_pose.position.x
+        curr_y = self.current_pose.position.y
+
+        dist = math.hypot(target_x - curr_x, target_y - curr_y)
+        desired_yaw = math.atan2(target_y - curr_y, target_x - curr_x)
+        current_yaw = self.get_yaw_from_quaternion(self.current_pose.orientation)
+        angle_error = math.atan2(math.sin(desired_yaw - current_yaw), math.cos(desired_yaw - current_yaw))
+
+        if dist < self.waypoint_threshold:
+            self.get_logger().info(f"Reached waypoint {self.current_idx}")
+            self.current_idx += 1
+            self.twist_msg = Twist()
+        else:
+            cmd = Twist()
+            cmd.linear.x = min(0.5, 0.2 * dist)
+            cmd.angular.z = 1.0 * angle_error
+            self.twist_msg = cmd
+
+    def publish_loop(self):
+        # Wait until at least one subscriber connects
+        while rclpy.ok() and self.cmd_pub.get_subscription_count() == 0:
+            time.sleep(0.1)
+        self.get_logger().info("cmd_vel subscriber connected. Starting publishing loop.")
+        self.subscriber_ready = True
+
+        rate = 20  # Hz
+        while rclpy.ok():
+            self.cmd_pub.publish(self.twist_msg)
+            time.sleep(1.0 / rate)
+
+def main():
+    rclpy.init()
+    node = PathFollower()
+    rclpy.spin(node)
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()

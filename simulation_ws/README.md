@@ -21,18 +21,22 @@ in the other run:
 	ros2 run ros_gz_bridge parameter_bridge \
 	/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist
 
-in the last run (change linear and angular as needed)
+in the last run (change linear and angular as needed [m/s])
 
-	ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "
-	linear:
-	x: 0.5
-	angular:
-	z: 0.3
-	"
+	ros2 topic pub /cmd_vel geometry_msgs/msg/Twist 
+	"{linear: {x: 0.0, y: 0.0, z: 0.0}, 
+	angular: {x: 0.0, y: 0.0, z: 0.0}}"
+
 
 to key the robot around run instead:
 
 	ros2 run teleop_twist_keyboard teleop_twist_keyboard
+
+IN PROGRESS <br>
+implementing controller for path following <br>
+in a new, sourced terminal run:
+
+	ros2 run rover_sim path_follower.py
 
 <h2>Visualizing Point Cloud Using Lidar Plugin</h2>
 The LiDAR is simulated using ray tracing through the provided laserscan topic in gazebo fortress <br> <br>

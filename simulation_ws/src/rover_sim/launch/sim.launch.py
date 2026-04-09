@@ -46,7 +46,11 @@ def generate_launch_description():
         arguments=[
             '-name', 'rover',
             '-file', sdf_file,
-            '-z', '0.8' # add some height if the rover spawns inside the terrain
+
+            # get x and y converted from the path planner and tiff file size 
+            '-x', '-15.0', # X = (start_x - tiff_width/2)*10
+            '-y', '10.0', # Y = (tiff_height - start_y)*10
+            '-z', '20.0' # add some height if the rover spawns inside the terrain
         ],
         output='screen'
     )

@@ -315,6 +315,12 @@ message(STATUS "Execute custom install script")
 
 # begin of custom install code
 
+# install(PROGRAMS "scripts/path_follower.py" "DESTINATION" "lib/rover_sim")
+ament_cmake_symlink_install_programs("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" PROGRAMS "scripts/path_follower.py" "DESTINATION" "lib/rover_sim")
+
+# install(DIRECTORY "launch" "rover" "config" "world" "scripts" "DESTINATION" "share/rover_sim")
+ament_cmake_symlink_install_directory("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" DIRECTORY "launch" "rover" "config" "world" "scripts" "DESTINATION" "share/rover_sim")
+
 # install(FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/rover_sim" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
 ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/rover_sim" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
 
@@ -356,6 +362,3 @@ ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/si
 
 # install(FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim/package.xml" "DESTINATION" "share/rover_sim")
 ament_cmake_symlink_install_files("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" FILES "/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim/package.xml" "DESTINATION" "share/rover_sim")
-
-# install(DIRECTORY "launch" "rover" "config" "world" "DESTINATION" "share/rover_sim")
-ament_cmake_symlink_install_directory("/home/pearluva/Documents/484_Rover_Project/simulation_ws/src/rover_sim" DIRECTORY "launch" "rover" "config" "world" "DESTINATION" "share/rover_sim")

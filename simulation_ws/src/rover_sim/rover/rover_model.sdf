@@ -40,7 +40,6 @@
         </geometry>
       </collision>
       
-      
       <!-- LiDAR Sensor Definition -->
       <sensor name="lidar_sensor" type="gpu_lidar">
         <pose>0 0 0 0 0 0</pose> <!-- change later -->
@@ -67,7 +66,7 @@
 
     <!-- FRONT LEFT MOUNT -->
     <link name="mount_fl">
-      <pose>0.278 -0.224 -0.062 1.5708 0 0</pose>
+      <pose>0.084 -0.074 -0.104 1.5708 0 0</pose>
       <visual name="visual">
         <geometry>
           <mesh>
@@ -85,7 +84,7 @@
 
     <!-- REAR LEFT MOUNT -->
     <link name="mount_rl">
-      <pose>0.198 0.098 -0.062 1.5708 0 0</pose>
+      <pose>0.004 0.248 -0.104 1.5708 0 0</pose>
       <visual name="visual">
         <geometry>
           <mesh>
@@ -103,7 +102,7 @@
 
     <!-- FRONT RIGHT MOUNT -->
     <link name="mount_fr">
-      <pose>-00.062 -0.102 -.062 1.5708 0 0</pose> 
+      <pose>-0.256 0.048 -0.104 1.5708 0 0</pose> 
       <visual name="visual">
         <geometry>
           <mesh>
@@ -121,7 +120,7 @@
 
     <!-- REAR RIGHT MOUNT -->
     <link name="mount_rr">
-      <pose>-0.062 0.099 -0.062 1.5708 0 0</pose>
+      <pose>-0.256 0.249 -0.104 1.5708 0 0</pose>
       <visual name="visual">
         <geometry>
           <mesh>
@@ -141,7 +140,7 @@
     <!-- WHEEL MACRO -->
     <!-- Front Left Wheel -->
     <link name="wheel_fl">
-      <pose>0.02 -0.015 -0.04 0 0 0</pose>
+      <pose>-0.174 0.135 -0.082 0 0 0</pose>
       <inertial>
         <mass>1.0</mass>
         <inertia>
@@ -175,7 +174,7 @@
 
     <!-- Rear Left Wheel -->
     <link name="wheel_rl">
-      <pose>0.02 -0.3 -0.04 0 0 0</pose>
+      <pose>-0.174 -0.15 -0.082 0 0 0</pose>
       <inertial>
         <mass>1.0</mass>
         <inertia>
@@ -209,7 +208,7 @@
 
     <!-- Front Right Wheel -->
     <link name="wheel_fr">
-      <pose>0.37 -0.015 -0.04 1.5708 0 0</pose>
+      <pose>0.176 0.135 -0.082 0 3.1415 0</pose>
       <inertial>
         <mass>1.0</mass>
         <inertia>
@@ -243,7 +242,7 @@
 
     <!-- Rear Right Wheel -->
     <link name="wheel_rr">
-      <pose>0.37 -0.3 -0.04 1.5708 0 0</pose>
+      <pose>0.176 -0.15 -0.082 0 3.1415 0</pose>
       <inertial>
         <mass>1.0</mass>
         <inertia>
@@ -315,7 +314,7 @@
       <!-- pose relative to mount -->
       <pose>0 0 0 0 0 0</pose> 
       <axis>
-        <xyz>1 0 0</xyz> <!-- change if the wheel spins the wrong way -->
+        <xyz>-1 0 0</xyz> <!-- change if the wheel spins the wrong way -->
         <dynamics>
           <damping>0.1</damping>   <!-- Resists velocity -->
           <friction>0.1</friction>  <!-- Initial resistance to start spinning -->
@@ -331,7 +330,7 @@
       <!-- pose relative to mount -->
       <pose>0 0 0 0 0 0</pose> 
       <axis>
-        <xyz>1 0 0</xyz> <!-- change if the wheel spins the wrong way -->
+        <xyz>-1 0 0</xyz> <!-- change if the wheel spins the wrong way -->
         <dynamics>
           <damping>0.1</damping>   <!-- Resists velocity -->
           <friction>0.1</friction>  <!-- Initial resistance to start spinning -->
@@ -340,28 +339,32 @@
       </axis>
     </joint>
 
-    <!-- [Repeat the wheel link and joint logic for FR, RL, RR changing poses] -->
-
+    <!-- PLUGINS -->
+    <!-- differential drive plugin configured for skid steering-->
     <!-- PLUGINS -->
     <plugin
-      filename="libignition-gazebo-diff-drive-system.so"
-      name="ignition::gazebo::systems::DiffDrive">
+      filename="gz-sim-diff-drive-system"
+      name="gz::sim::systems::DiffDrive">
+
       <left_joint>wheel_fl_joint</left_joint>
       <left_joint>wheel_rl_joint</left_joint>
+
       <right_joint>wheel_fr_joint</right_joint>
       <right_joint>wheel_rr_joint</right_joint>
-      <wheel_separation>0.3</wheel_separation>
-      <wheel_radius>0.18</wheel_radius>
-      <topic>/cmd_vel</topic>
-      <odom_topic>/odom</odom_topic>
-      <tf_topic>/tf</tf_topic>
+
+      <wheel_separation>0.35</wheel_separation>
+      <wheel_radius>0.09</wheel_radius>
+
+      <topic>cmd_vel</topic>
+      <odom_topic>odom</odom_topic>
+      <tf_topic>tf</tf_topic>
       <frame_id>odom</frame_id>
       <child_frame_id>base_link</child_frame_id>
     </plugin>
 
     <plugin
-      filename="libignition-gazebo-joint-state-publisher-system.so"
-      name="ignition::gazebo::systems::JointStatePublisher">
+      filename="gz-sim-joint-state-publisher-system"
+      name="gz::sim::systems::JointStatePublisher">
     </plugin>
 
   </model>
