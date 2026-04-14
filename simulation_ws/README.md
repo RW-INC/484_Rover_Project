@@ -11,16 +11,22 @@ Now you may build and source your package again
 	colcon build rover_sim
 	source install/setup.bash
 
-Open 3 terminals (tmux recommended) <br>
+Open 4 terminals (tmux recommended) <br>
 in one terminal run:
 
 	ros2 launch rover_sim sim.launch.py
 
-in the other run:
+in the second run:
 
 	ros2 run ros_gz_bridge parameter_bridge \
 	/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist
 
+in the third run:
+
+	ros2 run ros_gz_bridge parameter_bridge /odom@nav_msgs/msg/Odometry[gz.msgs.Odometry
+
+<h4>IF YOU DO NOT BRIDGE /CMD_VEL AND /ODOM IT WILL NOT WORK</H4>
+<br>
 in the last run (change linear and angular as needed [m/s])
 
 	ros2 topic pub /cmd_vel geometry_msgs/msg/Twist 
@@ -28,17 +34,16 @@ in the last run (change linear and angular as needed [m/s])
 	angular: {x: 0.0, y: 0.0, z: 0.0}}"
 
 
-to key the robot around run instead:
+to key the robot around instead:
 
 	ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
-IN PROGRESS <br>
 implementing controller for path following <br>
 in a new, sourced terminal run:
 
 	ros2 run rover_sim path_follower.py
 
-<h2>Visualizing Point Cloud Using Lidar Plugin</h2>
+<h2>Visualizing Point Cloud Using Lidar Plugin (IN PROGRESS)</h2>
 The LiDAR is simulated using ray tracing through the provided laserscan topic in gazebo fortress <br> <br>
 You can see the LiDAR data in a few ways <br>
 In a seperate, sourced terminal run: <br> <br>
@@ -49,6 +54,14 @@ Option 1: Echo topic
 Option 2: Use Rviz
 
 	rviz2
+
+
+- go to the bottom left and click add topic
+- click add new topic
+- echo LaserScan to the screen <br> <br>
+
+running into issues here with laserscan picking up no messages, topic is active but has no subscribers
+
 
 <h2>Image Editing for Heightmaps</h2>
 <h3> NOTE: heightmap rendering NOT used for the final version of this sim </h3>
@@ -74,16 +87,21 @@ source the setup files for ros if run/launch commands not working
 
 checking topics and controllers: 
 
-	ros2 topic list					# check active topics
-	ros2 topic echo /cmd_vel		# check velocity commands published
-	ros2 topic echo /odom			# echos odometry
-	ros2 control list_controllers	# lists active ros2 controllers
+	ros2 topic list							# check active topics
+	ros2 topic echo /cmd_vel				# echos velocity cmds
+	ros2 topic echo /odom					# echos odometry (expect to see 0's)
+	ros2 control list_controllers			# lists active ros2 controllers
 
-if spawn msg not sending, you can manually spawn the rover in:
+if spawn msg not sending, you can manually spawn the rover in: <br>
+you could also consider going into sim.launch.py and increasing the spawn delay
 
 	ros2 run ros_gz_sim create \
   	-file rover.urdf \
   	-name rover
+
+kill residual gazebo processes if windows not updating
+
+	killall -9 ruby gz-sim-gui
 
 <h4>DO NOT RUN FOLLOWING ON GAZEBO FORTRESS </h4>
 for classic gazebo debugging only

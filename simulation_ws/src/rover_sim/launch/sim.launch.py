@@ -48,28 +48,35 @@ def generate_launch_description():
             '-file', sdf_file,
 
             # get x and y converted from the path planner and tiff file size 
-            '-x', '-15.0', # X = (start_x - tiff_width/2)*10
-            '-y', '10.0', # Y = (tiff_height - start_y)*10
-            '-z', '20.0' # add some height if the rover spawns inside the terrain
+            #'-x', '-15.0', # X = (start_x - tiff_width/2)*10
+            #'-y', '10.0', # Y = (tiff_height - start_y)*10
+
+            # to spawn at origin
+            '-x', '0.0',
+            '-y', '0.0', 
+
+            '-z', '-454.7' # add some height if the rover spawns inside the terrain
         ],
         output='screen'
     )
 
-    # expanded bridge to add tf and clock 
-    # this maps rover pose to the /tf topic
+    # BRIDGE: includes laserscan, tfmsgs, clock, cmd_vel, and odometry
     bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
         arguments=[
-            '/lidar@sensor_msgs/msg/LaserScan@ignition.msgs.LaserScan',
+            '/lidar@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan', #2d laser scan
+            #'/lidar@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked', #should store as a point cloud
             '/model/rover/pose@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V',
-            '/world/default/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock'
+            '/world/default/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock',
+            '/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist',
+            '/odom@nav_msgs/msg/Odometry[ignition.msgs.Odometry'
         ],
         output='screen'
     )
 
-    # static transform for fixed 'map' frame
-    # links the 'map' frame to the odom or rover frame
+    # static transform for fixed frame
+    # links the tf frame to the odom or rover frame
     static_tf = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
@@ -84,3 +91,4 @@ def generate_launch_description():
         bridge,
         static_tf
     ])
+

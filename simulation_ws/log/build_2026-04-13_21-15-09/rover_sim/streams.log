@@ -1,0 +1,49 @@
+[0.009s] Invoking command in '/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim -- -j28 -l28
+[0.065s] Invoked command in '/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim -- -j28 -l28
+[0.076s] Invoking command in '/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim
+[0.084s] -- Install configuration: ""
+[0.085s] -- Execute custom install script
+[0.085s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/lib/rover_sim/path_follower.py
+[0.086s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/launch/__pycache__/sim.test.cpython-310.pyc
+[0.086s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/launch/sim.launch.py
+[0.086s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/launch/sim.test.py
+[0.087s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/rover/meshes/README.md
+[0.087s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/rover/meshes/chassis.STL
+[0.087s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/rover/meshes/mm_FL.STL
+[0.087s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/rover/meshes/mm_FR.STL
+[0.087s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/rover/meshes/mm_RL.STL
+[0.088s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/rover/meshes/mm_RR.STL
+[0.088s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/rover/meshes/wheel.stl
+[0.088s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/rover/rover.urdf
+[0.088s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/rover/rover_model.config
+[0.088s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/rover/rover_model.sdf
+[0.088s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/config/controllers.yaml
+[0.088s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/30m_path.mtl
+[0.088s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/30m_path.obj
+[0.089s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/30m_scale.mtl
+[0.089s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/30m_scale.obj
+[0.089s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/README.md
+[0.089s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/south_pole.mtl
+[0.089s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/south_pole.obj
+[0.089s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/obstacles.sdf
+[0.089s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/world.sdf
+[0.089s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/scripts/30m/cropped_DEM_file_30m.tiff
+[0.090s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/scripts/30m/cropped_path_pixels_30m.csv
+[0.090s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/scripts/30m/planned_path_nodes_meters_30.0.csv
+[0.090s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/scripts/path_follower.py
+[0.090s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/ament_index/resource_index/package_run_dependencies/rover_sim
+[0.090s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/ament_index/resource_index/parent_prefix_path/rover_sim
+[0.090s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/environment/ament_prefix_path.sh
+[0.090s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/environment/ament_prefix_path.dsv
+[0.090s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/environment/path.sh
+[0.090s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/environment/path.dsv
+[0.091s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/local_setup.bash
+[0.091s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/local_setup.sh
+[0.091s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/local_setup.zsh
+[0.091s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/local_setup.dsv
+[0.091s] -- Symlinking: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/package.dsv
+[0.097s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/ament_index/resource_index/packages/rover_sim
+[0.097s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/cmake/rover_simConfig.cmake
+[0.097s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/cmake/rover_simConfig-version.cmake
+[0.097s] -- Up-to-date symlink: /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/package.xml
+[0.099s] Invoked command in '/home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/pearluva/Documents/484_Rover_Project/simulation_ws/build/rover_sim

@@ -3,45 +3,92 @@ import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from geometry_msgs.msg import Twist
-from ament_index_python.packages import get_package_share_directory
 from nav_msgs.msg import Odometry
+from ament_index_python.packages import get_package_share_directory
 import csv
 import math
 import threading
 import time
 import os
 
+# NOTE: this class structure was pretty much ripped off of the teleop_twist_keyboard source code
+# creating custom thread class
+class PublishThread(threading.Thread):
+    def __init__(self, node, rate):
+        super(PublishThread, self).__init__() # parent thread
+        self.publisher = node.create_publisher(Twist, '/cmd_vel', 10) # making publisher for cmd_vel
+        self.x = 0.0    # linear velocity
+        self.th = 0.0   # angular velocity
+        self.condition = threading.Condition() # helps share info between threads
+        self.done = False # adding a termination flag for the thread
+        self.timeout = 1.0 / rate if rate != 0.0 else None # 20 Hz datarate
+        self.node = node # save node and start thread immediately
+        self.start()
+
+    # function for velocity updates
+    def update(self, x, th):
+        self.condition.acquire()
+        self.x = x
+        self.th = th
+        self.condition.notify()
+        self.condition.release()
+
+    # safely stop thread
+    def stop(self):
+        self.done = True
+        self.update(0.0, 0.0)
+        self.join()
+
+    # thread loop
+    def run(self):
+        while not self.done: # loop forever until termination condition
+
+            # wait for new data or until timeout
+            self.condition.acquire()
+            self.condition.wait(self.timeout)
+
+            # copying the state into a twist msg for velocity
+            twist = Twist()
+            twist.linear.x = float(self.x)
+            twist.angular.z = float(self.th)
+            self.condition.release()
+
+            # publish velocity to rover
+            if rclpy.ok():
+                self.publisher.publish(twist)
+
+        # publish stop when exiting
+        self.publisher.publish(Twist())
+
+# main control class
 class PathFollower(Node):
     def __init__(self):
         super().__init__('path_follower')
 
-        self.cmd_pub = self.create_publisher(Twist, '/cmd_vel', 10)
-        self.odom_sub = self.create_subscription(Odometry, '/odom', self.odom_callback, 10)
+        # configuration 
+        self.pixel_scale = 10.0         # 10m per pixel scale
+        self.img_center_x = 101.5       # change in accordance to tiff size
+        self.img_center_y = 101.0       # change in accordance to tiff size
+        self.waypoint_threshold = 2.0   # if within 2 meters of a waypoint validate completion 
 
-        # Configuration
-        self.pixel_scale = 10.0
-        self.img_center_x = 101.5
-        self.img_center_y = 101.0
-        self.waypoint_threshold = 2.0 
-
-        # Load Path
+        # load path from csv
+        # add new paths in folders with labeled path length
         package_share = get_package_share_directory('rover_sim')
         csv_path = os.path.join(package_share, 'scripts', '30m', 'cropped_path_pixels_30m.csv')
         self.waypoints = self.load_path_from_csv(csv_path)
         self.get_logger().info(f"Loaded {len(self.waypoints)} waypoints.")
 
-        self.current_idx = 0
-        self.current_pose = None
-        self.twist_msg = Twist()
-        
-        # Thread setup
-        self.condition = threading.Condition()
-        self.publish_thread = threading.Thread(target=self.publish_loop)
-        self.publish_thread.daemon = True
-        self.publish_thread.start()
+        self.current_idx = 0        # current waypoint naving to
+        self.current_pose = None    # current position of rover
 
+        self.pub_thread = PublishThread(self, 20.0) # 20 Hz
+        self.odom_sub = self.create_subscription(Odometry, '/odom', self.odom_callback, 10) # subscribe to odom to listen to position updates
+
+    # function to extract path from csv file
+    # csv is from Sayali code
     def load_path_from_csv(self, file_path):
         world_points = []
+
         try:
             with open(file_path, mode='r') as f:
                 reader = csv.DictReader(f)
@@ -50,74 +97,71 @@ class PathFollower(Node):
                     gx = (px - self.img_center_x) * self.pixel_scale
                     gy = (self.img_center_y - py) * self.pixel_scale
                     world_points.append((gx, gy))
+
         except Exception as e:
-            self.get_logger().error(f"CSV Load Error: {e}")
+            self.get_logger().error(f"csv error D: {e}")
+
         return world_points
 
+    # calculating heading angle from orientation information
     def get_yaw_from_quaternion(self, q):
         siny_cosp = 2 * (q.w * q.z + q.x * q.y)
         cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z)
-        return math.atan2(siny_cosp, cosy_cosp)
 
+        return math.atan2(siny_cosp, cosy_cosp) # return direction in rads
+
+    # odometry callback, runs every position update
     def odom_callback(self, msg):
-        with self.condition:
-            self.current_pose = msg.pose.pose
+        # this callback MUST fire to update 'x' and 'th'
+        self.current_pose = msg.pose.pose # save position
 
-            if self.current_idx >= len(self.waypoints):
-                self.twist_msg = Twist()
-                return
+        # check if all waypoints have been reached
+        if self.current_idx >= len(self.waypoints):
+            self.pub_thread.update(0.0, 0.0) # if so, stop
 
-            target_x, target_y = self.waypoints[self.current_idx]
-            curr_x = self.current_pose.position.x
-            curr_y = self.current_pose.position.y
+            return
 
-            dist = math.hypot(target_x - curr_x, target_y - curr_y)
-            
-            if dist < self.waypoint_threshold:
-                self.get_logger().info(f"Reached waypoint {self.current_idx}")
-                self.current_idx += 1
-                self.twist_msg = Twist()
-            else:
-                desired_yaw = math.atan2(target_y - curr_y, target_x - curr_x)
-                current_yaw = self.get_yaw_from_quaternion(self.current_pose.orientation)
-                angle_error = math.atan2(math.sin(desired_yaw - current_yaw), math.cos(desired_yaw - current_yaw))
-                
-                new_cmd = Twist()
-                new_cmd.linear.x = min(0.5, 0.2 * dist)
-                new_cmd.angular.z = 1.0 * angle_error
-                self.twist_msg = new_cmd
-            
-            # Notify the publish thread that twist_msg is updated
-            self.condition.notify()
+        # getting target and current position
+        target_x, target_y = self.waypoints[self.current_idx]
+        curr_x, curr_y = self.current_pose.position.x, self.current_pose.position.y
 
-    def publish_loop(self):
-        # Wait for subscriber like the teleop reference
-        while rclpy.ok() and self.cmd_pub.get_subscription_count() == 0:
-            time.sleep(0.1)
+        # calc distance to next waypoint
+        dist = math.hypot(target_x - curr_x, target_y - curr_y)
         
-        self.get_logger().info("Subscriber connected. Publishing...")
-        
-        rate = 20.0 # Hz
-        while rclpy.ok():
-            with self.condition:
-                # We publish the latest twist_msg calculated in the odom_callback
-                self.cmd_pub.publish(self.twist_msg)
-            time.sleep(1.0 / rate)
+        # stop moving if you're close enough to the waypoint
+        if dist < self.waypoint_threshold:
+            self.get_logger().info(f"Reached waypoint {self.current_idx}") # send confirmation to terminal
+            self.current_idx += 1
+            self.pub_thread.update(0.0, 0.0)
+        #if not continue to nav towards it
+        else:
+            desired_yaw = math.atan2(target_y - curr_y, target_x - curr_x)
+            current_yaw = self.get_yaw_from_quaternion(self.current_pose.orientation) # feed current direction into yaw function
+            # and calculate difference in current heading vs desired heading
+            angle_error = math.atan2(math.sin(desired_yaw - current_yaw), 
+                                     math.cos(desired_yaw - current_yaw))
+            
+            # send new values to the PublishThread
+            # you can change max speed by changing the min functin params here
+            # current max speed = 1 m/s
+            self.pub_thread.update(min(1, 0.2 * dist), 1.0 * angle_error)
 
 def main():
     rclpy.init()
     node = PathFollower()
     
-    # CRITICAL: Use MultiThreadedExecutor so the odom_callback 
-    # isn't blocked by the while loop or the publish thread
+    # required for multithreading support in ROS2
+    # allows the thread and callbacks to run simultaneously 
     executor = MultiThreadedExecutor()
     executor.add_node(node)
     
+    # clean shutdown 
     try:
         executor.spin()
     except KeyboardInterrupt:
         pass
     finally:
+        node.pub_thread.stop()
         node.destroy_node()
         rclpy.shutdown()
 

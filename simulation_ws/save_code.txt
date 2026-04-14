@@ -1,108 +1,89 @@
-#!/usr/bin/env python3
-import rclpy
-from rclpy.node import Node
-from geometry_msgs.msg import Twist
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription, TimerAction
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
-from nav_msgs.msg import Odometry
-import csv
-import math
-import threading
-import time
 import os
 
-class PathFollower(Node):
-    def __init__(self):
-        super().__init__('path_follower')
+def generate_launch_description():
+    # paths
+    pkg_rover = get_package_share_directory('rover_sim')
+    pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
 
-        self.cmd_pub = self.create_publisher(Twist, '/cmd_vel', 10)
-        self.odom_sub = self.create_subscription(Odometry, '/odom', self.odom_callback, 10)
+    urdf_file = os.path.join(pkg_rover, 'urdf', 'rover.urdf')
+    world_file = os.path.join(pkg_rover, 'world', 'world.sdf')
+    sdf_file = os.path.join(pkg_rover, 'rover', 'rover_model.sdf')
 
-        # Configuration
-        self.pixel_scale = 10.0
-        self.img_center_x = 101.5
-        self.img_center_y = 101.0
-        self.waypoint_threshold = 2.0  # meters
+    # adding a state published to /odom topic for rviz visualization
+    with open(sdf_file, 'r') as infp:
+        robot_desc = infp.read()
 
-        # Load CSV Path
-        package_share = get_package_share_directory('rover_sim')
-        csv_path = os.path.join(package_share, 'scripts', '30m', 'cropped_path_pixels_30m.csv')
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='screen',
+        parameters=[{
+            'use_sim_time': True,
+            'robot_description': robot_desc
+        }]
+    )
 
-        self.waypoints = self.load_path_from_csv(csv_path)
-        self.get_logger().info(f"Loaded {len(self.waypoints)} waypoints.")
+    # start gazebo 
+    gz_sim = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
+        ),
+        launch_arguments={'gz_args': f'-r {world_file}'}.items(),
+    )
 
-        self.current_idx = 0
-        self.current_pose = None
+    # spawn rover
+    spawn_robot = Node(
+        package='ros_gz_sim',
+        executable='create',
+        arguments=[
+            '-name', 'rover',
+            '-file', sdf_file,
+            '-x', '-15.0',
+            '-y', '10.0',
+            '-z', '-30.0'
+        ],
+        output='screen'
+    )
 
-        # Thread for publishing cmd_vel
-        self.twist_msg = Twist()
-        self.publish_thread = threading.Thread(target=self.publish_loop)
-        self.publish_thread.daemon = True
-        self.subscriber_ready = False
-        self.publish_thread.start()
+    # UPDATED BRIDGE: Added /cmd_vel and /odom
+    bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=[
+            # Existing bridges
+            '/lidar@sensor_msgs/msg/LaserScan@ignition.msgs.LaserScan',
+            '/model/rover/pose@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V',
+            '/world/default/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock',
+            
+            # NEW: Velocity command bridge (Bidirectional)
+            '/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist',
+            
+            # NEW: Odometry bridge (Gz -> ROS 2)
+            # Note: Ensure the Gz topic is just /odom or /model/rover/odometry 
+            # depending on your SDF plugin config
+            '/odom@nav_msgs/msg/Odometry[ignition.msgs.Odometry'
+        ],
+        output='screen'
+    )
 
-    def load_path_from_csv(self, file_path):
-        world_points = []
-        try:
-            with open(file_path, mode='r') as f:
-                reader = csv.DictReader(f)
-                for row in reader:
-                    px = float(row['x'])
-                    py = float(row['y'])
-                    gx = (px - self.img_center_x) * self.pixel_scale
-                    gy = (self.img_center_y - py) * self.pixel_scale
-                    world_points.append((gx, gy))
-        except Exception as e:
-            self.get_logger().error(f"Failed to read CSV: {e}")
-        return world_points
+    # static transform for fixed 'map' frame
+    static_tf = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        arguments=['0', '0', '0', '0', '0', '0', 'map', 'rover/odom'],
+        output='screen'
+    )
 
-    def get_yaw_from_quaternion(self, q):
-        siny_cosp = 2 * (q.w * q.z + q.x * q.y)
-        cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z)
-        return math.atan2(siny_cosp, cosy_cosp)
-
-    def odom_callback(self, msg):
-        self.current_pose = msg.pose.pose
-
-        if self.current_idx >= len(self.waypoints):
-            self.twist_msg = Twist()
-            return
-
-        target_x, target_y = self.waypoints[self.current_idx]
-        curr_x = self.current_pose.position.x
-        curr_y = self.current_pose.position.y
-
-        dist = math.hypot(target_x - curr_x, target_y - curr_y)
-        desired_yaw = math.atan2(target_y - curr_y, target_x - curr_x)
-        current_yaw = self.get_yaw_from_quaternion(self.current_pose.orientation)
-        angle_error = math.atan2(math.sin(desired_yaw - current_yaw), math.cos(desired_yaw - current_yaw))
-
-        if dist < self.waypoint_threshold:
-            self.get_logger().info(f"Reached waypoint {self.current_idx}")
-            self.current_idx += 1
-            self.twist_msg = Twist()
-        else:
-            cmd = Twist()
-            cmd.linear.x = min(0.5, 0.2 * dist)
-            cmd.angular.z = 1.0 * angle_error
-            self.twist_msg = cmd
-
-    def publish_loop(self):
-        # Wait until at least one subscriber connects
-        while rclpy.ok() and self.cmd_pub.get_subscription_count() == 0:
-            time.sleep(0.1)
-        self.get_logger().info("cmd_vel subscriber connected. Starting publishing loop.")
-        self.subscriber_ready = True
-
-        rate = 20  # Hz
-        while rclpy.ok():
-            self.cmd_pub.publish(self.twist_msg)
-            time.sleep(1.0 / rate)
-
-def main():
-    rclpy.init()
-    node = PathFollower()
-    rclpy.spin(node)
-    rclpy.shutdown()
-
-if __name__ == '__main__':
-    main()
+    return LaunchDescription([
+        gz_sim,
+        robot_state_publisher,
+        TimerAction(period=2.0, actions=[spawn_robot]),
+        bridge,
+        static_tf
+    ])
