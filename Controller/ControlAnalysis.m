@@ -3,7 +3,6 @@ clear; clc; close all;
 %% 1. Physics Parameters
 
 K = [0.1; 0.1; 2.0];       % SMC gain
-eps_v = 0.01;              % sigmoid smoothing
 
 r = 0.017; B = 0.2;        % rover dims
 
@@ -18,19 +17,21 @@ noise_scales = [0.01;       % X vel process noise
                 0.01;       % Y vel process noise
                 0.05];      % omega process noise
 
+eps_v = 0.01;
+
 %% 2. Setup Grids (M, F, N Control)
 
-range_R = 0.6:0.02:0.98;    % mu_r range (now includes nominal 1.0)
-range_L = 0.6:0.02:0.98;    % mu_l range (now includes nominal 1.0)
+range_R = 0.6:0.02:1.0;    % mu_r range (now includes nominal 1.0)
+range_L = 0.6:0.02:1.0;    % mu_l range (now includes nominal 1.0)
 [MU_R, MU_L] = meshgrid(range_R, range_L);
 
 mu_R_base = MU_R(:)';
 mu_L_base = MU_L(:)';
 
 % --- BATCHING CONTROLS ---
-M = 64;                     % Number of distinct Reference Trajectories
+M = 32;                     % Number of distinct Reference Trajectories
 F = length(mu_R_base);      % Number of Friction Scenarios (Grid size)
-N = 100;                    % Number of Iterations per Trajectory
+N = 31;                     % Number of Iterations per Trajectory
 W = M * F * N;              % Total batched simulations to run concurrently
 
 % Make the entire thing 2D. we repeat the same iteration N times, in a row,
@@ -48,7 +49,7 @@ mu_L_mega = repmat(repelem(mu_L_base, 1, N), 1, M);
 % based biases.
 
 % Spline control points
-t_knots = 0:5:30;
+t_knots = 0:15:100;
 Traj_dummy = Trajectory(f_phys, t_knots, 0, 0, 0.00, 0.055);
 n_steps = length(Traj_dummy.t_master);
 
