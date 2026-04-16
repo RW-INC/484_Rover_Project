@@ -14,9 +14,9 @@ f_ctrl = 100;               % ctrl rate
 dt = 1/f_phys;              % time step for sim
 decim = f_phys/f_ctrl;
 
-noise_scales = [0.1;       % X vel process noise
-                0.1;       % Y vel process noise
-                0.5];      % omega process noise
+noise_scales = [0.01;       % X vel process noise
+                0.01;       % Y vel process noise
+                0.05];      % omega process noise
 
 %% 2. Setup Grids (M, F, N Control)
 

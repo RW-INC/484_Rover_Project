@@ -82,9 +82,9 @@ function [mega_max_spatial, mega_max_theta, sum_x, sum_y, sum_x2, sum_y2] = smc_
     inv_2_epsv = 1 / (2 * eps_v);
 
     % Noise data
-    ns_1 = noise_scales(1);
-    ns_2 = noise_scales(2);
-    ns_3 = noise_scales(3);
+    ns_1 = noise_scales(1)^2;
+    ns_2 = noise_scales(2)^2;
+    ns_3 = noise_scales(3)^2;
 
     % State data
     x_curr = zeros(3, P, M, 'single');
