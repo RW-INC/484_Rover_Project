@@ -6,11 +6,11 @@
 #include "../Planning/grid2d.hpp"
 #include "../eigen/Eigen/Dense"
 
-#define M_PI 3.14159265358979323846
+// #define M_PI 3.14159265358979323846
 #define MAX_VEL 0.02  // cm/s
 #define MIN_VEL 0.014 //cm/s
 #define EPS 1e-9 
-#define roundto(x,n) std::round(x * std::pow(10,n))/std::pow(10,n) // rounds x to n decimal places
+// #define roundto(x,n) std::round(x * std::pow(10,n))/std::pow(10,n) // rounds x to n decimal places
 
 struct imu {
     float_t SAMPLE_HZ;                      // sampling frequency of the IMU
@@ -63,10 +63,10 @@ struct ekf {
 };
 
 struct spline {
-    uint32_t SPLINE_NUM_POINTS = 100;          // number of points to use for the spline interpolation of the trajectory
+    uint32_t SPLINE_NUM_POINTS;                // number of points to use for the spline interpolation of the trajectory
     tk::spline SPLINE_INTERPOLATOR;            // the spline interpolator object from the tk::spline library, used for generating smooth trajectories  
-    float_t x0, y0;                            // initial position of the trajectory, used for generating the spline points
-    float_t xf, yf;                            // final position of the trajectory, used for generating the spline points
+    std::vector<double_t> X_SPLINE_POINTS;     // the x coordinates of the points used for the spline interpolation
+    std::vector<double_t> Y_SPLINE_POINTS;     // the y coordinates of the points used for the spline interpolation
 };
 
 /**
@@ -95,49 +95,46 @@ struct SimConfig
 
 std::unique_ptr<spline> generate_testcases(SimConfig &cfg, float_t x0 = 0.0, float_t y0 = 0.0)
 {
-    auto s       = std::make_unique<spline>();
+    auto s = std::make_unique<spline>();
+    s->SPLINE_NUM_POINTS = cfg.t_vec.size();
+   
     auto t_knots = Eigen::VectorXd::LinSpaced(s->SPLINE_NUM_POINTS, cfg.t_vec.front(), cfg.t_vec.back());
-
-
+    
     // use the min velocity and get the max radius travelled 
     // get a random float between min and max velocity
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<float_t> dis(MIN_VEL, MAX_VEL + EPS); //include MAX_VEL, we'll truncate the decimal anyways to 2 decimal places. 
 
-    std::vector<double> x_vec(s->SPLINE_NUM_POINTS);
-    std::vector<double> y_vec(s->SPLINE_NUM_POINTS);
-
-    for (uint32_t i = 0; i < s->SPLINE_NUM_POINTS-1; i++)
+    s->X_SPLINE_POINTS.resize(s->SPLINE_NUM_POINTS);
+    s->Y_SPLINE_POINTS.resize(s->SPLINE_NUM_POINTS);
+    
+    s->X_SPLINE_POINTS[0] = x0;
+    s->Y_SPLINE_POINTS[0] = y0;
+    
+    for (uint32_t i = 1; i < s->SPLINE_NUM_POINTS; i++)
     {
-        auto dt = t_knots(i+1) - t_knots(i);
+        auto dt = t_knots(i) - t_knots(i-1);
         auto vel = dis(gen);
         auto r = vel * (dt);     
         
         // generate som random angle between 45 and 135 degrees. gets nicer curves than assuming the most limiting case of 
         // -90 and 90 deg
-        auto angle = std::uniform_real_distribution<float_t>(-M_PI / 4, M_PI / 4)(gen);
-        
+        auto angle = std::uniform_real_distribution<float_t>(-M_PI / 8, M_PI / 8)(gen);
         // i added more decimal places because of eps, but i doubt i have that much data...
         // lets just conservatively round to 3 decimal places and call it a day.
-        x_vec.push_back(roundto(x_vec.back() + r * std::cos(angle),3));
-        y_vec.push_back(roundto(y_vec.back() + r * std::sin(angle),3));
+        s->X_SPLINE_POINTS[i] = s->X_SPLINE_POINTS[i-1] + r * std::cos(angle);
+        s->Y_SPLINE_POINTS[i] = s->Y_SPLINE_POINTS[i-1] + r * std::sin(angle);
     }
 
     // and we can use x,y to generate the spline
-    s->SPLINE_INTERPOLATOR.set_points(x_vec, y_vec);
-    s->x0 = x0;
-    s->xf = x_vec.back();
-    
-    s->y0 = y0;
-    s->yf = y_vec.back();
-
+    s->SPLINE_INTERPOLATOR.set_points(s->X_SPLINE_POINTS, s->Y_SPLINE_POINTS);
     return s;
 }
 
 // std::map<std::string, SimConfig> run_mc(SimConfig &cfg)
 // {
-    
+//  ;   
 // }
 
 

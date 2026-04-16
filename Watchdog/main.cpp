@@ -13,17 +13,16 @@ int main()
 {
     // make a testcase 
     SimConfig cfg;
-    for(uint32_t i = 0; i < 100; i++)
-    {
-        cfg.t_vec.push_back((float_t)i);
-    }
+    
+    for(uint32_t i = 0; i < 5; i++)
+        cfg.t_vec.push_back((float_t)i*10);
 
     auto s = generate_testcases(cfg);
 
     // push the spline points to the csv
     std::ofstream file("spline_points.csv");
 
-    for (float_t x = s->x0; x <= s->xf; x += (s->xf - s->x0) / (s->SPLINE_NUM_POINTS - 1))
+    for (float_t x = s->X_SPLINE_POINTS.front(); x <= s->X_SPLINE_POINTS.back(); x += 0.01f)
     {
         auto y = s->SPLINE_INTERPOLATOR(x);
         file << x << "," << y << std::endl;
