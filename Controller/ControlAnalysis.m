@@ -2,14 +2,14 @@ clear; clc; close all;
 
 %% 1. Physics Parameters
 
-K = [0.1; 0.1; 2.0];       % SMC gain
+K = [0.1; 0.1; 4.0];       % SMC gain
 
-r = 0.017; B = 0.2;        % rover dims
+r = 0.17/2; B = 0.2;      % rover dims
 
-max_w = 105 * (2*pi)/60;   % motor restrictions (max rad/s)
+max_w = 0.235;   % motor restrictions (max rad/s)
 
-f_phys = 1000;              % sim rate
-f_ctrl = 100;               % ctrl rate
+f_phys = 1e4;               % sim rate
+f_ctrl = 1e2;               % ctrl rate
 dt = 1/f_phys;              % time step for sim
 decim = f_phys/f_ctrl;
 
@@ -17,7 +17,7 @@ noise_scales = [0.01;       % X vel process noise
                 0.01;       % Y vel process noise
                 0.05];      % omega process noise
 
-eps_v = 0.01;
+eps_v = 0.1;
 
 %% 2. Setup Grids (M, F, N Control)
 

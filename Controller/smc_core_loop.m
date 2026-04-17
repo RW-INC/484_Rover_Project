@@ -180,7 +180,7 @@ function [mega_max_spatial, mega_max_theta, sum_x, sum_y, sum_x2, sum_y2] = smc_
 
                         v_nom = r_over_2 * (loc_u(1, p) + loc_u(2, p));
                         w_nom = r_over_B * (loc_u(1, p) - loc_u(2, p));
-
+    
                         L_1 = -K_1 * tanh(s_1 * inv_2_epsv) - v_nom * c_th + ref_Xd;
                         L_2 = -K_2 * tanh(s_2 * inv_2_epsv) - v_nom * s_th + ref_Yd;
                         L_3 = -K_3 * tanh(s_3 * inv_2_epsv) - w_nom + ref_Thd;
@@ -199,8 +199,8 @@ function [mega_max_spatial, mega_max_theta, sum_x, sum_y, sum_x2, sum_y2] = smc_
 
                     x1 = loc_x(1, p) + (r_over_2 * (uR + uL) * c_th + ns_1 * loc_noise(1, p)) * dt;
                     x2 = loc_x(2, p) + (r_over_2 * (uR + uL) * s_th + ns_2 * loc_noise(2, p)) * dt;
-
                     x3 = loc_x(3, p) + (r_over_B * (uR - uL) + ns_3 * loc_noise(3, p)) * dt;
+
                     while x3 >= two_pi; x3 = x3 - two_pi; end
                     while x3 < 0;       x3 = x3 + two_pi; end
 
