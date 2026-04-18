@@ -1,5 +1,6 @@
 function dstate = rover_dynamics(state, u, terrain, geom)
     yaw = state(7);
+    pitch = state(8);
     w_r = u(1);  w_l = u(2);
     r = geom.r;  B = geom.B;  L = geom.L;
 
@@ -46,9 +47,9 @@ function dstate = rover_dynamics(state, u, terrain, geom)
            + (pitch_pp - pitch_mp)/(2*eps_p) * dyaw;
 
     % --- accelerations (u constant within step) ---
-    ax = -v * sin(yaw) * dyaw;
+    ax = -v * sin(yaw) * dyaw + v * cos(pitch) * dpitch;
     ay =  v * cos(yaw) * dyaw;
-    az =  a * ax + b * ay;
+    az =  a * ax + b * ay + v * sin(pitch) * dpitch;
 
     % --- pack ---
     dstate = [vx; vy; vz; ax; ay; az; dyaw; dpitch; droll];

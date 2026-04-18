@@ -11,8 +11,8 @@ normaldist_rot = makedist('Normal', 'mu', 0, 'sigma', 0.15 * 2 * pi / 360);
 normaldist_vel = makedist('Normal', 'mu', 0, 'sigma', 0.003);
 normaldist_rho = makedist('Normal', 'mu', 0, 'sigma', 0.01);
 normaldist_rhodot = makedist('Normal', 'mu', 0, 'sigma', 0.001);
-dt = 0.1;
-timesteps = 1:5000;
+dt = 1;
+timesteps = 1:10000;
 rw = 0.085;
 B = 0.2;
 
@@ -104,7 +104,7 @@ plot(timesteps, err)
 
 function [state_hat, P] = translational_ekf(IMU, UWB, orientation_estimate, u, prior_estimate, prior_P)
     %measurement / control unpacking
-    dt = 0.1;
+    dt = 1;
     x_nminus1 = prior_estimate(1);
     y_nminus1 = prior_estimate(2);
     z_nminus1 = prior_estimate(3);
@@ -130,12 +130,11 @@ function [state_hat, P] = translational_ekf(IMU, UWB, orientation_estimate, u, p
     B = 0.2; %base width, m
 
     %process noise matrix
-    W = diag([0.001; 0.001; 0.001; 0.0001; 0.0001; 0.0001; 0.0003; 0.0003]);
+    W = diag([0.001; 0.001; 0.001; 0.0001; 0.0001; 0.0001; 0; 0]);
 
     % MEASUREMENT NOISE TODO
-    R = diag([0.03, 0.03, 0.03, 0.003, 0.003, 0.003, 0.01, 0.001]); 
+    R = diag([0.03, 0.03, 0.03, 0.003, 0.003, 0.003, 0.01, 0.001, 1e-4, 1e-4]); 
     %R = diag(ones(8) * 0.01);
-    
     %predict step
     %state propagation
     planar = sqrt(x_nminus1^2 + y_nminus1^2);
@@ -182,29 +181,41 @@ function [state_hat, P] = translational_ekf(IMU, UWB, orientation_estimate, u, p
     z_dot_n = state_hat_pred(6);
     rho_n = norm(state_hat_pred(1:3));
 
-
     %update step
-    alpha = dot(state_hat_pred(1:3), state_hat_pred(4:6)); 
-    lambda = atan2(y_dot_n, x_dot_n);
-    c2l = cos(lambda)^2;
+    alpha = dot(prior_estimate(1:3), prior_estimate(4:6)); 
+    
+    yaw_angle_dynamics = atan2(y_n, x_n);
+    theta_angle_dynamics = atan2(z_n, sqrt(x_n^2 + y_n^2));
+
+    c2y = cos(yaw_angle_dynamics)^2;
+    c2t = cos(theta_angle_dynamics)^2;
+
     temp = [1, 0, 0, 0, 0, 0, 0, 0; 
             0, 1, 0, 0, 0, 0, 0, 0; 
             0, 0, 1, 0, 0, 0, 0, 0;
             0, 0, 0, 1, 0, 0, 0, 0;
             0, 0, 0, 0, 1, 0, 0, 0;
             0, 0, 0, 0, 0, 1, 0, 0];
+
     H = [temp; 
         x_n / rho_n, y_n / rho_n, z_n / rho_n, zeros(1, 5); 
         (x_dot_n * rho_n - alpha * x_n / rho_n) / rho_n^2, ...
         (y_dot_n * rho_n - alpha * y_n / rho_n) / rho_n^2, ...
         (z_dot_n * rho_n - alpha * z_n / rho_n) / rho_n^2, ...
-        x_n / rho_n, y_n / rho_n, z_n / rho_n, 0, 0]; 
+        x_n / rho_n, y_n / rho_n, z_n / rho_n, 0, 0;
+        -c2y * y_n/(x_n)^2, c2y / x_n, 0, 0, 0, 0, 1, 0; 
+        -0.25 * sin(2 * theta_angle_dynamics) * (x_n * x_dot_n) / (x_n ^ 2 + y_n^2), ...
+        -0.25 * sin(2 * theta_angle_dynamics) * (y_n * y_dot_n) / (x_n^2 + y_n^2), ...
+        -c2t * (1 / sqrt(x_n^2 + y_n ^ 2)), 0, 0, 0, 0, 1
+        ]; 
+
         %0, 0, 0, c2l * -y_dot_n / x_dot_n^2, c2l / x_dot_n, 0];
     K = P_pred * H' * pinv(H * P_pred * H' + R);
     rho_pred = norm(state_hat_pred(1:3));
     alpha_pred = dot(state_hat_pred(1:3), state_hat_pred(4:6));
-    state_hat = state_hat_pred + K * ([IMU; UWB] - [state_hat_pred(1:6); ...
-        rho_pred; alpha_pred / rho_pred]);
-    P = (eye(8) - K * H) * P_pred;
+    
+    state_hat = state_hat_pred + K * ([IMU; UWB; 0; 0] - [state_hat_pred(1:6); ...
+        rho_pred; alpha_pred / rho_pred; 0; 0]);
 
+    P = (eye(8) - K * H) * P_pred;
 end

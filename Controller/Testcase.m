@@ -57,7 +57,7 @@ classdef Testcase < handle
                                      + (d * 0.25) * exp(-dist_sq / (2 * r^2));
             end
             
-            max_slope_deg = 45; 
+            max_slope_deg = 11; 
             dx = obj.patch_size / (obj.N_res - 1);
             [dzdx, dzdy] = gradient(obj.Z_map, dx, dx);
             max_grad = max(sqrt(dzdx(:).^2 + dzdy(:).^2));
@@ -67,38 +67,41 @@ classdef Testcase < handle
             end
         end
         
-        function plot_scenario(obj)
+       function plot_scenario(obj, ax)
+            if nargin < 2
+                figure('Position', [100 100 900 700], 'Color', 'k');
+                ax = gca;
+            end
+        
+            axes(ax);
+            hold on; axis equal;
+        
             margin = obj.patch_size * 0.5;
             xmin = min(obj.traj.X) - margin;
             xmax = max(obj.traj.X) + margin;
             ymin = min(obj.traj.Y) - margin;
             ymax = max(obj.traj.Y) + margin;
-            
+        
             side = max(xmax - xmin, ymax - ymin);
             cx = 0.5 * (xmin + xmax);
             cy = 0.5 * (ymin + ymax);
-            xlim_v = [cx - side/2, cx + side/2];
-            ylim_v = [cy - side/2, cy + side/2];
-            
-            figure('Position', [100 100 900 700], 'Color', 'k'); 
-            hold on; axis equal;
-            xlim(xlim_v);
-            ylim(ylim_v);
-            axis off; 
-            
-            surf(obj.X_map, obj.Y_map, obj.Z_map, ...
+            xlim(ax, [cx - side/2, cx + side/2]);
+            ylim(ax, [cy - side/2, cy + side/2]);
+            axis off;
+        
+            surf(ax, obj.X_map, obj.Y_map, obj.Z_map, ...
                  'FaceAlpha', 0.9, 'EdgeColor', 'none', 'FaceLighting', 'gouraud');
-            plot3(obj.traj.X, obj.traj.Y, obj.Z_traj, 'r-', 'LineWidth', 2.5);
-            
-            plot3(obj.traj.X(1),   obj.traj.Y(1),   obj.Z_traj(1),   'go', ...
+            plot3(ax, obj.traj.X, obj.traj.Y, obj.Z_traj, 'r-', 'LineWidth', 2.5);
+        
+            plot3(ax, obj.traj.X(1),   obj.traj.Y(1),   obj.Z_traj(1),   'go', ...
                   'MarkerSize', 10, 'MarkerFaceColor', 'g');
-            plot3(obj.traj.X(end), obj.traj.Y(end), obj.Z_traj(end), 'ro', ...
+            plot3(ax, obj.traj.X(end), obj.traj.Y(end), obj.Z_traj(end), 'ro', ...
                   'MarkerSize', 10, 'MarkerFaceColor', 'r');
-            
-            colormap(gray(256)); material dull;
-            light('Position', [obj.patch_size, 0, obj.patch_size], 'Style', 'local');
-            view(-35, 45); 
-            title('Centered Trajectory', 'Color', 'w');
+        
+            colormap(ax, gray(256)); material dull;
+            light('Parent', ax, 'Position', [obj.patch_size, 0, obj.patch_size], 'Style', 'local');
+            view(ax, -35, 45);
+            title(ax, 'Centered Trajectory', 'Color', 'w');
         end
     end
 end

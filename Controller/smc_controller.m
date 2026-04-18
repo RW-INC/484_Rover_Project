@@ -67,6 +67,7 @@ for i = 1:n_steps
     while ref_Th < 0,       ref_Th = ref_Th + two_pi; end
 
     ref_Xd = 0; ref_Yd = 0; ref_Thd = 0;
+    
     if update_ctrl
         ref_Xd  = t_Xd(i);
         ref_Yd  = t_Yd(i);
