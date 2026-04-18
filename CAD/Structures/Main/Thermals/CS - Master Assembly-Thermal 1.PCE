@@ -1,0 +1,6 @@
+Job:C:\Users\cadil\OneDrive\Documents\GitHub\484_Rover_Project\CAD\Structures\Main\Thermals\CS - Master Assembly-Thermal 1	at:Fri Apr 17 14:46:34 2026
+
+******PCGLSS Error******
+Status:8
+PCGLSS0085:flushFactFileWriteBuffer:fileWriteBuff tried to IO 25670476 bytes. Actual IO 1464 bytesVersion:8.0:PCGLSS0085:Source File:writereadsf.c:Line:20
+******PCGLSS Error******
