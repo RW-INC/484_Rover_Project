@@ -1,33 +1,28 @@
 function smc_controller()
-% Single-particle trace of the SMC controller for chatter diagnostics.
-% Runs one trajectory, one friction condition, one noise draw — full time
-% history of state and control, then plots.
-
 clear; clc; close all;
 
 %% 1. Physics Parameters (match driver)
-K = [0.1; 0.1; 2.0];
+K = [0.01; 0.01; 0.05]*2;
 
-r = 0.017/2; B = 0.2;
-max_w = 105 * (2*pi)/60;
+r = 0.17/2; B = 0.2;
+max_w = 0.235;
 
-f_phys = 1000;
+f_phys = 1e4;
 f_ctrl = 100;
 dt = 1/f_phys;
 decim = f_phys/f_ctrl;
 
-noise_scales = abs(randn(3,1)) * 0.01;
-eps_v = 0.01;
+noise_scales = [0.01 ; 0.01; 0.05];
+eps_v = 0.05;
 
 disp(eps_v)
 
-% Fault condition (nominal-ish since grid tops at 0.98)
 mu_R = 0.98;
 mu_L = 0.98;
 
 %% 2. Reference Trajectory
-t_knots = 0:15:100;
-Traj = Trajectory(f_phys, t_knots, 0, 0, 0.00, 0.055);
+t_knots = 0:75:250;
+Traj = Trajectory(f_phys, t_knots, 0, 0, 0.00, 0.012);
 n_steps = length(Traj.t_master);
 
 t_X  = Traj.X;       t_Y  = Traj.Y;       t_Th  = Traj.Theta;
@@ -58,14 +53,13 @@ u_state = [0; 0];
 %% 5. History buffers
 x_hist = zeros(3, n_steps);
 u_hist = zeros(2, n_steps);
-s_hist = zeros(3, n_steps);  % sliding variables for chatter diagnostic
-L_hist = zeros(3, n_steps);  % raw control law output (pre-integration)
+s_hist = zeros(3, n_steps);
+L_hist = zeros(3, n_steps);
 
-%% 6. Time loop (direct replication of smc_core_loop inner body)
+%% 6. Time loop
 for i = 1:n_steps
     update_ctrl = (mod(i - 1, decim) == 0);
 
-    % Reference
     ref_X  = t_X(i);
     ref_Y  = t_Y(i);
     ref_Th = t_Th(i);
@@ -82,7 +76,6 @@ for i = 1:n_steps
     c_th = cos(x_state(3));
     s_th = sin(x_state(3));
 
-    % Control update (decimated)
     if update_ctrl
         s_1 = x_state(1) - ref_X;
         s_2 = x_state(2) - ref_Y;
@@ -109,7 +102,6 @@ for i = 1:n_steps
         L_hist(:, i) = L_hist(:, max(i-1, 1));
     end
 
-    % Plant
     noise = randn(3, 1);
     uR = mu_R * u_state(1);
     uL = mu_L * u_state(2);
@@ -129,27 +121,6 @@ end
 %% 7. Plots
 t = Traj.t_master;
 
-figure('Name', 'Control History', 'Position', [100 100 1000 700]);
-
-subplot(3,1,1);
-plot(t, u_hist(1,:), 'r', 'LineWidth', 1); hold on;
-plot(t, u_hist(2,:), 'b', 'LineWidth', 1);
-yline(max_w, 'k--'); yline(-max_w, 'k--');
-grid on; legend('\omega_R', '\omega_L', 'Saturation');
-ylabel('Wheel speed (rad/s)'); title('Control Input');
-
-subplot(3,1,2);
-plot(t, s_hist(1,:), 'r', t, s_hist(2,:), 'b', t, s_hist(3,:), 'g', 'LineWidth', 1);
-grid on; legend('s_1 (X)', 's_2 (Y)', 's_3 (\theta)');
-ylabel('Sliding variable'); title('Sliding Variables');
-
-subplot(3,1,3);
-du1 = diff(u_hist(1,:)) / dt;
-du2 = diff(u_hist(2,:)) / dt;
-plot(t(2:end), du1, 'r', t(2:end), du2, 'b', 'LineWidth', 0.5);
-grid on; legend('d\omega_R/dt', 'd\omega_L/dt');
-xlabel('Time (s)'); ylabel('Rate (rad/s^2)'); title('Control Rate (chatter indicator)');
-
 figure('Name', 'Trajectory', 'Position', [200 200 700 600]);
 plot(t_X, t_Y, 'k--', 'LineWidth', 2); hold on;
 plot(x_hist(1,:), x_hist(2,:), 'b', 'LineWidth', 1.2);
@@ -157,5 +128,37 @@ plot(t_X(1), t_Y(1), 'k^', 'MarkerFaceColor', 'k');
 axis equal; grid on;
 legend('Reference', 'Actual', 'Start');
 xlabel('X (m)'); ylabel('Y (m)'); title('Path');
-end
 
+figure('Name', 'Control History', 'Position', [100 100 1000 900]);
+
+subplot(4,1,1);
+plot(t, u_hist(1,:), 'r', 'LineWidth', 1); hold on;
+plot(t, u_hist(2,:), 'b', 'LineWidth', 1);
+yline(max_w, 'k--'); yline(-max_w, 'k--');
+grid on; legend('\omega_R', '\omega_L', 'Saturation');
+ylabel('Wheel speed (rad/s)'); title('Control Input');
+
+subplot(4,1,2);
+plot(t, s_hist(1,:), 'r', t, s_hist(2,:), 'b', t, s_hist(3,:), 'g', 'LineWidth', 1);
+grid on; legend('s_1 (X)', 's_2 (Y)', 's_3 (\theta)');
+ylabel('Sliding variable'); title('Sliding Variables');
+
+subplot(4,1,3);
+du1 = diff(u_hist(1,:)) / dt;
+du2 = diff(u_hist(2,:)) / dt;
+plot(t(2:end), du1, 'r', t(2:end), du2, 'b', 'LineWidth', 0.5);
+grid on; legend('d\omega_R/dt', 'd\omega_L/dt');
+ylabel('Rate (rad/s^2)'); title('Control Rate (chatter indicator)');
+
+subplot(4,1,4);
+N_fft = 2^nextpow2(n_steps);
+f_axis = (0:N_fft/2-1) * f_phys / N_fft;
+U1_fft = abs(fft(u_hist(1,:), N_fft));
+U2_fft = abs(fft(u_hist(2,:), N_fft));
+plot(f_axis, U1_fft(1:N_fft/2), 'r', f_axis, U2_fft(1:N_fft/2), 'b', 'LineWidth', 1);
+xlim([0 f_ctrl]);
+xline(f_ctrl/2, 'k--', 'Nyquist');
+grid on; legend('|\omega_R(f)|', '|\omega_L(f)|');
+xlabel('Frequency (Hz)'); ylabel('Magnitude'); title('Control Spectrum (chatter diagnostic)');
+
+end

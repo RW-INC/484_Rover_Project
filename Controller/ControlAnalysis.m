@@ -2,13 +2,13 @@ clear; clc; close all;
 
 %% 1. Physics Parameters
 
-K = [0.1; 0.1; 4.0];       % SMC gain
+K = [0.01; 0.01; 0.05]*2;
 
 r = 0.17/2; B = 0.2;      % rover dims
 
 max_w = 0.235;   % motor restrictions (max rad/s)
 
-f_phys = 1e4;               % sim rate
+f_phys = 1e3;               % sim rate
 f_ctrl = 1e2;               % ctrl rate
 dt = 1/f_phys;              % time step for sim
 decim = f_phys/f_ctrl;
@@ -17,7 +17,7 @@ noise_scales = [0.01;       % X vel process noise
                 0.01;       % Y vel process noise
                 0.05];      % omega process noise
 
-eps_v = 0.1;
+eps_v = 0.05;
 
 %% 2. Setup Grids (M, F, N Control)
 
@@ -29,7 +29,7 @@ mu_R_base = MU_R(:)';
 mu_L_base = MU_L(:)';
 
 % --- BATCHING CONTROLS ---
-M = 32;                     % Number of distinct Reference Trajectories
+M = 16;                     % Number of distinct Reference Trajectories
 F = length(mu_R_base);      % Number of Friction Scenarios (Grid size)
 N = 31;                     % Number of Iterations per Trajectory
 W = M * F * N;              % Total batched simulations to run concurrently
@@ -49,8 +49,8 @@ mu_L_mega = repmat(repelem(mu_L_base, 1, N), 1, M);
 % based biases.
 
 % Spline control points
-t_knots = 0:15:100;
-Traj_dummy = Trajectory(f_phys, t_knots, 0, 0, 0.00, 0.055);
+t_knots = 0:75:500;
+Traj_dummy = Trajectory(f_phys, t_knots, 0, 0, 0.00, 0.012);
 n_steps = length(Traj_dummy.t_master);
 
 assert(mod(M,4) == 0, "Chosen # of trajectories must be divisible by 4!")
