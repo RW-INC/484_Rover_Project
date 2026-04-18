@@ -1,0 +1,116 @@
+[
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  smc_core_loop_data.c -o build/win64/smc_core_loop_data.o",
+    "file": "smc_core_loop_data.c",
+    "output": "build/win64/smc_core_loop_data.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  rt_nonfinite.c -o build/win64/rt_nonfinite.o",
+    "file": "rt_nonfinite.c",
+    "output": "build/win64/rt_nonfinite.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  smc_core_loop_initialize.c -o build/win64/smc_core_loop_initialize.o",
+    "file": "smc_core_loop_initialize.c",
+    "output": "build/win64/smc_core_loop_initialize.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  smc_core_loop_terminate.c -o build/win64/smc_core_loop_terminate.o",
+    "file": "smc_core_loop_terminate.c",
+    "output": "build/win64/smc_core_loop_terminate.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  smc_core_loop.c -o build/win64/smc_core_loop.o",
+    "file": "smc_core_loop.c",
+    "output": "build/win64/smc_core_loop.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  tic.c -o build/win64/tic.o",
+    "file": "tic.c",
+    "output": "build/win64/tic.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  randn.c -o build/win64/randn.o",
+    "file": "randn.c",
+    "output": "build/win64/randn.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  eml_randn.c -o build/win64/eml_randn.o",
+    "file": "eml_randn.c",
+    "output": "build/win64/eml_randn.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  eml_rand.c -o build/win64/eml_rand.o",
+    "file": "eml_rand.c",
+    "output": "build/win64/eml_rand.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  eml_rand_mt19937ar_stateful.c -o build/win64/eml_rand_mt19937ar_stateful.o",
+    "file": "eml_rand_mt19937ar_stateful.c",
+    "output": "build/win64/eml_rand_mt19937ar_stateful.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  eml_rand_mt19937ar.c -o build/win64/eml_rand_mt19937ar.o",
+    "file": "eml_rand_mt19937ar.c",
+    "output": "build/win64/eml_rand_mt19937ar.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  toc.c -o build/win64/toc.o",
+    "file": "toc.c",
+    "output": "build/win64/toc.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  eml_rand_mcg16807_stateful.c -o build/win64/eml_rand_mcg16807_stateful.o",
+    "file": "eml_rand_mcg16807_stateful.c",
+    "output": "build/win64/eml_rand_mcg16807_stateful.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  eml_rand_shr3cong_stateful.c -o build/win64/eml_rand_shr3cong_stateful.o",
+    "file": "eml_rand_shr3cong_stateful.c",
+    "output": "build/win64/eml_rand_shr3cong_stateful.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  interface/_coder_smc_core_loop_api.c -o build/win64/_coder_smc_core_loop_api.o",
+    "file": "interface/_coder_smc_core_loop_api.c",
+    "output": "build/win64/_coder_smc_core_loop_api.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  interface/_coder_smc_core_loop_mex.c -o build/win64/_coder_smc_core_loop_mex.o",
+    "file": "interface/_coder_smc_core_loop_mex.c",
+    "output": "build/win64/_coder_smc_core_loop_mex.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  smc_core_loop_emxutil.c -o build/win64/smc_core_loop_emxutil.o",
+    "file": "smc_core_loop_emxutil.c",
+    "output": "build/win64/smc_core_loop_emxutil.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  interface/_coder_smc_core_loop_info.c -o build/win64/_coder_smc_core_loop_info.o",
+    "file": "interface/_coder_smc_core_loop_info.c",
+    "output": "build/win64/_coder_smc_core_loop_info.o"
+  },
+  {
+    "directory": "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop",
+    "command": "C:\\ProgramData\\MATLAB\\SupportPackages\\R2025b\\3P.instrset\\mingw_w64.instrset\\bin\\gcc -c -fexceptions -fno-omit-frame-pointer -m64 -DMATLAB_MEX_FILE  -DMATLAB_MEX_FILE -O2 -fwrapv -DNDEBUG -std=c99 -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\" -I \"C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\codegen\\mex\\smc_core_loop\\interface\" -I \"C:\\Program Files\\MATLAB\\R2025b\\extern\\include\" -I \".\" -DMODEL=smc_core_loop_mex -D__USE_MINGW_ANSI_STDIO=1 -msse2 -fno-predictive-commoning -Wno-stringop-overflow -Wno-maybe-uninitialized -fopenmp  \"C:/Program Files/MATLAB/R2025b/extern/version/c_mexapi_version.c\" -o build/win64/c_mexapi_version.o",
+    "file": "C:/Program Files/MATLAB/R2025b/extern/version/c_mexapi_version.c",
+    "output": "build/win64/c_mexapi_version.o"
+  }
+]

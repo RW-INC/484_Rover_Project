@@ -1,4 +1,4 @@
-close all; clear; clc;
+close all; clear all; clc;
 addpath 'C:\Users\srikr\Desktop\SPARX\Nav\Full State Estimation'
 addpath 'C:\Users\srikr\Desktop\SPARX\Controller'
 
@@ -7,7 +7,7 @@ N_res = 200;
 t_vec = 0:300:2000;       
 
 % === SPEED KNOB ===
-speed_factor = 100;
+speed_factor = 150;
 dt = 0.01;
 target_fps = 60;
 ctrl_freq = 100;
@@ -31,19 +31,21 @@ curr_state = [lander_pos; 0; 0; 0; my_test.traj.Theta(1); 0; 0];
 curr_state(7) = mod(curr_state(7), 2*pi);
 
 scale = 0.8;
-sun_scale = 6;
+sun_scale = 12;
 
 % =============================================
 % STATE ESTIMATION INITIALIZATION
 % =============================================
 % --- Sensor noise parameters ---
-sigma_accel  = 0.03;             % m/s^2
-sigma_gyro   = 0.15 * 2*pi/360;  % rad/s
-sigma_pos    = 0.03;             % m (IMU integrated position noise)
-sigma_vel    = 0.003;            % m/s
-sigma_rho    = 0.01;             % m (UWB range)
-sigma_rhodot = 0.001;            % m/s (UWB range rate)
-sigma_point  = 0.01;             % rad/s (Sun Sensor Attitude Noise)
+sigma_accel  = 0.03;               % m/s^2
+sigma_gyro   = 0.15 * pi/180 / 60; % rad/sqrt(s)
+sigma_pos    = 0.03;               % m (IMU integrated position noise)
+sigma_vel    = 0.003;              % m/s
+sigma_rho    = 0.01;               % m (UWB range)
+sigma_rhodot = 0.001;              % m/s (UWB range rate)
+sigma_point  = 0.01;               % rad/s (Sun Sensor Attitude Noise)
+
+bias_rate_gyro = (0.5 * pi/180) / 3600;
 
 % --- Rotational MEKF state ---
 yaw0 = curr_state(7);
@@ -133,6 +135,7 @@ yline(ax_err, 0, 'g--', 'LineWidth', 0.5);
 ylabel(ax_err, 'Error', 'Color', 'g');
 xlabel(ax_err, 'Time (s)', 'Color', 'g');
 title(ax_err, 'TRACKING ERROR', 'Color', 'g', 'FontName', 'Courier');
+legend(ax_err, {'Position Error', 'Velocity Error', 'Yaw Error'}, 'TextColor', 'g', 'Color', 'k', 'EdgeColor', 'g');
 
 % =============================================
 % FIGURE 3: LIVE FULL 9-DOF STATE EST (Bottom Right Quarter)
@@ -207,7 +210,7 @@ while ~boundary_hit
         a_imu = R_true' * (a_true - g_lunar) + randn(3,1) * sigma_accel;
 
         w_true = dstate(7:9);
-        w_imu = w_true + randn(3,1) * sigma_gyro;
+        w_imu = w_true + bias_rate_gyro * dt + randn(3,1) * sigma_gyro;
 
         pos_rel = curr_state(1:3) - lander_pos;
         vel_true = curr_state(4:6);
@@ -242,8 +245,9 @@ while ~boundary_hit
         w_imu_mod = w_imu - [0; 0; 0.085 * (u(1) - u(2)) / 0.2];
 
         [mekf_state, mekf_P] = rotational_mekf_fixed(...
-            q_triad_obj, w_imu_mod, mekf_state, mekf_P, u, dt);
-
+            q_triad_obj, w_imu_mod, mekf_state, mekf_P, u, dt, ...
+            sigma_gyro);
+    
         q_est_arr = mekf_state(1:4);
         q_est_obj = quaternion(q_est_arr(1), q_est_arr(2), q_est_arr(3), q_est_arr(4));
         R_est = rotmat(q_est_obj, 'frame');
@@ -278,8 +282,8 @@ while ~boundary_hit
         hist_est_pos(:, end+1)  = pos_est;
         hist_true_vel(:, end+1) = curr_state(4:6);
         hist_est_vel(:, end+1)  = vel_est;
-        hist_true_att(:, end+1) = [yaw_true; pitch_true; roll_true];
-        hist_est_att(:, end+1)  = [yaw_est; pitch_est; roll_est];
+        hist_true_att(:, end+1) = mod([yaw_true; pitch_true; roll_true] + pi, 2 * pi) - pi;
+        hist_est_att(:, end+1)  = mod([yaw_est; pitch_est; roll_est] + pi, 2 * pi) - pi; 
 
         % =============================================
         % 7. CONTROLLER 
@@ -349,8 +353,8 @@ while ~boundary_hit
         xlim(ax_handles(row, 2), [win_start, win_end]);
 
         % Attitude (Col 3) - Unwrap to prevent +/- pi jumps ruining the scale
-        set(h_true(row, 3), 'XData', t_buf, 'YData', unwrap(att_true_buf(row, :)));
-        set(h_est(row, 3),  'XData', t_buf, 'YData', unwrap(att_est_buf(row, :)));
+        set(h_true(row, 3), 'XData', t_buf, 'YData', (att_true_buf(row, :)));
+        set(h_est(row, 3),  'XData', t_buf, 'YData', (att_est_buf(row, :)));
         xlim(ax_handles(row, 3), [win_start, win_end]);
     end
 

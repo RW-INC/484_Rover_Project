@@ -1,80 +1,65 @@
 clear; clc; close all;
 
-%% 1. Physics Parameters
+%% 1. Physics Parameters (Reconciled with Main Sim)
+K = [0.02; 0.02; 0.1];
+r = 0.17/2; B = 0.2;        % rover dims
+max_w = 0.235;              % motor restrictions (max rad/s)
+f_phys = 1e2;               % CHANGED: Sim rate now 100 Hz to match dt = 0.01
+f_ctrl = 1e2;               % ctrl rate (100 Hz)
+dt = 1/f_phys;              % time step for sim (0.01)
+decim = f_phys/f_ctrl;      % Now 1, meaning controller runs every physics step
 
-K = [0.01; 0.01; 0.05]*2;
-
-r = 0.17/2; B = 0.2;      % rover dims
-
-max_w = 0.235;   % motor restrictions (max rad/s)
-
-f_phys = 1e3;               % sim rate
-f_ctrl = 1e2;               % ctrl rate
-dt = 1/f_phys;              % time step for sim
-decim = f_phys/f_ctrl;
-
-noise_scales = [0.01;       % X vel process noise
-                0.01;       % Y vel process noise
-                0.05];      % omega process noise
-
+% Lowered to better approximate the smoothed EKF output from the live sim
+noise_scales = [0.03;      % X vel process noise 
+                0.03;      % Y vel process noise
+                0.01];      % omega process noise 
 eps_v = 0.05;
 
 %% 2. Setup Grids (M, F, N Control)
-
-range_R = 0.6:0.02:1.0;    % mu_r range (now includes nominal 1.0)
-range_L = 0.6:0.02:1.0;    % mu_l range (now includes nominal 1.0)
+range_R = 0.6:0.04:1.0;    % mu_r range (now includes nominal 1.0)
+range_L = 0.6:0.04:1.0;    % mu_l range (now includes nominal 1.0)
 [MU_R, MU_L] = meshgrid(range_R, range_L);
 
 mu_R_base = MU_R(:)';
 mu_L_base = MU_L(:)';
 
 % --- BATCHING CONTROLS ---
-M = 16;                     % Number of distinct Reference Trajectories
+M = 4;                      % Number of distinct Reference Trajectories
 F = length(mu_R_base);      % Number of Friction Scenarios (Grid size)
 N = 31;                     % Number of Iterations per Trajectory
 W = M * F * N;              % Total batched simulations to run concurrently
 
-% Make the entire thing 2D. we repeat the same iteration N times, in a row,
-% and then repeat each set 64 times to repeat the same test case for each
-% trajectory.
 mu_R_mega = repmat(repelem(mu_R_base, 1, N), 1, M);
 mu_L_mega = repmat(repelem(mu_L_base, 1, N), 1, M);
+
 %% 3. Generate Reference Trajectories (quarter + 4-way mirror)
+% Reconciled to use the exact Testcase bounds from the live simulation
+patch_size = 10;        
+N_res = 200;            
+t_knots = 0:300:2000; % CHANGED: Match the 2000s mission timeline
 
-% Major issue existed where trajectories are generated biasing a certain
-% direction, so when the rover moves, the slipping wheel in that direction
-% ends up pulling the rover off course more than if the slipping wheel was
-% facing the opposite direction. This biases the plots, so we mirror the
-% trajectory in all 4 directions to account for clockwise/counter-clockwise
-% based biases.
-
-% Spline control points
-t_knots = 0:75:500;
-Traj_dummy = Trajectory(f_phys, t_knots, 0, 0, 0.00, 0.012);
+% Generate a dummy trajectory using Testcase to guarantee matching lengths
+dummy_test = Testcase(patch_size, N_res, f_phys, t_knots, 0, 0.01);
+Traj_dummy = dummy_test.traj;
 n_steps = length(Traj_dummy.t_master);
 
 assert(mod(M,4) == 0, "Chosen # of trajectories must be divisible by 4!")
 M_qtr = M / 4;  
 
-% This is our desired state and state derivative that we stack as an M x
-% n_steps array. Note: n_steps is basically the number of steps our physics
-% is going to to step forward in time. 
-t_X_all  = zeros(M, n_steps); 
-t_Y_all  = zeros(M, n_steps); 
+t_X_all   = zeros(M, n_steps); 
+t_Y_all   = zeros(M, n_steps); 
 t_Th_all  = zeros(M, n_steps);
-
-t_Xd_all = zeros(M, n_steps); 
-t_Yd_all = zeros(M, n_steps); 
+t_Xd_all  = zeros(M, n_steps); 
+t_Yd_all  = zeros(M, n_steps); 
 t_Thd_all = zeros(M, n_steps);
-
 Traj_List = cell(M, 1);
 
 fprintf('Generating %d Trajectories (%d unique)...\n', M, M_qtr);
 
 for m = 1:M_qtr
-    % Generate the trajectory and save it, but also save the reflections
-    % next to each other
-    Traj = Trajectory(f_phys, t_knots, 0, 0, 0.00, 0.055);
+    % Generate the trajectory using the exact Testcase wrapper from the main sim
+    my_test = Testcase(patch_size, N_res, f_phys, t_knots, 0, 0.01);
+    Traj = my_test.traj;
     Traj_List{m} = Traj;
     
     % 1. Original:  (X,  Y,  theta, Xd,  Yd,  theta_d)
@@ -85,7 +70,7 @@ for m = 1:M_qtr
     t_Xd_all(m,:) = Traj.X_dot;   
     t_Yd_all(m,:) = Traj.Y_dot;
     t_Thd_all(m,:)= Traj.Theta_dot;
-
+    
     % 2. Reflect across Y:  (X, -Y, -theta,      Xd, -Yd, -theta_d)
     j = M_qtr + m;
     t_X_all(j,:)  =  Traj.X;       
@@ -95,7 +80,7 @@ for m = 1:M_qtr
     t_Xd_all(j,:) =  Traj.X_dot;   
     t_Yd_all(j,:) = -Traj.Y_dot;
     t_Thd_all(j,:)= -Traj.Theta_dot;
-
+    
     % 3. Reflect across X:  (-X,  Y,  π-theta,  -Xd,  Yd, -theta_d)
     j = 2*M_qtr + m;
     t_X_all(j,:)  = -Traj.X;       
@@ -105,7 +90,7 @@ for m = 1:M_qtr
     t_Xd_all(j,:) = -Traj.X_dot;   
     t_Yd_all(j,:) =  Traj.Y_dot;
     t_Thd_all(j,:)= -Traj.Theta_dot;
-
+    
     % 4. Reflect XY: (-X, -Y,  θ+theta,  -Xd, -Yd,  theta_d)
     j = 3*M_qtr + m;
     t_X_all(j,:)  = -Traj.X;       
@@ -179,11 +164,12 @@ clear spat_3D th_3D mega_max_spatial mega_max_theta;
 % --- Envelopes: extract best-case first then free the big arrays ---
 % sum_x is (M, F, n_steps), so lets get that idx 
 % (corresponds to best mu_r, mu_l)
-sx  = squeeze(sum_x(:, F, :));    % (M, n_steps)
-sy  = squeeze(sum_y(:, F, :));
-sx2 = squeeze(sum_x2(:, F, :));
-sy2 = squeeze(sum_y2(:, F, :));
+sx  = squeeze(sum_x(:, floor(F/4), :));    % (M, n_steps)
+sy  = squeeze(sum_y(:, floor(F/4), :));
+sx2 = squeeze(sum_x2(:, floor(F/4), :));
+sy2 = squeeze(sum_y2(:, floor(F/4), :));
 
+mu = mu_R_base(floor(F/4));
 % Throw away literally everything else
 clear sum_x sum_y sum_x2 sum_y2;
 
@@ -267,7 +253,7 @@ end
 % Start position
 plot(t_X_all(idx, 1), t_Y_all(idx, 1), 'k^', 'MarkerSize', 8, 'MarkerFaceColor', 'k', ...
      'DisplayName', 'Start');
-title(sprintf('SMC Tracking (Testcase %d, Nominal \\mu=1.0)', idx), ...
+title(sprintf('SMC Tracking (Testcase %d, \\mu=%.2f)', idx, mu), ...
       'FontSize', 14, 'FontWeight', 'bold');
 
 xlabel('X Position (m)'); ylabel('Y Position (m)');

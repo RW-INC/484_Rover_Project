@@ -34,7 +34,7 @@ classdef Trajectory
                 dt_k = t_k(i) - t_k(i-1);
                 v = MIN_V + (MAX_V - MIN_V) * rand();
                 r = v * dt_k;
-                ang = (3 * pi / 2) * rand();
+                ang = (1.2 * pi) * rand();
                 x_p(i) = x_p(i-1) + r * cos(ang);
                 y_p(i) = y_p(i-1) + r * sin(ang);
             end
