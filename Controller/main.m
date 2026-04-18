@@ -6,7 +6,7 @@ patch_size = 10;
 N_res = 200;            
 t_vec = 0:300:2000;       
 
-% === SPEED KNOB ===
+% === SPEED KNOBS ===
 speed_factor = 150;
 dt = 0.01;
 target_fps = 60;
