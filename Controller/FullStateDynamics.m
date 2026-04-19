@@ -7,6 +7,8 @@ function dstate = rover_dynamics(state, u, terrain, geom)
     % set mur, mul dependent on the dynamics
     mu_r = 0.75 + (0.23) * exp(-w_r);
     mu_l = 0.75 + (0.23) * exp(-w_l);
+    % mu_r = 1.0;
+    % mu_l = 1.0;
 
     % --- diff-drive kinematics ---
     v    = (r/2) * (mu_r * w_r + mu_l * w_l);

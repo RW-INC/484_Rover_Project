@@ -16,8 +16,18 @@ function [state, P] = rotational_mekf_fixed(q_est_triad, w_gyro, prior_state, pr
     rw = 0.085;
     B = 0.2;
 
+    % convert q_est_triad into euler frame 
+    euler = quat2eul(q_est_triad, "XYZ");
+    yaw = euler(3);
+    pitch = euler(2);
+    roll = euler(1);
+    R = [cos(yaw) -sin(yaw) 0; sin(yaw) cos(yaw) 0; 0 0 1] * ...
+                 [cos(pitch) 0 sin(pitch); 0 1 0; -sin(pitch) 0 cos(pitch)] * ...
+                 [1 0 0; 0 cos(roll) -sin(roll); 0 sin(roll) cos(roll)];
+    
+
     % --- Predict: quaternion propagation ---
-    w_corrected = w_gyro - prior_b + [0; 0; rw * (u(1) - u(2)) / B];
+    w_corrected = w_gyro - prior_b + R' * [0; 0; rw * (u(1) - u(2)) / B];
     q_dot = 0.5 * quatmultiply(prior_q, quaternion(0, w_corrected(1), w_corrected(2), w_corrected(3)));
     q_pred = prior_q + q_dot * dt;
     q_pred = q_pred / (norm(q_pred) + 1e-12);
@@ -29,7 +39,7 @@ function [state, P] = rotational_mekf_fixed(q_est_triad, w_gyro, prior_state, pr
            -w_corrected(2), w_corrected(1), 0];
     F = [-w_x, -eye(3); zeros(3), zeros(3)];
 
-    Q_theta = (sigma_gyro)^2 * dt * eye(3);
+    Q_theta = (4e-4)^2 * dt * eye(3);
     Q_b = (6.5e-5)^2 * dt * eye(3); % 0.04 mg on the moon? 
     P = prior_P + (F * prior_P + prior_P * F' + blkdiag(Q_theta, Q_b)) * dt;
 
@@ -39,7 +49,7 @@ function [state, P] = rotational_mekf_fixed(q_est_triad, w_gyro, prior_state, pr
     dtheta = 2 * [ey; ec; ed];
 
     H = [eye(3), zeros(3)];
-    R = 8.7e-3 * eye(3);
+    R = 8.7e-4 * eye(3);
     S = H * P * H' + R;
     K = P * H' * pinv(S);
     dx = K * dtheta;

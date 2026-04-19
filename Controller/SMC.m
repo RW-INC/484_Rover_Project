@@ -5,8 +5,8 @@ function u = SMC(x, xd, u, geom, max_w)
 %   u   = [wR; wL]               previous wheel speeds (modified in-place)
 %   geom.r, geom.B               wheel radius, track width
 %   max_w                         wheel speed saturation (rad/s)
-    K = [0.02; 0.02; 0.1];
-    eps_v = 2;
+    K = [0.02; 0.02; 0.2];
+    eps_v = 5.0;
 
     r = geom.r;
     B = geom.B;

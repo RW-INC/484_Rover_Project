@@ -7,7 +7,7 @@ N_res = 200;
 t_vec = 0:300:2000;       
 
 % === SPEED KNOBS ===
-speed_factor = 150;
+speed_factor = 100;
 dt = 0.01;
 target_fps = 60;
 ctrl_freq = 100;
@@ -41,11 +41,11 @@ sigma_accel  = 0.03;               % m/s^2
 sigma_gyro   = 0.15 * pi/180 / 60; % rad/sqrt(s)
 sigma_pos    = 0.03;               % m (IMU integrated position noise)
 sigma_vel    = 0.003;              % m/s
-sigma_rho    = 0.01;               % m (UWB range)
+sigma_rho    = 0.01;               % m 
 sigma_rhodot = 0.001;              % m/s (UWB range rate)
 sigma_point  = 0.01;               % rad/s (Sun Sensor Attitude Noise)
 
-bias_rate_gyro = (0.5 * pi/180) / 3600;
+bias_rate_gyro = 0.5 * pi/180 / 60;
 
 % --- Rotational MEKF state ---
 yaw0 = curr_state(7);
@@ -260,7 +260,7 @@ while ~boundary_hit
         yaw_est = mod(yaw_est, 2*pi);
         pitch_est = mod(pitch_est + pi, 2*pi) - pi;
         roll_est = mod(roll_est, 2*pi);
-
+        
 
         % =============================================
         % 5. TRANSLATIONAL EKF
@@ -274,19 +274,16 @@ while ~boundary_hit
         pos_est = trans_state(1:3) + lander_pos;
         vel_est = trans_state(4:6);
 
+        if any(isnan(yaw_est)) || ... 
+            any(isnan(pitch_est)) || ...
+            any(isnan(roll_est)) || ...
+            any(isnan(pos_est)) || ...
+            any(isnan(vel_est))
+            beep;
+            pause;
+        end
         % =============================================
-        % 6. RECORD FULL STATE FOR DIAGNOSTICS
-        % =============================================
-        hist_time(end+1)        = mission_time;
-        hist_true_pos(:, end+1) = curr_state(1:3);
-        hist_est_pos(:, end+1)  = pos_est;
-        hist_true_vel(:, end+1) = curr_state(4:6);
-        hist_est_vel(:, end+1)  = vel_est;
-        hist_true_att(:, end+1) = mod([yaw_true; pitch_true; roll_true] + pi, 2 * pi) - pi;
-        hist_est_att(:, end+1)  = mod([yaw_est; pitch_est; roll_est] + pi, 2 * pi) - pi; 
-
-        % =============================================
-        % 7. CONTROLLER 
+        % 6. CONTROLLER 
         % =============================================
         xd = [my_test.traj.X(i), my_test.traj.Y(i), my_test.traj.Theta(i), ...
               my_test.traj.X_dot(i), my_test.traj.Y_dot(i), my_test.traj.Theta_dot(i)]';
@@ -398,58 +395,3 @@ while ~boundary_hit
 end
 
 fprintf('Sim complete: %.1f s mission time, %d steps\n', mission_time, i);
-
-% =============================================
-% POST-SIM DIAGNOSTIC: FULL STATE HISTORY
-% =============================================
-fig_diag = figure('Name', 'Diagnostic: True vs Estimated State History', ...
-                  'Position', [150 150 1200 800], 'Color', 'w');
-
-% --- Positions (X, Y, Z) ---
-subplot(3,3,1); hold on; grid on;
-plot(hist_time, hist_true_pos(1,:), 'b-', 'LineWidth', 1.5);
-plot(hist_time, hist_est_pos(1,:), 'r--', 'LineWidth', 1.5);
-title('Position X'); ylabel('m');
-legend('Truth', 'Estimate', 'Location', 'best');
-
-subplot(3,3,4); hold on; grid on;
-plot(hist_time, hist_true_pos(2,:), 'b-', 'LineWidth', 1.5);
-plot(hist_time, hist_est_pos(2,:), 'r--', 'LineWidth', 1.5);
-title('Position Y'); ylabel('m');
-
-subplot(3,3,7); hold on; grid on;
-plot(hist_time, hist_true_pos(3,:), 'b-', 'LineWidth', 1.5);
-plot(hist_time, hist_est_pos(3,:), 'r--', 'LineWidth', 1.5);
-title('Position Z'); ylabel('m'); xlabel('Time (s)');
-
-% --- Velocities (Vx, Vy, Vz) ---
-subplot(3,3,2); hold on; grid on;
-plot(hist_time, hist_true_vel(1,:), 'b-', 'LineWidth', 1.5);
-plot(hist_time, hist_est_vel(1,:), 'r--', 'LineWidth', 1.5);
-title('Velocity X'); ylabel('m/s');
-
-subplot(3,3,5); hold on; grid on;
-plot(hist_time, hist_true_vel(2,:), 'b-', 'LineWidth', 1.5);
-plot(hist_time, hist_est_vel(2,:), 'r--', 'LineWidth', 1.5);
-title('Velocity Y'); ylabel('m/s');
-
-subplot(3,3,8); hold on; grid on;
-plot(hist_time, hist_true_vel(3,:), 'b-', 'LineWidth', 1.5);
-plot(hist_time, hist_est_vel(3,:), 'r--', 'LineWidth', 1.5);
-title('Velocity Z'); ylabel('m/s'); xlabel('Time (s)');
-
-% --- Attitude (Yaw, Pitch, Roll) ---
-subplot(3,3,3); hold on; grid on;
-plot(hist_time, unwrap(hist_true_att(1,:)), 'b-', 'LineWidth', 1.5);
-plot(hist_time, unwrap(hist_est_att(1,:)), 'r--', 'LineWidth', 1.5);
-title('Heading (Yaw)'); ylabel('rad'); 
-
-subplot(3,3,6); hold on; grid on;
-plot(hist_time, unwrap(hist_true_att(2,:)), 'b-', 'LineWidth', 1.5);
-plot(hist_time, unwrap(hist_est_att(2,:)), 'r--', 'LineWidth', 1.5);
-title('Pitch'); ylabel('rad'); 
-
-subplot(3,3,9); hold on; grid on;
-plot(hist_time, unwrap(hist_true_att(3,:)), 'b-', 'LineWidth', 1.5);
-plot(hist_time, unwrap(hist_est_att(3,:)), 'r--', 'LineWidth', 1.5);
-title('Roll'); ylabel('rad'); xlabel('Time (s)');

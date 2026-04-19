@@ -23,15 +23,15 @@ classdef Testcase < handle
         end
         
         function generate_terrain(obj)
-            wobble_amp  = obj.patch_size * 0.015;
-            terrain_amp = obj.patch_size * 0.003;
+            wobble_amp  = obj.patch_size * 0.15;
+            terrain_amp = obj.patch_size * 0.03;
             num_craters = 80;
             
             vec = linspace(0, obj.patch_size, obj.N_res);
             [obj.X_map, obj.Y_map] = meshgrid(vec, vec);
             obj.Z_map = zeros(obj.N_res, obj.N_res);
             
-            wobble_nodes = 8;
+            wobble_nodes = 4;
             node_vec = linspace(0, obj.patch_size, wobble_nodes);
             [node_X, node_Y] = meshgrid(node_vec, node_vec);
             raw_wobble = randn(wobble_nodes, wobble_nodes);
@@ -57,7 +57,7 @@ classdef Testcase < handle
                                      + (d * 0.25) * exp(-dist_sq / (2 * r^2));
             end
             
-            max_slope_deg = 11; 
+            max_slope_deg = 50; 
             dx = obj.patch_size / (obj.N_res - 1);
             [dzdx, dzdy] = gradient(obj.Z_map, dx, dx);
             max_grad = max(sqrt(dzdx(:).^2 + dzdy(:).^2));
