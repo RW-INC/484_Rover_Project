@@ -7,11 +7,12 @@ N_res = 200;
 t_vec = 0:300:2000;       
 
 % === SPEED KNOBS ===
-speed_factor = 100;
-dt = 0.01;
+speed_factor = 10;
+dt = 0.001;
 target_fps = 60;
-ctrl_freq = 100;
-ctrl_decim = round(1 / (dt * ctrl_freq));
+
+estimation_freq = 100;
+ctrl_freq = 20;
 sim_freq = 1 / dt;
 steps_per_frame = max(1, round(speed_factor / (dt * target_fps)));
 % ===================
@@ -24,7 +25,7 @@ geom.L = 0.25;
 
 mission_time = 0;   
 u = [0; 0; 0; 0]; 
-max_w = 0.235;
+max_w = 0.935;
 
 lander_pos = [my_test.traj.X(1); my_test.traj.Y(1); my_test.Z_traj(1)];
 curr_state = [lander_pos; 0; 0; 0; my_test.traj.Theta(1); 0; 0];
@@ -36,28 +37,24 @@ sun_scale = 12;
 % =============================================
 % STATE ESTIMATION INITIALIZATION
 % =============================================
-% --- Sensor noise parameters ---
-sigma_accel  = 0.03;               % m/s^2
-sigma_gyro   = 0.15 * pi/180 / 60; % rad/sqrt(s)
-sigma_pos    = 0.03;               % m (IMU integrated position noise)
-sigma_vel    = 0.003;              % m/s
-sigma_rho    = 0.01;               % m 
-sigma_rhodot = 0.001;              % m/s (UWB range rate)
-sigma_point  = 0.01;               % rad/s (Sun Sensor Attitude Noise)
+sigma_accel  = 0.03;
+sigma_gyro   = 0.15 * pi/180 / 60;
+sigma_pos    = 0.03;
+sigma_vel    = 0.003;
+sigma_rho    = 0.01;
+sigma_rhodot = 0.001;
+sigma_point  = 0.01;
 
 bias_rate_gyro = 0.5 * pi/180 / 60;
 
-% --- Rotational MEKF state ---
 yaw0 = curr_state(7);
 q0 = [cos(yaw0/2), 0, 0, sin(yaw0/2)];  
 mekf_state = [q0, 0, 0, 0];              
 mekf_P = blkdiag(eye(3)*0.01, eye(3)*0.001);
 
-% --- Translational EKF state ---
 trans_state = [lander_pos; 0; 0; 0];
 trans_P = diag([0.1, 0.1, 0.1, 0.01, 0.01, 0.01]);
 
-% --- Attitude estimate (DCM) ---
 R_est = eye(3);
 
 % =============================================
@@ -66,29 +63,40 @@ R_est = eye(3);
 ekg_len = 500;
 t_buf  = nan(1, ekg_len);
 
-% Controls EKG buffers
 wR_buf = nan(1, ekg_len);
 wL_buf = nan(1, ekg_len);
 s1_buf = nan(1, ekg_len);
 s2_buf = nan(1, ekg_len);
 s3_buf = nan(1, ekg_len);
 
-% Matrix Buffers for 9-DOF State EKG
+% Actual slip (from model: 0.75 + 0.23*exp(-|w|))
+mu_r_act_buf = nan(1, ekg_len);
+mu_l_act_buf = nan(1, ekg_len);
+% Estimated slip (from kinematics: 1 - r*w/v)
+mu_r_est_buf = nan(1, ekg_len);
+mu_l_est_buf = nan(1, ekg_len);
+
 pos_true_buf = nan(3, ekg_len); pos_est_buf = nan(3, ekg_len);
 vel_true_buf = nan(3, ekg_len); vel_est_buf = nan(3, ekg_len);
 att_true_buf = nan(3, ekg_len); att_est_buf = nan(3, ekg_len);
 
-% Full Post-Sim History Buffers
 hist_time     = [];
 hist_true_pos = []; hist_est_pos  = [];
 hist_true_vel = []; hist_est_vel  = [];
 hist_true_att = []; hist_est_att  = [];
+
+% Hold values between controller updates
+mu_r_act_hold = NaN;
+mu_l_act_hold = NaN;
+mu_r_est_hold = NaN;
+mu_l_est_hold = NaN;
+
 % =============================================
 % GET SCREEN SIZE FOR FULLSCREEN SPLIT LAYOUT
 % =============================================
 scrsz = get(0, 'ScreenSize');
-SW = scrsz(3); % Monitor Width
-SH = scrsz(4); % Monitor Height
+SW = scrsz(3);
+SH = scrsz(4);
 
 % =============================================
 % FIGURE 1: 3D ENVIRONMENT (Left Half of Screen)
@@ -113,7 +121,7 @@ h_attitude = quiver3(curr_state(1), curr_state(2), curr_state(3),0,0,0, 'w', 'Li
 % =============================================
 fig_ctrl = figure('Name', 'Controller Inputs', 'Position', [SW/2 + 1, SH/2 + 1, SW/2, SH/2], 'Color', 'k');
 
-ax_ekg = subplot(2, 1, 1); % Changed from (2,1,2) so they stack cleanly
+ax_ekg = subplot(3, 1, 1);
 set(ax_ekg, 'Color', 'k', 'XColor', 'g', 'YColor', 'g', 'GridColor', [0.1 0.4 0.1]);
 hold on; grid on;
 hWR = plot(ax_ekg, t_buf, wR_buf, 'r', 'LineWidth', 1.5);
@@ -125,7 +133,7 @@ title(ax_ekg, 'WHEEL SPEED', 'Color', 'g', 'FontName', 'Courier');
 legend(ax_ekg, {'\omega_R', '\omega_L'}, 'TextColor', 'g', 'Color', 'k', 'EdgeColor', 'g');
 ylim(ax_ekg, [-max_w*1.3, max_w*1.3]);
 
-ax_err = subplot(2, 1, 2); % Changed from (2,2,2) so they stack cleanly
+ax_err = subplot(3, 1, 2);
 set(ax_err, 'Color', 'k', 'XColor', 'g', 'YColor', 'g', 'GridColor', [0.1 0.4 0.1]);
 hold on; grid on;
 hS1 = plot(ax_err, t_buf, s1_buf, 'r', 'LineWidth', 1.5);
@@ -133,9 +141,22 @@ hS2 = plot(ax_err, t_buf, s2_buf, 'c', 'LineWidth', 1.5);
 hS3 = plot(ax_err, t_buf, s3_buf, 'm', 'LineWidth', 1.5);
 yline(ax_err, 0, 'g--', 'LineWidth', 0.5);
 ylabel(ax_err, 'Error', 'Color', 'g');
-xlabel(ax_err, 'Time (s)', 'Color', 'g');
 title(ax_err, 'TRACKING ERROR', 'Color', 'g', 'FontName', 'Courier');
 legend(ax_err, {'Position Error', 'Velocity Error', 'Yaw Error'}, 'TextColor', 'g', 'Color', 'k', 'EdgeColor', 'g');
+
+ax_mu = subplot(3, 1, 3);
+set(ax_mu, 'Color', 'k', 'XColor', 'g', 'YColor', 'g', 'GridColor', [0.1 0.4 0.1]);
+hold on; grid on;
+hMuRact = plot(ax_mu, t_buf, mu_r_act_buf, 'r-',  'LineWidth', 1.5);
+hMuRest = plot(ax_mu, t_buf, mu_r_est_buf, 'r--', 'LineWidth', 1.5);
+hMuLact = plot(ax_mu, t_buf, mu_l_act_buf, 'c-',  'LineWidth', 1.5);
+hMuLest = plot(ax_mu, t_buf, mu_l_est_buf, 'c--', 'LineWidth', 1.5);
+ylabel(ax_mu, '\mu', 'Color', 'g');
+xlabel(ax_mu, 'Time (s)', 'Color', 'g');
+title(ax_mu, 'SLIP RATIO', 'Color', 'g', 'FontName', 'Courier');
+legend(ax_mu, {'\mu_R', '\mu_{R,est}', '\mu_L', '\mu_{L,est}'}, ...
+    'TextColor', 'g', 'Color', 'k', 'EdgeColor', 'g');
+ylim(ax_mu, [0, 1.1]);
 
 % =============================================
 % FIGURE 3: LIVE FULL 9-DOF STATE EST (Bottom Right Quarter)
@@ -228,68 +249,92 @@ while ~boundary_hit
         % =============================================
         % 4. ATTITUDE ESTIMATION (TRIAD + MEKF)
         % =============================================
-        noisy_angles = randn(3,1) * sigma_point;
-        % suppose small angles for noise, simplifies rotmat to
-        % skewsymmetric
-        noisy_quaternion = quaternion(noisy_angles', 'rotvec');
-        
-        g_body = -a_imu / norm(a_imu);
-        R_r_sun_est = R_true' * s_dir;
-        R_r_sun_est = rotatepoint(noisy_quaternion, R_r_sun_est' / norm(R_r_sun_est))';
-        R_r_sun_est = R_r_sun_est/norm(R_r_sun_est);
+        mekf_P_saved = [];
+        trans_P_saved = [];
 
-        L_r_sun = s_dir / norm(s_dir);
-        R_triad = TRIAD(L_r_sun, R_r_sun_est, g_body);
-        q_triad_obj = quaternion(R_triad, 'rotmat', 'frame');
-
-        w_imu_mod = w_imu - [0; 0; 0.085 * (u(1) - u(2)) / 0.2];
-
-        [mekf_state, mekf_P] = rotational_mekf_fixed(...
-            q_triad_obj, w_imu_mod, mekf_state, mekf_P, u, dt, ...
-            sigma_gyro);
+        if mod(i-1, sim_freq/estimation_freq) == 0
+            noisy_angles = randn(3,1) * sigma_point;
+            noisy_quaternion = quaternion(noisy_angles', 'rotvec');
+            
+            g_body = -a_imu / norm(a_imu);
+            R_r_sun_est = R_true' * s_dir;
+            R_r_sun_est = rotatepoint(noisy_quaternion, R_r_sun_est' / norm(R_r_sun_est))';
+            R_r_sun_est = R_r_sun_est/norm(R_r_sun_est);
     
-        q_est_arr = mekf_state(1:4);
-        q_est_obj = quaternion(q_est_arr(1), q_est_arr(2), q_est_arr(3), q_est_arr(4));
-        R_est = rotmat(q_est_obj, 'frame');
+            L_r_sun = s_dir / norm(s_dir);
+            R_triad = TRIAD(L_r_sun, R_r_sun_est, g_body);
+            q_triad_obj = quaternion(R_triad, 'rotmat', 'frame');
+    
+            w_imu_mod = w_imu - [0; 0; 0.085 * (u(1) - u(2)) / 0.2];
+    
+            [mekf_state, mekf_P] = rotational_mekf_fixed(...
+                q_triad_obj, w_imu_mod, mekf_state, mekf_P, u, dt, ...
+                sigma_gyro);
         
-        % Extract Euler Angles (ZYX Sequence)
-        yaw_est   = atan2(R_est(2,1), R_est(1,1));
-        pitch_est = asin(-R_est(3,1));
-        roll_est  = atan2(R_est(3,2), R_est(3,3));
-        
-        yaw_est = mod(yaw_est, 2*pi);
-        pitch_est = mod(pitch_est + pi, 2*pi) - pi;
-        roll_est = mod(roll_est, 2*pi);
-        
+            q_est_arr = mekf_state(1:4);
+            q_est_obj = quaternion(q_est_arr(1), q_est_arr(2), q_est_arr(3), q_est_arr(4));
+            R_est = rotmat(q_est_obj, 'frame');
+            
+            yaw_est   = atan2(R_est(2,1), R_est(1,1));
+            pitch_est = asin(-R_est(3,1));
+            roll_est  = atan2(R_est(3,2), R_est(3,3));
+            
+            yaw_est = mod(yaw_est, 2*pi);
+            pitch_est = mod(pitch_est + pi, 2*pi) - pi;
+            roll_est = mod(roll_est, 2*pi);
 
         % =============================================
         % 5. TRANSLATIONAL EKF
         % =============================================
-        imu_pos_rel = imu_pos - lander_pos;
+            imu_pos_rel = imu_pos - lander_pos;
+    
+            [trans_state, trans_P] = translational_ekf_fixed(...
+                [imu_pos_rel; imu_vel], [uwb_rho; uwb_rhodot], ...
+                [roll_est;pitch_est;yaw_est], u, trans_state, trans_P, mekf_P, dt);
+    
+            pos_est = trans_state(1:3) + lander_pos;
+            vel_est = trans_state(4:6);
+    
+            if any(isnan(yaw_est)) || ... 
+                any(isnan(pitch_est)) || ...
+                any(isnan(roll_est)) || ...
+                any(isnan(pos_est)) || ...
+                any(isnan(vel_est))
+                beep;
+                pause;
+            end
 
-        [trans_state, trans_P] = translational_ekf_fixed(...
-            [imu_pos_rel; imu_vel], [uwb_rho; uwb_rhodot], ...
-            [roll_est;pitch_est;yaw_est], u, trans_state, trans_P,mekf_P, dt);
-
-        pos_est = trans_state(1:3) + lander_pos;
-        vel_est = trans_state(4:6);
-
-        if any(isnan(yaw_est)) || ... 
-            any(isnan(pitch_est)) || ...
-            any(isnan(roll_est)) || ...
-            any(isnan(pos_est)) || ...
-            any(isnan(vel_est))
-            beep;
-            pause;
+            mekf_P_saved = mekf_P;
+            trans_P_saved = trans_P;
         end
+
         % =============================================
         % 6. CONTROLLER 
         % =============================================
         xd = [my_test.traj.X(i), my_test.traj.Y(i), my_test.traj.Theta(i), ...
               my_test.traj.X_dot(i), my_test.traj.Y_dot(i), my_test.traj.Theta_dot(i)]';
 
-        if mod(i - 1, ctrl_decim) == 0
-            u = SMC([pos_est(1); pos_est(2); yaw_est], xd, u, geom, max_w);
+        if mod(i - 1, sim_freq/ctrl_freq) == 0
+            q = diag(mekf_P_saved(1:3,1:3));
+            q = quaternion([sqrt(1 - sum(q.^2)) ; q]');
+            eulers = quat2eul(q,'XYZ');
+            state_P = diag([trans_P_saved(1,1); trans_P_saved(2,2); eulers(3)^2]);
+            
+            v = norm(vel_est) + 1e-6;
+            mu_r = abs(geom.r * u(1)/(v*cos(yaw_est)));
+            mu_l = abs(geom.r * u(2)/(v*cos(yaw_est)));
+            mu_est = [mu_r; mu_l]
+
+            % Actual slip model
+            mu_r_act_hold = 0.75 + 0.23 * exp(-abs(u(1)));
+            mu_l_act_hold = 0.75 + 0.23 * exp(-abs(u(2)));
+            % Estimated slip
+            mu_r_est_hold = mu_r;
+            mu_l_est_hold = mu_l;
+
+            u = SMC([pos_est(1); pos_est(2); yaw_est], xd, u, geom, max_w, state_P, mu_est);
+        else
+            u(3:4) = [0;0];
         end
 
         % --- Boundary check ---
@@ -314,13 +359,16 @@ while ~boundary_hit
     s2_buf = [s2_buf(2:end), s2];
     s3_buf = [s3_buf(2:end), s3];
 
-    % Update matrix buffers for 9-DOF
+    mu_r_act_buf = [mu_r_act_buf(2:end), mu_r_act_hold];
+    mu_l_act_buf = [mu_l_act_buf(2:end), mu_l_act_hold];
+    mu_r_est_buf = [mu_r_est_buf(2:end), mu_r_est_hold];
+    mu_l_est_buf = [mu_l_est_buf(2:end), mu_l_est_hold];
+
+    % Update 9-DOF estimation buffers
     pos_true_buf = [pos_true_buf(:, 2:end), curr_state(1:3)];
     pos_est_buf  = [pos_est_buf(:, 2:end),  pos_est];
-    
     vel_true_buf = [vel_true_buf(:, 2:end), curr_state(4:6)];
     vel_est_buf  = [vel_est_buf(:, 2:end),  vel_est];
-    
     att_true_buf = [att_true_buf(:, 2:end), [yaw_true; pitch_true; roll_true]];
     att_est_buf  = [att_est_buf(:, 2:end),  [yaw_est; pitch_est; roll_est]];
 
@@ -337,19 +385,22 @@ while ~boundary_hit
     set(hS3, 'XData', t_buf, 'YData', s3_buf);
     xlim(ax_err, [win_start, win_end]);
 
+    set(hMuRact, 'XData', t_buf, 'YData', mu_r_act_buf);
+    set(hMuRest, 'XData', t_buf, 'YData', mu_r_est_buf);
+    set(hMuLact, 'XData', t_buf, 'YData', mu_l_act_buf);
+    set(hMuLest, 'XData', t_buf, 'YData', mu_l_est_buf);
+    xlim(ax_mu, [win_start, win_end]);
+
     % Draw 9-DOF Live Estimation EKG
     for row = 1:3
-        % Position (Col 1)
         set(h_true(row, 1), 'XData', t_buf, 'YData', pos_true_buf(row, :));
         set(h_est(row, 1),  'XData', t_buf, 'YData', pos_est_buf(row, :));
         xlim(ax_handles(row, 1), [win_start, win_end]);
         
-        % Velocity (Col 2)
         set(h_true(row, 2), 'XData', t_buf, 'YData', vel_true_buf(row, :));
         set(h_est(row, 2),  'XData', t_buf, 'YData', vel_est_buf(row, :));
         xlim(ax_handles(row, 2), [win_start, win_end]);
 
-        % Attitude (Col 3) - Unwrap to prevent +/- pi jumps ruining the scale
         set(h_true(row, 3), 'XData', t_buf, 'YData', (att_true_buf(row, :)));
         set(h_est(row, 3),  'XData', t_buf, 'YData', (att_est_buf(row, :)));
         xlim(ax_handles(row, 3), [win_start, win_end]);

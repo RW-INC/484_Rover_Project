@@ -1,4 +1,4 @@
-function u = SMC(x, xd, u, geom, max_w)
+function u = SMC(x, xd, u, geom, max_w, state_P, mu_est)
 % SMC  Sliding-mode controller for differential-drive rover.
 %   x   = [x; y; theta]          current state
 %   xd  = [x; y; theta; xd; yd; thd]  reference state + velocities
@@ -6,17 +6,16 @@ function u = SMC(x, xd, u, geom, max_w)
 %   geom.r, geom.B               wheel radius, track width
 %   max_w                         wheel speed saturation (rad/s)
     K = [0.02; 0.02; 0.2];
-    eps_v = 5.0;
+    eps_v = 17 * sqrt(diag(state_P)) / (mu_est(1) + mu_est(2));
 
-    r = geom.r;
-    B = geom.B;
-    inv_r    = 1 / r;
-    r_over_2 = r / 2;
-    r_over_B = r / B;
-    half_B   = B / 2;
+    r = geom.r; B = geom.B;
+    inv_r    = 1 / r; r_over_2 = r / 2;
+    r_over_B = r / B; half_B   = B / 2;
 
     K_1 = K(1); K_2 = K(2); K_3 = K(3);
-    inv_2_epsv = 1 / (2 * eps_v);
+    inv_2_epsv = 1 ./ (2 * eps_v);
+
+    inv_2_epsv_1 = inv_2_epsv(1); inv_2_epsv_2 = inv_2_epsv(2); inv_2_epsv_3 = inv_2_epsv(3); 
 
     c_th = cos(x(3));
     s_th = sin(x(3));
@@ -32,9 +31,9 @@ function u = SMC(x, xd, u, geom, max_w)
     w_nom = r_over_B * (u(1) - u(2));
 
     % Reaching law
-    L_1 = -K_1 * tanh(s_1 * inv_2_epsv) - v_nom * c_th + xd(4);
-    L_2 = -K_2 * tanh(s_2 * inv_2_epsv) - v_nom * s_th + xd(5);
-    L_3 = -K_3 * tanh(s_3 * inv_2_epsv) - w_nom       + xd(6);
+    L_1 = -K_1 * tanh(s_1 * inv_2_epsv_1) - v_nom * c_th + xd(4);
+    L_2 = -K_2 * tanh(s_2 * inv_2_epsv_2) - v_nom * s_th + xd(5);
+    L_3 = -K_3 * tanh(s_3 * inv_2_epsv_3) - w_nom       + xd(6);
 
     % Project onto body frame and compute wheel increments
     L_proj = L_1 * c_th + L_2 * s_th;
