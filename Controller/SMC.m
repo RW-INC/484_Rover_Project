@@ -6,7 +6,7 @@ function u = SMC(x, xd, u, geom, max_w, state_P, mu_est)
 %   geom.r, geom.B               wheel radius, track width
 %   max_w                         wheel speed saturation (rad/s)
     K = [0.02; 0.02; 0.2];
-    eps_v = 17 * sqrt(diag(state_P)) / (mu_est(1) + mu_est(2));
+    eps_v = 5 * ones(3);
 
     r = geom.r; B = geom.B;
     inv_r    = 1 / r; r_over_2 = r / 2;
