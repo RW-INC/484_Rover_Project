@@ -1,0 +1,8 @@
+[StartTime]
+Assembly-Thermal 1.MFC=
+[SolverState]
+Assembly-Thermal 1.MFC=2
+[ShowMin]
+Assembly-Thermal 1.MFC=yes
+[StudyType]
+Assembly-Thermal 1.MFC=-1
