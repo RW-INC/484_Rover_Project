@@ -19,7 +19,16 @@
 
     </scene>
 
-    <!-- 3. The Sun: Harsh, high-intensity light with no scattering -->
+    <!-- 1. Handles the math/physics for your controller -->
+    <plugin filename="libgz-sim-physics-system.so" name="gz::sim::systems::Physics" />
+    
+    <!-- 2. Sends visual data to the GUI so you can see markers -->
+    <plugin filename="libgz-sim-scene-broadcaster-system.so" name="gz::sim::systems::SceneBroadcaster" />
+    
+    <!-- 3. Required for processing user and marker commands -->
+    <plugin filename="libgz-sim-user-commands-system.so" name="gz::sim::systems::UserCommands" />
+
+    <!-- sun unsure if this is working tbh -->
     <light name="sun" type="directional">
       <cast_shadows>true</cast_shadows>
       <pose>0 0 500 0 0 0</pose>
@@ -31,16 +40,16 @@
     </light>
 
     <!-- Terrain Model -->
-    <model name="south_pole_terrain">
+    <model name="lunar_terrain">
       <static>true</static>
       <!-- X Y Z Roll Pitch Yaw -->
-      <pose>0 0 8 1.5708 0 0</pose> <!-- change z here to move the terrain up and down -->
+      <pose>0 0 0 1.5708 0 0</pose> <!-- change z here to move the terrain up and down -->
       <link name="terrain_link">
         <collision name="collision">
           <geometry>
             <mesh>
-              <uri>model://src/rover_sim/world/meshes/30m_scale.obj</uri>
-              <scale>10 10 10</scale>
+              <uri>model://src/rover_sim/world/meshes/6221_forced_scale.obj</uri>
+              <scale>1 1 1</scale>
             </mesh>
           </geometry>
           <surface>
@@ -59,8 +68,8 @@
         <visual name="visual">
           <geometry>
             <mesh>
-              <uri>model://src/rover_sim/world/meshes/30m_scale.obj</uri>
-              <scale>10 10 10</scale>
+              <uri>model://src/rover_sim/world/meshes/6221_forced_scale.obj</uri>
+              <scale>1 1 1</scale>
             </mesh>
           </geometry>
           <material>

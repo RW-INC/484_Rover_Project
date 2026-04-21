@@ -17,6 +17,12 @@
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/30m_path.obj
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/30m_scale.mtl
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/30m_scale.obj
+/home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/6211_path.mtl
+/home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/6211_path.obj
+/home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/6221_forced_scale.mtl
+/home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/6221_forced_scale.obj
+/home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/6221_forced_square.mtl
+/home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/6221_forced_square.obj
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/README.md
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/south_pole.mtl
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/world/meshes/south_pole.obj
@@ -25,6 +31,8 @@
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/scripts/30m/cropped_DEM_file_30m.tiff
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/scripts/30m/cropped_path_pixels_30m.csv
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/scripts/30m/planned_path_nodes_meters_30.0.csv
+/home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/scripts/6211m/6221m_path.tiff
+/home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/scripts/6211m/path_6221_PIXELS.csv
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/rover_sim/scripts/path_follower.py
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/ament_index/resource_index/package_run_dependencies/rover_sim
 /home/pearluva/Documents/484_Rover_Project/simulation_ws/install/rover_sim/share/ament_index/resource_index/parent_prefix_path/rover_sim

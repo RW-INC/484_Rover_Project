@@ -48,14 +48,16 @@ def generate_launch_description():
             '-file', sdf_file,
 
             # get x and y converted from the path planner and tiff file size 
-            #'-x', '-15.0', # X = (start_x - tiff_width/2)*10
-            #'-y', '10.0', # Y = (tiff_height - start_y)*10
+            '-x', '80.5', # X = (start_x - tiff_width/2) *10 if not scaled
+            '-y', '-404.5', # Y = (tiff_height/2 - start_y) *10 if not scaled 
+            #'-y', '809.0',
+            '-z', '-3.8' # depends on the obj file tbh
 
             # to spawn at origin
-            '-x', '0.0',
-            '-y', '0.0', 
-
-            '-z', '-454.7' # add some height if the rover spawns inside the terrain
+            #'-x', '0.0',
+            #'-y', '0.0', 
+            #'-z', '-131.4'
+            #'-z', '-454.7' # add some height if the rover spawns inside the terrain
         ],
         output='screen'
     )

@@ -66,15 +66,15 @@ class PathFollower(Node):
         super().__init__('path_follower')
 
         # configuration 
-        self.pixel_scale = 10.0         # 10m per pixel scale
-        self.img_center_x = 101.5       # change in accordance to tiff size
-        self.img_center_y = 101.0       # change in accordance to tiff size
-        self.waypoint_threshold = 2.0   # if within 2 meters of a waypoint validate completion 
+        self.pixel_scale = 1.0         # 10m per pixel scale
+        self.img_center_x = 860.0       # change in accordance to tiff size
+        self.img_center_y = 585.5       # change in accordance to tiff size
+        self.waypoint_threshold = 5.0   # if within 2 meters of a waypoint validate completion 
 
         # load path from csv
         # add new paths in folders with labeled path length
         package_share = get_package_share_directory('rover_sim')
-        csv_path = os.path.join(package_share, 'scripts', '30m', 'cropped_path_pixels_30m.csv')
+        csv_path = os.path.join(package_share, 'scripts', '6211m', 'path_6221_PIXELS.csv')
         self.waypoints = self.load_path_from_csv(csv_path)
         self.get_logger().info(f"Loaded {len(self.waypoints)} waypoints.")
 
