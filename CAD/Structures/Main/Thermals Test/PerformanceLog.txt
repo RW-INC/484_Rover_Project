@@ -1,0 +1,2 @@
+Number of Contacts: 1073
+Number of contact data: 253522
