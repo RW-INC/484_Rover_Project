@@ -4,6 +4,7 @@ project(SPARX_Windows)
 # Use C++17 for better performance/syntax
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+
 set(LIBTORCH_CPU_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/libtorch_cpu/libtorch")
 
 # 1. Find all your source (.cpp) files
