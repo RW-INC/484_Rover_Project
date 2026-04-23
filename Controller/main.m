@@ -1,16 +1,17 @@
 close all; clear all; clc;
-addpath 'C:\Users\srikr\Desktop\SPARX\Nav\Full State Estimation'
-addpath 'C:\Users\srikr\Desktop\SPARX\Controller'
+addpath '..\Nav\Full State Estimation'
+addpath '..\Controller'
+
 patch_size = 10;        
-N_res = 200;            
-t_vec = 0:300:2000;       
+N_res = 100;            
+t_vec = 0:15:100;       
 
 % === SPEED KNOBS ===
-speed_factor = 10;
-dt = 0.001;
-target_fps = 60;
-estimation_freq = 100;
-ctrl_freq = 20;
+speed_factor = 100;
+dt = 1e-3;
+target_fps = 120;
+estimation_freq = 500;
+ctrl_freq = 100;
 sim_freq = 1 / dt;
 steps_per_frame = max(1, round(speed_factor / (dt * target_fps)));
 % ===================
@@ -21,7 +22,7 @@ geom.B = 0.2;
 geom.L = 0.25;
 mission_time = 0;   
 u = [0; 0; 0; 0]; 
-max_w = 0.235;
+max_w = 0.935;
 lander_pos = [my_test.traj.X(1); my_test.traj.Y(1); my_test.Z_traj(1)];
 curr_state = [
     lander_pos(1);          % 1. X
@@ -53,7 +54,7 @@ bias_rate_gyro = 0.5 * pi/180 / 60;
 yaw0 = curr_state(9);
 q0 = [cos(yaw0/2), 0, 0, sin(yaw0/2)];  
 mekf_state = [q0, 0, 0, 0];              
-mekf_P = blkdiag(eye(3)*0.01, eye(3)*0.001);
+mekf_P = blkdiag(eye(3), eye(3)*0.01);
 trans_state = [lander_pos; 0; 0; 0];
 trans_P = diag([0.1, 0.1, 0.1, 0.01, 0.01, 0.01]);
 R_est = eye(3);
@@ -299,9 +300,21 @@ while ~boundary_hit
                 any(isnan(roll_est)) || ...
                 any(isnan(pos_est)) || ...
                 any(isnan(vel_est))
+                % print literally everything
+                vel_est
+                pos_est
+                trans_state
+                trans_P
+                imu_pos_rel
+                roll_est
+                pitch_est
+                yaw_est
+                R_est
+                q_triad_obj
                 beep;
                 pause;
             end
+
             % Slip estimation
             V_body_true = R_est' * vel_est;
             V_long_true = V_body_true(1);
@@ -309,22 +322,22 @@ while ~boundary_hit
             % r_true is exactly w_body_true(3) from your sensor block
             r_true_val = w_imu(3) - mekf_state(7); 
             
-            V_long_r_true = V_long_true + (geom.B/2) * r_true_val;
-            V_long_l_true = V_long_true - (geom.B/2) * r_true_val;
+            V_long_r_true = V_long_true - (geom.B/2) * r_true_val;
+            V_long_l_true = V_long_true + (geom.B/2) * r_true_val;
             
             % Guard against divide-by-zero during SMC chatter
-            mu_r_truth = abs(V_long_r_true / (geom.r * u(1)));
-            mu_l_truth = abs(V_long_l_true / (geom.r * u(2)));
-            mu_est = [mu_r_truth; mu_l_truth]
+            mu_r_truth = abs(V_long_r_true / (geom.r * u(1) + 1e-6));
+            mu_l_truth = abs(V_long_l_true / (geom.r * u(2) + 1e-6));
+            mu_est = [mu_r_truth; mu_l_truth];
             
             % estimated slip model
-            mu_r_est_hold = mu_est(1)
-            mu_l_est_hold = mu_est(2)
+            mu_r_est_hold = mu_est(1);
+            mu_l_est_hold = mu_est(2);
 
             % Actual slip model
-            mu_r_act_hold = 0.7323
-            mu_l_act_hold = 0.8923
-             
+            mu_r_act_hold = 1.0;
+            mu_l_act_hold = 1.0;
+
             err = [
                 (mu_r_act_hold - mu_r_est_hold)/mu_r_act_hold ; 
                 (mu_l_act_hold - mu_l_est_hold)/mu_l_act_hold
@@ -351,8 +364,9 @@ while ~boundary_hit
             u(3:4) = [0;0];
         end
         % --- Boundary check ---
-        if any(curr_state(1:2) > patch_size) || any(curr_state(1:2) < 0)
+        if norm(curr_state(1:2)) > patch_size
             boundary_hit = true;
+            fprintf("Boundary hit detected!")
             break;
         end
     end

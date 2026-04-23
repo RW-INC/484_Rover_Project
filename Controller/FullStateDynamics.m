@@ -1,4 +1,4 @@
-function dstate = rover_dynamics(state, u, terrain, geom, dt, ctrl_freq)
+function dstate = FullStateDynamics(state, u, terrain, geom, dt, ~)
     yaw = state(9);
     pitch = state(8);
     w_r = u(1);  w_l = u(2);
@@ -6,17 +6,17 @@ function dstate = rover_dynamics(state, u, terrain, geom, dt, ctrl_freq)
     r = geom.r;  B = geom.B;  L = geom.L;
     
     % set mur, mul dependent on the dynamics
-    mu_r = 0.7323;
-    mu_l = 0.8923;
+    % mu_r = 0.8 + 0.2 * exp(-abs(w_r));
+    % mu_l = 0.8 + 0.2 * exp(-abs(w_l));
 
-    % mu_r = 1.0;
-    % mu_l = 1.0;
+    mu_r = 1.0;
+    mu_l = 1.0;
     % --- diff-drive kinematics ---
     v    = (r/2) * (mu_r * w_r + mu_l * w_l);
     % Velocities
     vx = v * cos(yaw) * cos(pitch);
     vy = v * sin(yaw) * cos(pitch);
-    vz = -v * sin(pitch);
+    vz = v * sin(pitch);
     
     % Accelerations
     dv = (r/2) * (mu_r * dw_r + mu_l * dw_l)/(dt);
@@ -45,7 +45,7 @@ function dstate = rover_dynamics(state, u, terrain, geom, dt, ctrl_freq)
     % --- accelerations (u constant within step) ---
     ax = cos(yaw)*cos(pitch)*dv - v*cos(pitch)*sin(yaw)*dyaw - v*cos(yaw)*sin(pitch)*dpitch;
     ay = sin(yaw)*cos(pitch)*dv + v*cos(pitch)*cos(yaw)*dyaw - v*sin(yaw)*sin(pitch)*dpitch;
-    az = -sin(pitch)*dv - v*cos(pitch)*dpitch;
+    az = sin(pitch)*dv + v*cos(pitch)*dpitch;
     % --- pack ---
     dstate = [vx; vy; vz; ax; ay; az; droll; dpitch; dyaw];
     % --- nested attitude helper ---

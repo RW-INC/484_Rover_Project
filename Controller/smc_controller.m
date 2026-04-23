@@ -29,12 +29,6 @@ t_X  = Traj.X;       t_Y  = Traj.Y;       t_Th  = Traj.Theta;
 t_Xd = Traj.X_dot;   t_Yd = Traj.Y_dot;   t_Thd = Traj.Theta_dot;
 
 %% 3. Precomputed constants
-inv_r    = 1 / r;
-r_over_2 = r / 2;
-r_over_B = r / B;
-half_B   = B / 2;
-two_pi   = 2 * pi;
-
 K_1 = K(1); K_2 = K(2); K_3 = K(3);
 inv_2_epsv = 1 / (2 * eps_v);
 
@@ -44,8 +38,8 @@ ns_3 = noise_scales(3)^2;
 
 %% 4. Initial state
 th0 = t_Th(1);
-while th0 >= two_pi, th0 = th0 - two_pi; end
-while th0 < 0,       th0 = th0 + two_pi; end
+while th0 >= 2*pi, th0 = th0 - 2*pi; end
+while th0 < 0,       th0 = th0 + 2*pi; end
 
 x_state = [t_X(1); t_Y(1); th0];
 u_state = [0; 0];
@@ -63,8 +57,8 @@ for i = 1:n_steps
     ref_X  = t_X(i);
     ref_Y  = t_Y(i);
     ref_Th = t_Th(i);
-    while ref_Th >= two_pi, ref_Th = ref_Th - two_pi; end
-    while ref_Th < 0,       ref_Th = ref_Th + two_pi; end
+    while ref_Th >= 2*pi, ref_Th = ref_Th - 2*pi; end
+    while ref_Th < 0,       ref_Th = ref_Th + 2*pi; end
 
     ref_Xd = 0; ref_Yd = 0; ref_Thd = 0;
     
@@ -81,11 +75,11 @@ for i = 1:n_steps
         s_1 = x_state(1) - ref_X;
         s_2 = x_state(2) - ref_Y;
         s_3 = x_state(3) - ref_Th;
-        while s_3 > pi,  s_3 = s_3 - two_pi; end
-        while s_3 < -pi, s_3 = s_3 + two_pi; end
+        while s_3 > pi,  s_3 = s_3 - 2*pi; end
+        while s_3 < -pi, s_3 = s_3 + 2*pi; end
 
-        v_nom = r_over_2 * (u_state(1) + u_state(2));
-        w_nom = r_over_B * (u_state(1) - u_state(2));
+        v_nom = r/2 * (u_state(1) + u_state(2));
+        w_nom = r/B * (u_state(1) - u_state(2));
 
         L_1 = -K_1 * tanh(s_1 * inv_2_epsv) - v_nom * c_th + ref_Xd;
         L_2 = -K_2 * tanh(s_2 * inv_2_epsv) - v_nom * s_th + ref_Yd;
@@ -93,8 +87,8 @@ for i = 1:n_steps
 
         L_proj = L_1 * c_th + L_2 * s_th;
 
-        u_state(1) = max(min(u_state(1) + (L_proj + L_3 * half_B) * inv_r, max_w), -max_w);
-        u_state(2) = max(min(u_state(2) + (L_proj - L_3 * half_B) * inv_r, max_w), -max_w);
+        u_state(1) = max(min(u_state(1) + (L_proj + L_3 * B/2) * 1/r, max_w), -max_w);
+        u_state(2) = max(min(u_state(2) + (L_proj - L_3 * B/2) * 1/r, max_w), -max_w);
 
         s_hist(:, i) = [s_1; s_2; s_3];
         L_hist(:, i) = [L_1; L_2; L_3];
@@ -107,11 +101,11 @@ for i = 1:n_steps
     uR = mu_R * u_state(1);
     uL = mu_L * u_state(2);
 
-    x1 = x_state(1) + (r_over_2 * (uR + uL) * c_th + ns_1 * noise(1)) * dt;
-    x2 = x_state(2) + (r_over_2 * (uR + uL) * s_th + ns_2 * noise(2)) * dt;
-    x3 = x_state(3) + (r_over_B * (uR - uL) + ns_3 * noise(3)) * dt;
-    while x3 >= two_pi, x3 = x3 - two_pi; end
-    while x3 < 0,       x3 = x3 + two_pi; end
+    x1 = x_state(1) + (r/2 * (uR + uL) * c_th + ns_1 * noise(1)) * dt;
+    x2 = x_state(2) + (r/2 * (uR + uL) * s_th + ns_2 * noise(2)) * dt;
+    x3 = x_state(3) + (r/B * (uR - uL) + ns_3 * noise(3)) * dt;
+    while x3 >= 2*pi, x3 = x3 - 2*pi; end
+    while x3 < 0,       x3 = x3 + 2*pi; end
 
     x_state = [x1; x2; x3];
 

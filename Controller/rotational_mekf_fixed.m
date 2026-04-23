@@ -26,6 +26,7 @@ function [state, P] = rotational_mekf_fixed(q_est_triad, w_gyro, prior_state, pr
     w_x = [0, -w_corrected(3), w_corrected(2); 
            w_corrected(3), 0, -w_corrected(1); 
            -w_corrected(2), w_corrected(1), 0];
+    
     F = [-w_x, -eye(3); zeros(3), zeros(3)];
 
     Q_theta = (4e-4)^2 * dt * eye(3);
