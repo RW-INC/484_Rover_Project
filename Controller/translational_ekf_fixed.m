@@ -1,21 +1,21 @@
 function [state_hat, P] = translational_ekf_fixed(IMU, UWB, orientation_estimate, u, prior_estimate, prior_P, rot_P, dt)
     %measurement / control unpacking
-
+    rw = 0.17/2; % wheel radius, m
+    
     wr = u(1);
     wl = u(2);
     dwr = u(3);
     dwl = u(4);
-    v = wr + wl;
-    dv = dwr + dwl;
+    
+    % Correct Diff-Drive Kinematics
+    v = (rw/2) * (wr + wl);
+    dv = (rw/2) * (dwr + dwl);
     dv = dv / dt;
     
     eul = orientation_estimate;
     %roll = orientation_estimate(1);
     pitch = eul(2);
     yaw = eul(3);
-
-    rw = 0.17/2; %wheel radius, m
-    % B = 0.2; %base width, m
 
     %process noise matrix
     W = diag([0.001; 0.001; 0.001; 0.0001; 0.0001; 0.0001]);
@@ -31,7 +31,7 @@ function [state_hat, P] = translational_ekf_fixed(IMU, UWB, orientation_estimate
                     sin(pitch) * v; 
                     cos(yaw) * dv; 
                     sin(yaw) * dv; 
-                    sin(pitch) * dv] * rw / 2;
+                    sin(pitch) * dv];
 
     
     %rw * [cos(yaw) * (wr + wl) / 2; sin(yaw) * (wr + wl) / 2; (wr - wl) / B];
