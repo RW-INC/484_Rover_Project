@@ -1,2 +1,2 @@
-Number of Contacts: 1073
-Number of contact data: 253522
+Number of Contacts: 1083
+Number of contact data: 243498
