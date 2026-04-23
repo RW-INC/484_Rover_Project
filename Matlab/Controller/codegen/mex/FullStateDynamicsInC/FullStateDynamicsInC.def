@@ -1,0 +1,9 @@
+LIBRARY FullStateDynamicsInC.mexw64
+EXPORTS
+mexFunction
+mexfilerequiredapiversion
+emlrtMexFcnProperties
+FullStateDynamicsInC
+FullStateDynamicsInC_initialize
+FullStateDynamicsInC_terminate
+FullStateDynamicsInC_atexit
