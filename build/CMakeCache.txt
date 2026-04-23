@@ -209,6 +209,9 @@ SPARX_Windows_SOURCE_DIR:STATIC=C:/Users/srikr/Desktop/SPARX
 //Path to a library.
 TORCH_CPU_LIBRARY:FILEPATH=TORCH_CPU_LIBRARY-NOTFOUND
 
+//The directory containing a CMake configuration file for Torch.
+Torch_DIR:PATH=Torch_DIR-NOTFOUND
+
 
 ########################
 # INTERNAL cache entries
