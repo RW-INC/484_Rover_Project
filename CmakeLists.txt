@@ -4,6 +4,7 @@ project(SPARX_Windows)
 # Use C++17 for better performance/syntax
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(LIBTORCH_CPU_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/libtorch_cpu/libtorch")
 
 # 1. Find all your source (.cpp) files
 # Now it actually grabs the C++ files from your Planning folder!
@@ -30,4 +31,21 @@ target_include_directories(sparx_node PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Utils
     ${CMAKE_CURRENT_SOURCE_DIR}/eigen
     ${CMAKE_CURRENT_SOURCE_DIR}/spline
+    ${LIBTORCH_CPU_ROOT}/include
+    ${LIBTORCH_CPU_ROOT}/include/torch/csrc/api/include
 )
+
+find_library(TORCH_CPU_LIBRARY
+    NAMES torch_cpu libtorch_cpu
+    PATHS
+        ${LIBTORCH_CPU_ROOT}/lib
+        ${LIBTORCH_CPU_ROOT}/bin
+        ${CMAKE_CURRENT_SOURCE_DIR}/libtorch_cpu
+    NO_DEFAULT_PATH
+)
+
+if(TORCH_CPU_LIBRARY)
+    target_link_libraries(sparx_node PRIVATE ${TORCH_CPU_LIBRARY})
+else()
+    message(WARNING "libtorch_cpu requested, but no torch_cpu/libtorch_cpu library was found under ${LIBTORCH_CPU_ROOT}.")
+endif()

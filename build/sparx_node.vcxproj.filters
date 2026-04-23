@@ -24,6 +24,9 @@
     <ClInclude Include="C:\Users\srikr\Desktop\SPARX\Planning\lightpq.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="C:\Users\srikr\Desktop\SPARX\Planning\simulation.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="C:\Users\srikr\Desktop\SPARX\Utils\plotter.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

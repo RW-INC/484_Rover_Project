@@ -7,9 +7,9 @@
 #include "../eigen/Eigen/Dense"
 
 // #define M_PI 3.14159265358979323846
-#define MAX_VEL 0.02  // cm/s
-#define MIN_VEL 0.014 //cm/s
-#define EPS 1e-9 
+#define MAX_VEL 0.02f  // cm/s
+#define MIN_VEL 0.014f //cm/s
+#define EPS 1e-9f 
 // #define roundto(x,n) std::round(x * std::pow(10,n))/std::pow(10,n) // rounds x to n decimal places
 
 struct imu {

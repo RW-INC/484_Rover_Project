@@ -206,6 +206,9 @@ SPARX_Windows_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 SPARX_Windows_SOURCE_DIR:STATIC=C:/Users/srikr/Desktop/SPARX
 
+//Path to a library.
+TORCH_CPU_LIBRARY:FILEPATH=TORCH_CPU_LIBRARY-NOTFOUND
+
 
 ########################
 # INTERNAL cache entries
