@@ -1,43 +1,40 @@
 cmake_minimum_required(VERSION 3.15)
 project(SPARX_Windows)
 
-# Use C++17 for better performance/syntax
+set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# 1. Point CMake to the exact root of your unzipped LibTorch folder
-set(Torch_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libtorch_cpu/libtorch/share/cmake/Torch")
-
-# 2. Find Torch (this handles all the nasty protobuf/dependency linking)
+set(Torch_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libtorch/share/cmake/Torch")
 find_package(Torch REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
-# 3. Find your source and header files
-file(GLOB_RECURSE SOURCES 
-    "Watchdog/*.cpp" 
+file(GLOB_RECURSE SOURCES
+    "Watchdog/*.cpp"
     "Planning/*.cpp"
+    "Nav/*.cpp"
+    "Comms/*.cpp"
+    "Utils/*.cpp"
 )
 
-file(GLOB_RECURSE HEADERS 
-    "Watchdog/*.hpp" 
+file(GLOB_RECURSE HEADERS
+    "Watchdog/*.hpp"
     "Planning/*.hpp"
+    "Nav/*.hpp"
+    "Comms/*.hpp"
     "Utils/*.hpp"
 )
 
-# 4. Create the executable
 add_executable(sparx_node ${SOURCES} ${HEADERS})
 
-# 5. Add your include directories (no need to include Torch here, find_package does it)
 target_include_directories(sparx_node PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Watchdog
     ${CMAKE_CURRENT_SOURCE_DIR}/Planning
+    ${CMAKE_CURRENT_SOURCE_DIR}/Nav
+    ${CMAKE_CURRENT_SOURCE_DIR}/Comms
     ${CMAKE_CURRENT_SOURCE_DIR}/Utils
     ${CMAKE_CURRENT_SOURCE_DIR}/eigen
     ${CMAKE_CURRENT_SOURCE_DIR}/spline
 )
 
-# 6. Link LibTorch to your executable
 target_link_libraries(sparx_node PRIVATE ${TORCH_LIBRARIES})
-
-# (Windows specific) Ensure Torch links with the correct C++ standard
-set_property(TARGET sparx_node PROPERTY CXX_STANDARD 17)

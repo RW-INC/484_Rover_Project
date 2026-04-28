@@ -1,6 +1,6 @@
 function dstate = FullStateDynamicsInC(state, u, xmin, ymin, dx, dy, Z_map, geom, dt, ~)
 %#codegen    
-yaw = state(9);
+    yaw = state(9);
     pitch = state(8);
     w_r = u(1);  w_l = u(2);
     dw_r = u(3); dw_l = u(4);

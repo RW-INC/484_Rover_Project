@@ -36,60 +36,76 @@ typedef struct {
 #endif /* typedef_c_captured_var */
 
 /* Variable Definitions */
-static emlrtRSInfo b_emlrtRSI = {
-    30,                     /* lineNo */
-    "FullStateDynamicsInC", /* fcnName */
-    "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\FullStateDynamicsInC.m" /* pathName
-                                                                            */
+static emlrtRSInfo b_emlrtRSI =
+    {
+        30,                     /* lineNo */
+        "FullStateDynamicsInC", /* fcnName */
+        "C:"
+        "\\Users\\srikr\\Desktop\\SPARX\\Matlab\\Controller\\FullStateDynamicsI"
+        "nC.m" /* pathName */
 };
 
-static emlrtRSInfo c_emlrtRSI = {
-    31,                     /* lineNo */
-    "FullStateDynamicsInC", /* fcnName */
-    "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\FullStateDynamicsInC.m" /* pathName
-                                                                            */
+static emlrtRSInfo c_emlrtRSI =
+    {
+        31,                     /* lineNo */
+        "FullStateDynamicsInC", /* fcnName */
+        "C:"
+        "\\Users\\srikr\\Desktop\\SPARX\\Matlab\\Controller\\FullStateDynamicsI"
+        "nC.m" /* pathName */
 };
 
-static emlrtRSInfo d_emlrtRSI = {
-    33,                     /* lineNo */
-    "FullStateDynamicsInC", /* fcnName */
-    "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\FullStateDynamicsInC.m" /* pathName
-                                                                            */
+static emlrtRSInfo d_emlrtRSI =
+    {
+        33,                     /* lineNo */
+        "FullStateDynamicsInC", /* fcnName */
+        "C:"
+        "\\Users\\srikr\\Desktop\\SPARX\\Matlab\\Controller\\FullStateDynamicsI"
+        "nC.m" /* pathName */
 };
 
-static emlrtRSInfo e_emlrtRSI = {
-    34,                     /* lineNo */
-    "FullStateDynamicsInC", /* fcnName */
-    "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\FullStateDynamicsInC.m" /* pathName
-                                                                            */
+static emlrtRSInfo e_emlrtRSI =
+    {
+        34,                     /* lineNo */
+        "FullStateDynamicsInC", /* fcnName */
+        "C:"
+        "\\Users\\srikr\\Desktop\\SPARX\\Matlab\\Controller\\FullStateDynamicsI"
+        "nC.m" /* pathName */
 };
 
-static emlrtRSInfo f_emlrtRSI = {
-    36,                     /* lineNo */
-    "FullStateDynamicsInC", /* fcnName */
-    "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\FullStateDynamicsInC.m" /* pathName
-                                                                            */
+static emlrtRSInfo f_emlrtRSI =
+    {
+        36,                     /* lineNo */
+        "FullStateDynamicsInC", /* fcnName */
+        "C:"
+        "\\Users\\srikr\\Desktop\\SPARX\\Matlab\\Controller\\FullStateDynamicsI"
+        "nC.m" /* pathName */
 };
 
-static emlrtRSInfo g_emlrtRSI = {
-    37,                     /* lineNo */
-    "FullStateDynamicsInC", /* fcnName */
-    "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\FullStateDynamicsInC.m" /* pathName
-                                                                            */
+static emlrtRSInfo g_emlrtRSI =
+    {
+        37,                     /* lineNo */
+        "FullStateDynamicsInC", /* fcnName */
+        "C:"
+        "\\Users\\srikr\\Desktop\\SPARX\\Matlab\\Controller\\FullStateDynamicsI"
+        "nC.m" /* pathName */
 };
 
-static emlrtRSInfo i_emlrtRSI = {
-    61,                         /* lineNo */
-    "FullStateDynamicsInC/att", /* fcnName */
-    "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\FullStateDynamicsInC.m" /* pathName
-                                                                            */
+static emlrtRSInfo i_emlrtRSI =
+    {
+        61,                         /* lineNo */
+        "FullStateDynamicsInC/att", /* fcnName */
+        "C:"
+        "\\Users\\srikr\\Desktop\\SPARX\\Matlab\\Controller\\FullStateDynamicsI"
+        "nC.m" /* pathName */
 };
 
-static emlrtRSInfo j_emlrtRSI = {
-    67,                         /* lineNo */
-    "FullStateDynamicsInC/att", /* fcnName */
-    "C:\\Users\\srikr\\Desktop\\SPARX\\Controller\\FullStateDynamicsInC.m" /* pathName
-                                                                            */
+static emlrtRSInfo j_emlrtRSI =
+    {
+        67,                         /* lineNo */
+        "FullStateDynamicsInC/att", /* fcnName */
+        "C:"
+        "\\Users\\srikr\\Desktop\\SPARX\\Matlab\\Controller\\FullStateDynamicsI"
+        "nC.m" /* pathName */
 };
 
 static emlrtRSInfo k_emlrtRSI = {
@@ -138,112 +154,96 @@ static emlrtRSInfo
             "internal\\lusolve.m" /* pathName */
 };
 
-static emlrtBCInfo
-    emlrtBCI =
-        {
-            1,                                           /* iFirst */
-            1000,                                        /* iLast */
-            89,                                          /* lineNo */
-            22,                                          /* colNo */
-            "Z_map",                                     /* aName */
-            "FullStateDynamicsInC/fast_triangle_interp", /* fName */
-            "C:"
-            "\\Users\\srikr\\Desktop\\SPARX\\Controller\\FullStateDynamicsInC."
-            "m", /* pName */
-            0    /* checkKind */
+static emlrtBCInfo emlrtBCI = {
+    1,                                           /* iFirst */
+    1000,                                        /* iLast */
+    89,                                          /* lineNo */
+    22,                                          /* colNo */
+    "Z_map",                                     /* aName */
+    "FullStateDynamicsInC/fast_triangle_interp", /* fName */
+    "C:"
+    "\\Users\\srikr\\Desktop\\SPARX\\Matlab\\Controller\\FullStateDynamicsInC."
+    "m", /* pName */
+    0    /* checkKind */
 };
 
-static emlrtDCInfo
-    emlrtDCI =
-        {
-            89,                                          /* lineNo */
-            22,                                          /* colNo */
-            "FullStateDynamicsInC/fast_triangle_interp", /* fName */
-            "C:"
-            "\\Users\\srikr\\Desktop\\SPARX\\Controller\\FullStateDynamicsInC."
-            "m", /* pName */
-            1    /* checkKind */
+static emlrtDCInfo emlrtDCI = {
+    89,                                          /* lineNo */
+    22,                                          /* colNo */
+    "FullStateDynamicsInC/fast_triangle_interp", /* fName */
+    "C:"
+    "\\Users\\srikr\\Desktop\\SPARX\\Matlab\\Controller\\FullStateDynamicsInC."
+    "m", /* pName */
+    1    /* checkKind */
 };
 
-static emlrtBCInfo
-    b_emlrtBCI =
-        {
-            1,                                           /* iFirst */
-            1000,                                        /* iLast */
-            89,                                          /* lineNo */
-            34,                                          /* colNo */
-            "Z_map",                                     /* aName */
-            "FullStateDynamicsInC/fast_triangle_interp", /* fName */
-            "C:"
-            "\\Users\\srikr\\Desktop\\SPARX\\Controller\\FullStateDynamicsInC."
-            "m", /* pName */
-            0    /* checkKind */
+static emlrtBCInfo b_emlrtBCI = {
+    1,                                           /* iFirst */
+    1000,                                        /* iLast */
+    89,                                          /* lineNo */
+    34,                                          /* colNo */
+    "Z_map",                                     /* aName */
+    "FullStateDynamicsInC/fast_triangle_interp", /* fName */
+    "C:"
+    "\\Users\\srikr\\Desktop\\SPARX\\Matlab\\Controller\\FullStateDynamicsInC."
+    "m", /* pName */
+    0    /* checkKind */
 };
 
-static emlrtDCInfo
-    b_emlrtDCI =
-        {
-            89,                                          /* lineNo */
-            34,                                          /* colNo */
-            "FullStateDynamicsInC/fast_triangle_interp", /* fName */
-            "C:"
-            "\\Users\\srikr\\Desktop\\SPARX\\Controller\\FullStateDynamicsInC."
-            "m", /* pName */
-            1    /* checkKind */
+static emlrtDCInfo b_emlrtDCI = {
+    89,                                          /* lineNo */
+    34,                                          /* colNo */
+    "FullStateDynamicsInC/fast_triangle_interp", /* fName */
+    "C:"
+    "\\Users\\srikr\\Desktop\\SPARX\\Matlab\\Controller\\FullStateDynamicsInC."
+    "m", /* pName */
+    1    /* checkKind */
 };
 
-static emlrtBCInfo
-    c_emlrtBCI =
-        {
-            1,                                           /* iFirst */
-            1000,                                        /* iLast */
-            90,                                          /* lineNo */
-            34,                                          /* colNo */
-            "Z_map",                                     /* aName */
-            "FullStateDynamicsInC/fast_triangle_interp", /* fName */
-            "C:"
-            "\\Users\\srikr\\Desktop\\SPARX\\Controller\\FullStateDynamicsInC."
-            "m", /* pName */
-            0    /* checkKind */
+static emlrtBCInfo c_emlrtBCI = {
+    1,                                           /* iFirst */
+    1000,                                        /* iLast */
+    90,                                          /* lineNo */
+    34,                                          /* colNo */
+    "Z_map",                                     /* aName */
+    "FullStateDynamicsInC/fast_triangle_interp", /* fName */
+    "C:"
+    "\\Users\\srikr\\Desktop\\SPARX\\Matlab\\Controller\\FullStateDynamicsInC."
+    "m", /* pName */
+    0    /* checkKind */
 };
 
-static emlrtDCInfo
-    c_emlrtDCI =
-        {
-            90,                                          /* lineNo */
-            34,                                          /* colNo */
-            "FullStateDynamicsInC/fast_triangle_interp", /* fName */
-            "C:"
-            "\\Users\\srikr\\Desktop\\SPARX\\Controller\\FullStateDynamicsInC."
-            "m", /* pName */
-            1    /* checkKind */
+static emlrtDCInfo c_emlrtDCI = {
+    90,                                          /* lineNo */
+    34,                                          /* colNo */
+    "FullStateDynamicsInC/fast_triangle_interp", /* fName */
+    "C:"
+    "\\Users\\srikr\\Desktop\\SPARX\\Matlab\\Controller\\FullStateDynamicsInC."
+    "m", /* pName */
+    1    /* checkKind */
 };
 
-static emlrtBCInfo
-    d_emlrtBCI =
-        {
-            1,                                           /* iFirst */
-            1000,                                        /* iLast */
-            91,                                          /* lineNo */
-            22,                                          /* colNo */
-            "Z_map",                                     /* aName */
-            "FullStateDynamicsInC/fast_triangle_interp", /* fName */
-            "C:"
-            "\\Users\\srikr\\Desktop\\SPARX\\Controller\\FullStateDynamicsInC."
-            "m", /* pName */
-            0    /* checkKind */
+static emlrtBCInfo d_emlrtBCI = {
+    1,                                           /* iFirst */
+    1000,                                        /* iLast */
+    91,                                          /* lineNo */
+    22,                                          /* colNo */
+    "Z_map",                                     /* aName */
+    "FullStateDynamicsInC/fast_triangle_interp", /* fName */
+    "C:"
+    "\\Users\\srikr\\Desktop\\SPARX\\Matlab\\Controller\\FullStateDynamicsInC."
+    "m", /* pName */
+    0    /* checkKind */
 };
 
-static emlrtDCInfo
-    d_emlrtDCI =
-        {
-            91,                                          /* lineNo */
-            22,                                          /* colNo */
-            "FullStateDynamicsInC/fast_triangle_interp", /* fName */
-            "C:"
-            "\\Users\\srikr\\Desktop\\SPARX\\Controller\\FullStateDynamicsInC."
-            "m", /* pName */
-            1    /* checkKind */
+static emlrtDCInfo d_emlrtDCI = {
+    91,                                          /* lineNo */
+    22,                                          /* colNo */
+    "FullStateDynamicsInC/fast_triangle_interp", /* fName */
+    "C:"
+    "\\Users\\srikr\\Desktop\\SPARX\\Matlab\\Controller\\FullStateDynamicsInC."
+    "m", /* pName */
+    1    /* checkKind */
 };
 
 /* Function Declarations */

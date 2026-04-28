@@ -11,6 +11,9 @@ import numpy as np
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Plot terrain.bin with an optional terrain_traj.bin overlay.")
     parser.add_argument("terrain_path", nargs="?", default="terrain.bin")
+    # parser.add_argument("control_path", nargs="?", default="simulation_output.bin")
+    parser.add_argument("terrain_traj_path", nargs="?", default="terrain_traj.bin")
+
     parser.add_argument("--trajectory", default=None)
     parser.add_argument("--surface-stride", type=int, default=4)
     return parser.parse_args()
@@ -19,8 +22,6 @@ def parse_args() -> argparse.Namespace:
 def resolve_path(path_str: str) -> Path:
     requested = Path(path_str)
     fallback_requested = requested
-    if requested.suffix.lower() == ".csv":
-        fallback_requested = requested.with_suffix(".bin")
 
     if requested.is_absolute():
         if requested.exists():
@@ -88,9 +89,12 @@ def find_trajectory_file(arg_value: str | None, terrain_path: Path) -> Path | No
 def main() -> None:
     args = parse_args()
     terrain_path = resolve_path(args.terrain_path)
-    traj_path = find_trajectory_file(args.trajectory, terrain_path)
+    # control_path = resolve_path(args.control_path)
 
+    traj_path = find_trajectory_file(args.trajectory, terrain_path)
     terrain = load_terrain(terrain_path)
+
+
     z_grid = terrain["z_grid"]
     x_grid = terrain["x_grid"]
     y_grid = terrain["y_grid"]
@@ -125,6 +129,26 @@ def main() -> None:
         ax.scatter(traj["x"][-1], traj["y"][-1], traj_z[-1] * 1.5, color="tab:blue", edgecolors="white", linewidths=1.5, s=110, depthshade=False)
         ax.set_title(f"Terrain Surface with Trajectory\n{terrain_path.name}")
 
+    # if control_path is not None:
+    #     with control_path.open("rb") as handle:
+    #         magic, count = struct.unpack("<8sI", handle.read(12))
+    #         if magic.rstrip(b"\0") != b"SPXSIM1":
+    #             raise ValueError(f"Unrecognized simulation output format in {control_path}.")
+    #         data = np.fromfile(handle, dtype=np.float64, count=count * 9).reshape(count, 9)
+
+        # sim_traj = {
+        #     "t": data[:, 0],
+        #     "x": data[:, 1],
+        #     "y": data[:, 2],
+        #     "z": data[:, 3],
+        # }
+        # print(sim_traj['x'])
+        # print(sim_traj['y'])
+        # print(sim_traj['z'])
+        
+        # ax.plot3D(sim_traj["x"], sim_traj["y"], sim_traj["z"], color="cyan", linewidth=3.0, alpha=0.85, zorder=10)
+        # ax.set_title(f"Terrain Surface with Trajectory and Simulation\n{terrain_path.name}")
+    
     ax.legend(["Trajectory", "Start", "End"])
     fig.colorbar(surface, ax=ax, shrink=0.7, pad=0.08, label="height")
     plt.tight_layout()

@@ -2,7 +2,7 @@
 #define __SIMULATION_HPP__
 
 #include "Eigen/Dense"
-#include "../spline/src/spline.h"
+#include "spline.h"
 #include "../Planning/grid2d.hpp"
 #include <algorithm>
 #include <cassert>
@@ -14,15 +14,30 @@
 #include <random>
 #include <string>
 #include <vector>
+#include "../Nav/ekf.hpp"
+
+#include <chrono>
+#include <iomanip>
 
 namespace simulation
 {
-    constexpr double k_pi = 3.14159265358979323846;
+    // wrap to [0, 2π]
+    inline double wrap_2pi(double angle)
+    {
+        angle = fmod(angle, 2.0 * M_PI);
+        if (angle < 0)
+            angle += 2.0 * M_PI;
+        return angle;
+    }
 
-    using ControllerFunction = std::function<Eigen::VectorXd(
-        const Eigen::VectorXd &state,
-        const Eigen::VectorXd &reference,
-        double dt)>;
+    // wrap to [-π, π]
+    inline double wrap_pi(double angle)
+    {
+        angle = fmod(angle + M_PI, 2.0 * M_PI);
+        if (angle < 0)
+            angle += 2.0 * M_PI;
+        return angle - M_PI;
+    }
 
     class trajectory
     {
@@ -71,6 +86,9 @@ namespace simulation
             this->s0 = evaluate_at_x(this->t_knots.front());
             this->sf = evaluate_at_x(this->t_knots.back());
         }
+
+        const state_eval &get_initial_state() const { return this->s0; }
+        const state_eval &get_final_state() const { return this->sf; }
 
         const std::vector<double> &get_x_knots() const { return this->x_knots; }
         const std::vector<double> &get_y_knots() const { return this->y_knots; }
@@ -126,7 +144,7 @@ namespace simulation
 
             std::uniform_real_distribution<double> dis_vel(min_vel, max_vel);
             std::uniform_real_distribution<double> dis_dt(min_dt, max_dt);
-            std::uniform_real_distribution<double> dis_angle(-k_pi, k_pi);
+            std::uniform_real_distribution<double> dis_angle(0, M_PI);
 
             const uint32_t n = num_points;
             t_out.resize(n);
@@ -265,7 +283,7 @@ namespace simulation
                 max_abs_y = std::max(max_abs_y, std::abs(y));
             }
 
-            return std::max(2.0 * std::hypot(max_abs_x, max_abs_y), 5.0);
+            return std::max(1.2 * std::hypot(max_abs_x, max_abs_y), 5.0);
         }
 
         void store_projected_trajectory(const trajectory &traj, double dt)
@@ -308,7 +326,7 @@ namespace simulation
 
             std::random_device rd;
             std::mt19937 gen(rd());
-            std::uniform_real_distribution<double> phase_dist(0.0, 2.0 * k_pi);
+            std::uniform_real_distribution<double> phase_dist(M_PI / 2, M_PI);
             std::uniform_real_distribution<double> crater_center_dist(-this->patch_size, this->patch_size);
             std::uniform_real_distribution<double> crater_radius_dist(
                 this->patch_size * 0.01,
@@ -326,9 +344,9 @@ namespace simulation
                 const double phase_x = phase_dist(gen);
                 const double phase_y = phase_dist(gen);
                 const Eigen::VectorXd x_wave =
-                    (2.0 * k_pi * freq * this->axis.array() + phase_x).sin().matrix();
+                    (2.0 * M_PI * freq * this->axis.array() + phase_x).sin().matrix();
                 const Eigen::VectorXd y_wave =
-                    (2.0 * k_pi * freq * this->axis.array() + phase_y).cos().matrix();
+                    (2.0 * M_PI * freq * this->axis.array() + phase_y).cos().matrix();
 
                 this->z_map.noalias() += amp * (y_wave * x_wave.transpose());
             }
@@ -384,7 +402,7 @@ namespace simulation
             this->z_map = gaussian_convolve(this->z_map, polish_blur_radius, polish_blur_sigma);
 
             const double max_grad = compute_max_gradient(this->z_map, dx);
-            const double target_grad = std::tan(55.0 * k_pi / 180.0);
+            const double target_grad = std::tan(20.0 * M_PI / 180.0);
 
             if (max_grad > target_grad)
             {
@@ -547,6 +565,365 @@ namespace simulation
             return max_grad;
         }
     };
+
+    Eigen::Vector3d LanderSunPointingVector(float_t t_lunar_day, float_t t_relative)
+    {
+        // --- 1. CONSTANTS ---
+        double tau = 1.54;
+        double Y_period = 365.25;
+        double n = 172;
+        double t0 = 0;
+        double L = -90 * M_PI / 180; // South Pole
+        double T_lunar = 708;
+        double omega = 360 / T_lunar;
+        double t_lunar_offset = (t_lunar_day - 2831) * 24;
+
+        // --- 2. CALCULATION LOOP ---
+        double ti = t_relative;
+        double t_abs = ti + t_lunar_offset;
+
+        // Solar declination (must be radians for trig below)
+        double delta = (tau * sin(M_PI / 180.0 * (360.0 / Y_period) * (n + t_abs / 24.0 - t0))) * M_PI / 180.0;
+
+        // Hour angle
+        double H = M_PI / 180.0 * (omega * (T_lunar / 2 - t_abs));
+
+        // Solar elevation
+        double beta = asin(cos(L) * cos(delta) * cos(H) + sin(L) * sin(delta));
+
+        // Solar Azimuth
+        double phi_s = atan2(cos(delta) * sin(H), sin(L) * cos(delta) * cos(H) - cos(L) * sin(delta));
+
+        // --- 3. GENERATE VECTORS ---
+        // X = East, Y = North, Z = Up
+        return Eigen::Vector3d(cos(beta) * sin(phi_s),
+                               cos(beta) * cos(phi_s),
+                               sin(beta));
+    }
+
+    Eigen::Matrix3d TRIAD(Eigen::Vector3d L_r_sun, Eigen::Vector3d R_r_sun, Eigen::Vector3d R_r_gravity)
+    {
+        // Rover LVLH
+        auto R_t1 = R_r_gravity;
+        auto R_t2 = R_t1.cross(R_r_sun).normalized();
+        auto R_t3 = R_t1.cross(R_t2);
+
+        // Lunar LVLH
+        Eigen::Vector3d L_t1(0, 0, -1);
+        Eigen::Vector3d L_t2 = L_t1.cross(L_r_sun).normalized();
+        auto L_t3 = L_t1.cross(L_t2);
+
+        Eigen::Matrix3d M_rover;
+        M_rover.col(0) = R_t1;
+        M_rover.col(1) = R_t2;
+        M_rover.col(2) = R_t3;
+
+        Eigen::Matrix3d M_lunar;
+        M_lunar.col(0) = L_t1;
+        M_lunar.col(1) = L_t2;
+        M_lunar.col(2) = L_t3;
+
+        return M_lunar * M_rover.transpose();
+    }
+
+    using ControllerFunction = std::function<Eigen::VectorXd(
+        const Eigen::VectorXd &state,
+        const Eigen::VectorXd &reference,
+        const Eigen::VectorXd &control,
+        double dt)>;
+
+    using SimulationFunction = std::function<Eigen::VectorXd(
+        const Eigen::VectorXd &state,
+        const Eigen::VectorXd &control_input,
+        const terrain &env,
+        double dt)>;
+
+    struct geom
+    {
+        double r = 0.17 / 2.0;
+        double B = 0.2;
+        double L = 0.25;
+        double maxw = 1.0;
+    };
+
+#include <chrono>
+    void run_simulation(ControllerFunction &controller, SimulationFunction &sim_func,
+                        const trajectory &traj, const terrain &terr,
+                        double dt, const std::string &output_file,
+                        uint32_t control_decim, uint32_t estimation_decim, geom &rover_dims)
+    {
+        std::mt19937 gen(std::random_device{}());
+
+        auto s0 = terr.get_projected_trajectory()[0];
+        Eigen::Vector3d lander_pos(s0.x, s0.y, s0.z);
+
+        double sigma_accel = 0.003;
+        double sigma_gyro = 0.15 * M_PI / 180.0 / 60.0;
+        double sigma_pos = 0.003;
+        double sigma_vel = 0.0003;
+        double sigma_rho = 0.001;
+        double sigma_rhodot = 0.0001;
+        double sigma_point = 0.001;
+        double bias_rate_gyro = 0.5 * M_PI / 180.0 / 60.0;
+        double yaw0 = 0.0;
+
+        Eigen::Vector4d q0(cos(yaw0 / 2), 0, 0, sin(yaw0 / 2));
+        Eigen::VectorXd mekf_state(7);
+        mekf_state << q0, 0, 0, 0;
+
+        Eigen::Matrix<double, 6, 6> mekf_P;
+        mekf_P.setZero();
+        mekf_P.diagonal() << 0.1, 0.1, 0.1, 0.001, 0.001, 0.001;
+
+        Eigen::VectorXd trans_state(6);
+        trans_state << 0.1, 0.1, 0.1, 0, 0, 0;
+
+        Eigen::Matrix<double, 6, 6> trans_P;
+        trans_P.setZero();
+        trans_P.diagonal() << 0.1, 0.1, 0.1, 0.01, 0.01, 0.01;
+
+        const auto reference_traj = terr.get_projected_trajectory();
+        assert(!reference_traj.empty());
+        std::cout << "Running simulation with " << reference_traj.size() << " steps..." << std::endl;
+
+        Eigen::VectorXd state(9);
+        // create the initial state
+        state << lander_pos, 0, 0, 0, 0, 0, 0;
+        Eigen::VectorXd control_input = Eigen::VectorXd::Zero(4);
+
+        std::ofstream csv("full_state_output.csv");
+        csv << std::setprecision(15) << std::scientific;
+
+        csv << "t,x,y,z,vx,vy,vz,roll,pitch,yaw,"
+            << "xe,ye,ze,vxe,vye,vze,roll_e,pitch_e,yaw_e,"
+            << "wr,wl,dwr,dwl,"
+            << "s1,s2,s3,"
+            << "mu_r_est,mu_l_est,mu_r_act,mu_l_act\n";
+
+        double yaw_est = 0, pitch_est = 0, roll_est = 0;
+        Eigen::Vector3d pos_est = lander_pos;
+        Eigen::Vector3d vel_est = Eigen::Vector3d::Zero();
+
+        double mission_time = 0.0;
+        double mu_r_est = 0.0;
+        double mu_l_est = 0.0;
+        double mu_r_act = 1.0;
+        double mu_l_act = 1.0;
+
+        for (size_t i = 0; i < reference_traj.size(); ++i)
+        {
+            mission_time += dt;
+
+            const auto &ref = reference_traj[i];
+            Eigen::VectorXd reference(6);
+            reference << ref.x, ref.y, ref.vel_x, ref.vel_y, ref.theta, ref.theta_dot;
+
+            // 1. Propagate true state
+            auto sim_timing0 = std::chrono::high_resolution_clock::now();
+            auto dstate = sim_func(state, control_input, terr, dt);
+            auto sim_timing1 = std::chrono::high_resolution_clock::now();
+
+            state += dstate * dt;
+
+            // yaw wrap after state propagation
+            state[8] = wrap_pi(state[8]);
+            state[7] = wrap_pi(state[7]); // pitch stays [-π, π]
+            state[6] = wrap_pi(state[6]);
+
+            auto yaw_true = state[8];
+            auto pitch_true = state[7];
+            auto roll_true = state[6];
+
+            // 4. Estimation
+
+            auto estimation_timing0 = std::chrono::high_resolution_clock::now();
+            if (i % estimation_decim == 0)
+            {
+                Eigen::Matrix3d R3;
+                R3 << cos(yaw_true), -sin(yaw_true), 0,
+                    sin(yaw_true), cos(yaw_true), 0,
+                    0, 0, 1;
+                Eigen::Matrix3d R2;
+                R2 << cos(pitch_true), 0, sin(pitch_true),
+                    0, 1, 0,
+                    -sin(pitch_true), 0, cos(pitch_true);
+                Eigen::Matrix3d R1;
+                R1 << 1, 0, 0,
+                    0, cos(roll_true), -sin(roll_true),
+                    0, sin(roll_true), cos(roll_true);
+                Eigen::Matrix3d R_true = R3 * R2 * R1;
+
+                // 2. Simulate sensors
+                Eigen::Vector3d a_true(dstate[3], dstate[4], dstate[5]);
+                Eigen::Vector3d g_lunar(0, 0, -1.625);
+                std::normal_distribution<double> accel_dist(0.0, sigma_accel);
+                Eigen::Vector3d imu_noise(accel_dist(gen), accel_dist(gen), accel_dist(gen));
+                auto a_imu = R_true.transpose() * (a_true - g_lunar) + imu_noise;
+
+                Eigen::Vector3d w_true(dstate(6), dstate(7), dstate(8));
+                auto p_true = w_true(0) - sin(pitch_true) * w_true(2);
+                auto q_true = cos(roll_true) * w_true(1) + sin(roll_true) * cos(pitch_true) * w_true(2);
+                auto r_true = -sin(roll_true) * w_true(1) + cos(roll_true) * cos(pitch_true) * w_true(2);
+                Eigen::Vector3d w_body_true(p_true, q_true, r_true);
+
+                std::normal_distribution<double> gyro_dist(0.0, sigma_gyro);
+                Eigen::Vector3d gyro_noise(gyro_dist(gen), gyro_dist(gen), gyro_dist(gen));
+                auto w_imu = w_body_true + Eigen::Vector3d::Constant(bias_rate_gyro * dt) + gyro_noise;
+
+                Eigen::Vector3d pos_rel(state[0], state[1], state[2]);
+                pos_rel -= lander_pos;
+                Eigen::Vector3d vel_true_vec(state[3], state[4], state[5]);
+                double rho_true = pos_rel.norm();
+                double rhodot_true = pos_rel.dot(vel_true_vec) / std::max(rho_true, 1e-6);
+
+                std::normal_distribution<double> rho_dist(0.0, sigma_rho);
+                auto uwb_rho = rho_dist(gen) + rho_true;
+
+                std::normal_distribution<double> rhodot_dist(0.0, sigma_rhodot);
+                auto uwb_rhodot = rhodot_dist(gen) + rhodot_true;
+
+                auto hours_elapsed = mission_time / (3600.0);
+                Eigen::Vector3d s_dir = LanderSunPointingVector(2831, hours_elapsed);
+
+                std::normal_distribution<double> pos_dist(0.0, sigma_pos);
+                Eigen::Vector3d pos_noise(pos_dist(gen), pos_dist(gen), pos_dist(gen));
+                std::normal_distribution<double> vel_dist(0.0, sigma_vel);
+                Eigen::Vector3d vel_noise(vel_dist(gen), vel_dist(gen), vel_dist(gen));
+
+                Eigen::Vector3d imu_pos = Eigen::Vector3d(state[0], state[1], state[2]) + pos_noise;
+                Eigen::Vector3d imu_vel = Eigen::Vector3d(state[3], state[4], state[5]) + vel_noise;
+
+                std::normal_distribution<double> sun_dist(0.0, sigma_point);
+                Eigen::Vector3d sun_noise(sun_dist(gen), sun_dist(gen), sun_dist(gen));
+                double angle = sun_noise.norm();
+                Eigen::Quaterniond noisy_quaternion = (angle < 1e-10)
+                                                          ? Eigen::Quaterniond::Identity()
+                                                          : Eigen::Quaterniond(Eigen::AngleAxisd(angle, sun_noise / angle));
+
+                auto g_body = -a_imu / a_imu.norm();
+                Eigen::Vector3d R_r_sun_est = R_true.transpose() * s_dir;
+                R_r_sun_est = R_r_sun_est / R_r_sun_est.norm();
+
+                auto L_r_sun = s_dir / s_dir.norm();
+                auto R_triad = TRIAD(L_r_sun, R_r_sun_est, g_body);
+                Eigen::Quaterniond q_triad_obj(R_triad);
+                q_triad_obj.normalize();
+
+                Eigen::Matrix<double, 6, 6> mekf_P_new;
+                Eigen::VectorXd mekf_state_new;
+                rotational_mekf(q_triad_obj, w_imu, mekf_state,
+                                mekf_P, dt * estimation_decim, sigma_gyro, mekf_P_new, mekf_state_new);
+                mekf_P = mekf_P_new;
+
+                mekf_state = mekf_state_new;
+                Eigen::Quaterniond q_est(mekf_state[0], mekf_state[1], mekf_state[2], mekf_state[3]);
+                Eigen::Matrix3d R_est_mat = q_est.toRotationMatrix();
+
+                yaw_est = atan2(R_est_mat(1, 0), R_est_mat(0, 0));
+                pitch_est = asin(-R_est_mat(2, 0));
+                roll_est = atan2(R_est_mat(2, 1), R_est_mat(2, 2));
+
+                yaw_est = wrap_pi(yaw_est);
+                pitch_est = wrap_pi(pitch_est);
+                roll_est = wrap_pi(roll_est);
+
+                Eigen::Vector3d imu_pos_rel = imu_pos - lander_pos;
+                Eigen::VectorXd imu_meas(6);
+                imu_meas << imu_pos_rel, imu_vel;
+
+                Eigen::Vector2d uwb_meas(uwb_rho, uwb_rhodot);
+                Eigen::Vector3d orient_est(roll_est, pitch_est, yaw_est);
+
+                Eigen::Matrix<double, 6, 6> trans_P_new;
+                Eigen::VectorXd trans_state_new;
+                translational_ekf(imu_meas, uwb_meas, orient_est, control_input,
+                                  trans_state, trans_P, mekf_P, dt * estimation_decim, trans_P_new, trans_state_new);
+                trans_P = trans_P_new;
+                trans_state = trans_state_new;
+
+                pos_est = trans_state.head<3>() + lander_pos;
+                vel_est = trans_state.segment<3>(3);
+
+                // estimate slip
+                Eigen::Vector3d V_body_est = R_est_mat.transpose() * vel_est;
+                double V_long_est = V_body_est[0]; // Longitudinal velocity
+
+                // 2. Get the estimated body yaw rate (gyro z - estimated bias z)
+                // mekf_state is [q0, q1, q2, q3, bx, by, bz], so bz is index 6
+                double r_est_val = w_imu[2] - mekf_state[6];
+
+                // 3. Calculate wheel velocities using differential kinematics
+                double V_long_r_est = V_long_est + (rover_dims.B / 2.0) * r_est_val;
+                double V_long_l_est = V_long_est - (rover_dims.B / 2.0) * r_est_val;
+
+                // 4. Estimate mu (V_wheel / (r * omega))
+                mu_r_est =  std::abs(control_input[0]) < 0.1 ? 1 : std::abs(V_long_r_est / (rover_dims.r * control_input[0]));
+                mu_l_est = std::abs(control_input[1]) < 0.1 ? 1 : std::abs(V_long_l_est / (rover_dims.r * control_input[1]));
+
+                //  Actual slip model
+                mu_r_act = sin(10 * abs(control_input[0]));
+                mu_l_act = sin(10 * abs(control_input[1]));
+
+
+                if (pos_est.hasNaN() || vel_est.hasNaN())
+                {
+                    std::cerr << "NaN at step " << i << std::endl;
+                    break;
+                }
+            }
+            auto estimation_timing1 = std::chrono::high_resolution_clock::now();
+
+            // 3. Controller
+            auto controller_timing0 = std::chrono::high_resolution_clock::now();
+
+            
+            // 5. Tracking error
+            double s1 = state[0] - ref.x;
+            double s2 = state[1] - ref.y;
+            double s3 = wrap_pi(state[8] - ref.theta);
+
+            if (i % control_decim == 0)
+            {
+                Eigen::VectorXd est_state(9);
+                est_state << pos_est[0], pos_est[1], pos_est[2],
+                    vel_est[0], vel_est[1], vel_est[2],
+                    roll_est, pitch_est, yaw_est;
+                control_input = controller(est_state, reference, control_input, dt);
+            }
+            else
+            {
+                control_input[2] = 0.0;
+                control_input[3] = 0.0;
+            }
+            auto controller_timing1 = std::chrono::high_resolution_clock::now();
+            
+            // 6. Write CSV
+            csv << mission_time << ","
+                << state[0] << "," << state[1] << "," << state[2] << ","
+                << state[3] << "," << state[4] << "," << state[5] << ","
+                << roll_true << "," << pitch_true << "," << yaw_true << ","
+                << pos_est[0] << "," << pos_est[1] << "," << pos_est[2] << ","
+                << vel_est[0] << "," << vel_est[1] << "," << vel_est[2] << ","
+                << roll_est << "," << pitch_est << "," << yaw_est << ","
+                << control_input[0] << "," << control_input[1] << ","
+                << control_input[2] << "," << control_input[3] << ","
+                << s1 << "," << s2 << "," << s3 << ","
+                << mu_r_est << "," << mu_l_est << ","
+                << mu_r_act << "," << mu_l_act << "\n";
+
+            
+            if (i % 1000 == 0)
+            {
+                std::cout << "Step " << i << " / " << reference_traj.size() << "          \n"
+                          << "Simulation: " << std::chrono::duration<double>(sim_timing1 - sim_timing0).count() << "s          \n"
+                          << "Estimation: " << std::chrono::duration<double>(estimation_timing1 - estimation_timing0).count() << "s          \n"
+                          << "Controller: " << std::chrono::duration<double>(controller_timing1 - controller_timing0).count() << "s          "
+                          << std::endl;
+            }
+        }
+        csv.close();
+        std::cout << "\nWrote full_state_output.csv" << std::endl;
+    }
 }
 
 #endif
