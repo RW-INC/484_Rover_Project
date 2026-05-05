@@ -120,9 +120,9 @@ private:
     float min_x_ = 0.0f;
     float max_x_ = 10.0f; // Keeps everything from 0 to 10 m in positive x
     float max_abs_y_ = 10.0f; // Keeps everything in +-5 m
-    float min_z_ = -1.0f; // Filters out z > 1 and z < -1. Probably need to refine this but chose these values for now, note that on
+    float min_z_ = 0.0f; // Filters out z > 1 and z < 0. Probably need to refine this but chose these values for now, note that on
     // flat surface the expected zs should be like -.6 (rover height)
-    float max_z_ = 1.0f; // In theory the LiDAR should never see above like .6 m also, so can use this knowledge to diagnose issues
+    float max_z_ = 10.0f; // In theory the LiDAR should never see above like .6 m also, so can use this knowledge to diagnose issues
 
     // Ground removal threshold - Assumption - Anything below this height is ground or too small to matter.
     float ground_threshold_ = 0.03f; // Probably need to refine, but 3 cm is the smallest obstacle we need to avoid so base choice
@@ -205,8 +205,8 @@ private:
                         0.0f, -1.0f,  0.0f,
                         0.0f,  0.0f, -1.0f;
 
-        // Apply yaw then upside down correction
-        return R_upside_down * R_yaw;
+        // Apply yaw, no more upside down correction
+        return R_yaw;
     }
 
     // FILTERING STUFF
@@ -214,6 +214,8 @@ private:
     void filterPoints()
     {
         filtered_cloud_->clear(); // initialize
+
+        float projector_height = 4.0f; // Define the height of the projector area, meters
 
         for (const auto& p : cloud_body_->points) {
             if (!std::isfinite(p.x) ||
@@ -225,10 +227,16 @@ private:
             // Keep only points in front of rover and inside local planning box - defined earlier
             if (p.x < min_x_ || p.x > max_x_) continue;
             if (std::abs(p.y) > max_abs_y_) continue;
-            if (p.z < min_z_ || p.z > max_z_) continue;
+            if (p.z < 0.0f || p.z > projector_height) continue;
+
+            if (p.z > 1.0f && p.z < 3.0f) continue; // filter out between 1 and 3 m
+
+            if (p.z > 1.0f) { // this is just for testing idk but want to see print statements
+                RCLCPP_WARN(this->get_logger(), "Point with z > 1.0 m detected, which is unexpected: z=%.2f", p.z);
+            }
 
             // Remove ground and features below requirement threshold
-            if (p.z < (-.6 + ground_threshold_) && p.z > (-.6 - ground_threshold_)) continue; // negative .6 is height of rover
+            // if (p.z < (-.6 + ground_threshold_) && p.z > (-.6 - ground_threshold_)) continue; // negative .6 is height of rover
 
             filtered_cloud_->points.push_back(p);
         }
