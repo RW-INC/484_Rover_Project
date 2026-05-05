@@ -14,14 +14,16 @@ screen = pygame.display.set_mode((SCREEN_W, SCREEN_H), pygame.RESIZABLE | pygame
 WIDTH_FT = 3.048 # THIS IS ACTUALLY IN METERS BUT I DONT WANT TO CHANGE ALL OF THE VARIABLE NAMES
 HEIGHT_FT = 1.8288 # THIS IS ACTUALLY IN METERS BUT I DONT WANT TO CHANGE ALL OF THE VARIABLE NAMES
 SCALE = 100
-WIDTH, HEIGHT = WIDTH_FT * SCALE, HEIGHT_FT * SCALE
-CENTER_FT = (WIDTH_FT/2, HEIGHT_FT/2)
+WIDTH = int(WIDTH_FT * SCALE)
+HEIGHT = int(HEIGHT_FT * SCALE)
+CENTER_FT = (0, 0)
 prev_loc = CENTER_FT
 
 screen = pygame.display.set_mode((SCREEN_W, SCREEN_H), pygame.FULLSCREEN)
 
 # Your working "virtual canvas"
-WORK_W, WORK_H = WIDTH_FT*SCALE, HEIGHT_FT*SCALE
+WORK_W = WIDTH
+WORK_H = HEIGHT
 
 # Center it on screen
 offset_x = (SCREEN_W - WORK_W) // 2
@@ -102,6 +104,40 @@ def pixel_to_feet(pos): # substitution which is more robust than before
 
     return (q[0], q[1])
 
+def feet_to_pixel(pos):
+    X, Y = pos
+
+    src = np.array([
+        [0, 0],
+        [WORK_W, 0],
+        [WORK_W, WORK_H],
+        [0, WORK_H]
+    ], dtype=float)
+
+    dst = np.array([
+        [-5.4,  3.0],
+        [ 5.4,  3.0],
+        [ 4.6, -3.0],
+        [-4.6, -3.0]
+    ], dtype=float)
+
+    A = []
+    for (xp, yp), (Xr, Yr) in zip(dst, src):
+        A.append([xp, yp, 1, 0, 0, 0, -Xr*xp, -Xr*yp, -Xr])
+        A.append([0, 0, 0, xp, yp, 1, -Yr*xp, -Yr*yp, -Yr])
+
+    A = np.array(A, dtype=float)
+
+    _, _, Vt = np.linalg.svd(A)
+    H_inv = Vt[-1].reshape(3, 3)
+    H_inv = H_inv / H_inv[2, 2]
+
+    p = np.array([X, Y, 1.0])
+    q = H_inv @ p
+    q = q / q[2]
+
+    return int(q[0]), int(q[1])
+
 def downsample(points, step=5):
     return points[::step]
 
@@ -131,8 +167,8 @@ def draw_spline(pts, color = GREEN):
         x1, y1 = pts[i]
         x2, y2 = pts[i + 1]
 
-        p1 = (int(x1 * SCALE), int(y1 * SCALE))
-        p2 = (int(x2 * SCALE), int(y2 * SCALE))
+        p1 = feet_to_pixel((x1, y1))
+        p2 = feet_to_pixel((x2, y2))
 
         pygame.draw.line(draw_surface, color, p1, p2, 3)
 
@@ -248,7 +284,8 @@ while running:
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
-                pygame.mouse.set_pos((offset_x + prev_loc[0]*SCALE, offset_y + prev_loc[1]*SCALE))
+                px, py = feet_to_pixel(prev_loc)
+                pygame.mouse.set_pos((offset_x + px, offset_y + py))
                 drawing = True
                 raw_points = []          # reset path
                 mx, my = event.pos
@@ -310,7 +347,7 @@ while running:
                     prev_loc = latest_spline_pts[-1]
 
             elif event.key == pygame.K_c:
-                return_spline = generate_return_spline(prev_loc, (WIDTH_FT/2, HEIGHT_FT/2))
+                return_spline = generate_return_spline(prev_loc, (0, 0))
                 if return_spline is not None:
                     spline_pts, tck = return_spline
                     latest_spline_pts = spline_pts
@@ -355,8 +392,7 @@ while running:
         x, y = CENTER_FT
 
 
-    px = int(x * SCALE)
-    py = int(y * SCALE)
+    px, py = feet_to_pixel((x, y))
 
     # Surface for transparency
     ripple_surface = pygame.Surface((WORK_W, WORK_H), pygame.SRCALPHA)
