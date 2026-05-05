@@ -64,39 +64,43 @@ def draw_grid(surface):
     for y in range(0, HEIGHT + 1, SCALE):
         pygame.draw.line(surface, GRID_COLOR, (0, y), (WIDTH, y), 1)
 
-def pixel_to_feet(pos):
+def pixel_to_feet(pos): # substitution which is more robust than before
     x, y = pos
 
-    # pixels -> feet first
-    x /= SCALE
-    y /= SCALE
+    # Pygame canvas corners in pixels
+    src = np.array([
+        [0, 0],              # top-left
+        [WORK_W, 0],         # top-right
+        [WORK_W, WORK_H],    # bottom-right
+        [0, WORK_H]          # bottom-left
+    ], dtype=float)
 
-    point = np.array([x, y, 1]) # define new point array
+    # Replace with our measurements!!!!
+    dst = np.array([
+        [-5.4,  3.0],   # top-left
+        [ 5.4,  3.0],   # top-right
+        [ 4.6, -3.0],   # bottom-right
+        [-4.6, -3.0]    # bottom-left
+    ], dtype=float)
 
-    shift_matrix = np.array([[1, 0, -WIDTH_FT/2],
-                             [0, 1, -HEIGHT_FT/2],
-                             [0, 0, 1]]) # shift origin to center
-    
-    flip_y_matrix = np.array([[1, 0, 0],
-                              [0, -1, 0],
-                              [0, 0, 1]]) # flip y-axis
+    # Solve homography H
+    A = []
+    for (xp, yp), (X, Y) in zip(src, dst):
+        A.append([xp, yp, 1, 0, 0, 0, -X*xp, -X*yp, -X])
+        A.append([0, 0, 0, xp, yp, 1, -Y*xp, -Y*yp, -Y])
 
-    """normalize_matrix = np.array([[1/WORK_W, 0, 0],
-                                 [0, 1/WORK_H, 0],
-                                 [0, 0, 1]]) # normalize coordinates - THIS SHOULDNT BE HERE BUT KEEPING COMMENTED INCASE"""
+    A = np.array(A, dtype=float)
 
-    transformed = flip_y_matrix @ shift_matrix @ point # transform the point
-    x, y, _ = transformed
+    _, _, Vt = np.linalg.svd(A)
+    H = Vt[-1].reshape(3, 3)
+    H = H / H[2, 2]
 
-    r = 1.2 # perspective ratio (top/bottom)
-    k = (r - 1) / (r + 1) # tweak this for more/less distortion, k = (r - 1)/(r + 1) where r is top/bottom ratio
-    stretch = 1.1 # vertical stretch factor to compensate for distortion
+    # Apply homography
+    p = np.array([x, y, 1.0])
+    q = H @ p
+    q = q / q[2]
 
-    y_norm = y / (HEIGHT_FT / 2) # need y to be normalized for perspective distortion
-    x_new = x * (1 + k*y_norm) # add perspective distortion
-    y_new = stretch * y
-
-    return (x_new, y_new)
+    return (q[0], q[1])
 
 def downsample(points, step=5):
     return points[::step]
