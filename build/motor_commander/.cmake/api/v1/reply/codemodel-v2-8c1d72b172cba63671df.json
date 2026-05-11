@@ -1,0 +1,88 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-14501b6deaff73b3d9e6.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.15"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "motor_commander",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "motor_commander_node::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-motor_commander_node-a157b95a83f2a50c0bb8.json",
+					"name" : "motor_commander_node",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "motor_commander_uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-motor_commander_uninstall-f4493e30ecbe6404c889.json",
+					"name" : "motor_commander_uninstall",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "smc_node::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-smc_node-b9e7f4054e814fe0edda.json",
+					"name" : "smc_node",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-uninstall-22d1b6c1a580995b6dc7.json",
+					"name" : "uninstall",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/sparky/Desktop/SPARX_E/build/motor_commander",
+		"source" : "/home/sparky/Desktop/SPARX_E/src/motor_commander"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}

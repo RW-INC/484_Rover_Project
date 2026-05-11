@@ -1,0 +1,2 @@
+[console_scripts]
+status_updater_node = status_updater.main:main

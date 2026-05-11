@@ -1,0 +1,17 @@
+/home/sparky/Desktop/SPARX_E/install/motor_commander/lib/motor_commander/smc_node
+/home/sparky/Desktop/SPARX_E/install/motor_commander/lib/motor_commander/motor_commander_node
+/home/sparky/Desktop/SPARX_E/install/motor_commander/share/ament_index/resource_index/package_run_dependencies/motor_commander
+/home/sparky/Desktop/SPARX_E/install/motor_commander/share/ament_index/resource_index/parent_prefix_path/motor_commander
+/home/sparky/Desktop/SPARX_E/install/motor_commander/share/motor_commander/environment/ament_prefix_path.sh
+/home/sparky/Desktop/SPARX_E/install/motor_commander/share/motor_commander/environment/ament_prefix_path.dsv
+/home/sparky/Desktop/SPARX_E/install/motor_commander/share/motor_commander/environment/path.sh
+/home/sparky/Desktop/SPARX_E/install/motor_commander/share/motor_commander/environment/path.dsv
+/home/sparky/Desktop/SPARX_E/install/motor_commander/share/motor_commander/local_setup.bash
+/home/sparky/Desktop/SPARX_E/install/motor_commander/share/motor_commander/local_setup.sh
+/home/sparky/Desktop/SPARX_E/install/motor_commander/share/motor_commander/local_setup.zsh
+/home/sparky/Desktop/SPARX_E/install/motor_commander/share/motor_commander/local_setup.dsv
+/home/sparky/Desktop/SPARX_E/install/motor_commander/share/motor_commander/package.dsv
+/home/sparky/Desktop/SPARX_E/install/motor_commander/share/ament_index/resource_index/packages/motor_commander
+/home/sparky/Desktop/SPARX_E/install/motor_commander/share/motor_commander/cmake/motor_commanderConfig.cmake
+/home/sparky/Desktop/SPARX_E/install/motor_commander/share/motor_commander/cmake/motor_commanderConfig-version.cmake
+/home/sparky/Desktop/SPARX_E/install/motor_commander/share/motor_commander/package.xml

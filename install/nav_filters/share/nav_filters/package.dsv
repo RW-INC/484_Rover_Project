@@ -1,0 +1,6 @@
+source;share/nav_filters/hook/cmake_prefix_path.dsv
+source;share/nav_filters/hook/cmake_prefix_path.sh
+source;share/nav_filters/local_setup.bash
+source;share/nav_filters/local_setup.dsv
+source;share/nav_filters/local_setup.sh
+source;share/nav_filters/local_setup.zsh

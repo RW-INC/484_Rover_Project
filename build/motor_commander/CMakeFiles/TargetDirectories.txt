@@ -1,0 +1,11 @@
+/home/sparky/Desktop/SPARX_E/build/motor_commander/CMakeFiles/uninstall.dir
+/home/sparky/Desktop/SPARX_E/build/motor_commander/CMakeFiles/motor_commander_uninstall.dir
+/home/sparky/Desktop/SPARX_E/build/motor_commander/CMakeFiles/smc_node.dir
+/home/sparky/Desktop/SPARX_E/build/motor_commander/CMakeFiles/motor_commander_node.dir
+/home/sparky/Desktop/SPARX_E/build/motor_commander/CMakeFiles/test.dir
+/home/sparky/Desktop/SPARX_E/build/motor_commander/CMakeFiles/edit_cache.dir
+/home/sparky/Desktop/SPARX_E/build/motor_commander/CMakeFiles/rebuild_cache.dir
+/home/sparky/Desktop/SPARX_E/build/motor_commander/CMakeFiles/list_install_components.dir
+/home/sparky/Desktop/SPARX_E/build/motor_commander/CMakeFiles/install.dir
+/home/sparky/Desktop/SPARX_E/build/motor_commander/CMakeFiles/install/local.dir
+/home/sparky/Desktop/SPARX_E/build/motor_commander/CMakeFiles/install/strip.dir

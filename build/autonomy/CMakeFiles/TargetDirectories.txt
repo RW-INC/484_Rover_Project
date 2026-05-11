@@ -1,0 +1,10 @@
+/home/sparky/Desktop/SPARX_E/build/autonomy/CMakeFiles/uninstall.dir
+/home/sparky/Desktop/SPARX_E/build/autonomy/CMakeFiles/autonomy_uninstall.dir
+/home/sparky/Desktop/SPARX_E/build/autonomy/CMakeFiles/auto_node.dir
+/home/sparky/Desktop/SPARX_E/build/autonomy/CMakeFiles/test.dir
+/home/sparky/Desktop/SPARX_E/build/autonomy/CMakeFiles/edit_cache.dir
+/home/sparky/Desktop/SPARX_E/build/autonomy/CMakeFiles/rebuild_cache.dir
+/home/sparky/Desktop/SPARX_E/build/autonomy/CMakeFiles/list_install_components.dir
+/home/sparky/Desktop/SPARX_E/build/autonomy/CMakeFiles/install.dir
+/home/sparky/Desktop/SPARX_E/build/autonomy/CMakeFiles/install/local.dir
+/home/sparky/Desktop/SPARX_E/build/autonomy/CMakeFiles/install/strip.dir

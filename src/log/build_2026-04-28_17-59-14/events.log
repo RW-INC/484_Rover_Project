@@ -1,0 +1,9 @@
+[0.000000] (-) TimerEvent: {}
+[0.001198] (-) JobUnselected: {'identifier': 'arduino_bridge'}
+[0.001336] (-) JobUnselected: {'identifier': 'build_sparxe'}
+[0.001401] (-) JobUnselected: {'identifier': 'camera'}
+[0.001436] (-) JobUnselected: {'identifier': 'motor_commander'}
+[0.001474] (-) JobUnselected: {'identifier': 'status_updater'}
+[0.001520] (-) JobUnselected: {'identifier': 'unitree_lidar_ros2'}
+[0.001556] (-) JobUnselected: {'identifier': 'unitree_lidar_sdk'}
+[0.007138] (-) EventReactorShutdown: {}

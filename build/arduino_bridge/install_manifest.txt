@@ -1,0 +1,16 @@
+/home/sparky/Desktop/SPARX_E/install/arduino_bridge/lib/arduino_bridge/arduino_bridge_node
+/home/sparky/Desktop/SPARX_E/install/arduino_bridge/share/ament_index/resource_index/package_run_dependencies/arduino_bridge
+/home/sparky/Desktop/SPARX_E/install/arduino_bridge/share/ament_index/resource_index/parent_prefix_path/arduino_bridge
+/home/sparky/Desktop/SPARX_E/install/arduino_bridge/share/arduino_bridge/environment/ament_prefix_path.sh
+/home/sparky/Desktop/SPARX_E/install/arduino_bridge/share/arduino_bridge/environment/ament_prefix_path.dsv
+/home/sparky/Desktop/SPARX_E/install/arduino_bridge/share/arduino_bridge/environment/path.sh
+/home/sparky/Desktop/SPARX_E/install/arduino_bridge/share/arduino_bridge/environment/path.dsv
+/home/sparky/Desktop/SPARX_E/install/arduino_bridge/share/arduino_bridge/local_setup.bash
+/home/sparky/Desktop/SPARX_E/install/arduino_bridge/share/arduino_bridge/local_setup.sh
+/home/sparky/Desktop/SPARX_E/install/arduino_bridge/share/arduino_bridge/local_setup.zsh
+/home/sparky/Desktop/SPARX_E/install/arduino_bridge/share/arduino_bridge/local_setup.dsv
+/home/sparky/Desktop/SPARX_E/install/arduino_bridge/share/arduino_bridge/package.dsv
+/home/sparky/Desktop/SPARX_E/install/arduino_bridge/share/ament_index/resource_index/packages/arduino_bridge
+/home/sparky/Desktop/SPARX_E/install/arduino_bridge/share/arduino_bridge/cmake/arduino_bridgeConfig.cmake
+/home/sparky/Desktop/SPARX_E/install/arduino_bridge/share/arduino_bridge/cmake/arduino_bridgeConfig-version.cmake
+/home/sparky/Desktop/SPARX_E/install/arduino_bridge/share/arduino_bridge/package.xml

@@ -1,0 +1,4 @@
+source;share/arduino_bridge/local_setup.bash
+source;share/arduino_bridge/local_setup.dsv
+source;share/arduino_bridge/local_setup.sh
+source;share/arduino_bridge/local_setup.zsh

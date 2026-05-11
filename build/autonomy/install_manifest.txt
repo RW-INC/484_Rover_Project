@@ -1,0 +1,16 @@
+/home/sparky/Desktop/SPARX_E/install/autonomy/lib/autonomy/auto_node
+/home/sparky/Desktop/SPARX_E/install/autonomy/share/ament_index/resource_index/package_run_dependencies/autonomy
+/home/sparky/Desktop/SPARX_E/install/autonomy/share/ament_index/resource_index/parent_prefix_path/autonomy
+/home/sparky/Desktop/SPARX_E/install/autonomy/share/autonomy/environment/ament_prefix_path.sh
+/home/sparky/Desktop/SPARX_E/install/autonomy/share/autonomy/environment/ament_prefix_path.dsv
+/home/sparky/Desktop/SPARX_E/install/autonomy/share/autonomy/environment/path.sh
+/home/sparky/Desktop/SPARX_E/install/autonomy/share/autonomy/environment/path.dsv
+/home/sparky/Desktop/SPARX_E/install/autonomy/share/autonomy/local_setup.bash
+/home/sparky/Desktop/SPARX_E/install/autonomy/share/autonomy/local_setup.sh
+/home/sparky/Desktop/SPARX_E/install/autonomy/share/autonomy/local_setup.zsh
+/home/sparky/Desktop/SPARX_E/install/autonomy/share/autonomy/local_setup.dsv
+/home/sparky/Desktop/SPARX_E/install/autonomy/share/autonomy/package.dsv
+/home/sparky/Desktop/SPARX_E/install/autonomy/share/ament_index/resource_index/packages/autonomy
+/home/sparky/Desktop/SPARX_E/install/autonomy/share/autonomy/cmake/autonomyConfig.cmake
+/home/sparky/Desktop/SPARX_E/install/autonomy/share/autonomy/cmake/autonomyConfig-version.cmake
+/home/sparky/Desktop/SPARX_E/install/autonomy/share/autonomy/package.xml

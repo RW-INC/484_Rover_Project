@@ -1,0 +1,2 @@
+[INFO] [1777963276.201251512] [nav_node]: CALIBRATING IMU... [1/1000] | baseline gravity vec=[-0.0183, -0.0093, 9.8404] | baseline gyro vec=[0.0045, 0.0031, -0.0021]
+[ros2run]: Segmentation fault

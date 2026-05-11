@@ -1,0 +1,96 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Release-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "unitree_lidar_sdk",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "example_lidar_serial::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-example_lidar_serial-Release-e0054b9fa541e3372ae3.json",
+					"name" : "example_lidar_serial",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "example_lidar_udp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-example_lidar_udp-Release-7febbb63b3eba5fe8187.json",
+					"name" : "example_lidar_udp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "set_ip_address::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-set_ip_address-Release-b4ccdc304cdac63c4ab5.json",
+					"name" : "set_ip_address",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "set_to_serial_mode::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-set_to_serial_mode-Release-aab592a8b7fb9acc3b5a.json",
+					"name" : "set_to_serial_mode",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "set_to_udp_mode::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-set_to_udp_mode-Release-5819c4dabe7f886b61bf.json",
+					"name" : "set_to_udp_mode",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/sparky/Desktop/SPARX_E/build/unitree_lidar_sdk",
+		"source" : "/home/sparky/Desktop/SPARX_E/src/unilidar_sdk2/unitree_lidar_sdk"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}

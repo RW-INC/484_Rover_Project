@@ -1,0 +1,16 @@
+/home/sparky/Desktop/SPARX_E/install/uwb_bridge/lib/uwb_bridge/uwb_bridge_node
+/home/sparky/Desktop/SPARX_E/install/uwb_bridge/share/ament_index/resource_index/package_run_dependencies/uwb_bridge
+/home/sparky/Desktop/SPARX_E/install/uwb_bridge/share/ament_index/resource_index/parent_prefix_path/uwb_bridge
+/home/sparky/Desktop/SPARX_E/install/uwb_bridge/share/uwb_bridge/environment/ament_prefix_path.sh
+/home/sparky/Desktop/SPARX_E/install/uwb_bridge/share/uwb_bridge/environment/ament_prefix_path.dsv
+/home/sparky/Desktop/SPARX_E/install/uwb_bridge/share/uwb_bridge/environment/path.sh
+/home/sparky/Desktop/SPARX_E/install/uwb_bridge/share/uwb_bridge/environment/path.dsv
+/home/sparky/Desktop/SPARX_E/install/uwb_bridge/share/uwb_bridge/local_setup.bash
+/home/sparky/Desktop/SPARX_E/install/uwb_bridge/share/uwb_bridge/local_setup.sh
+/home/sparky/Desktop/SPARX_E/install/uwb_bridge/share/uwb_bridge/local_setup.zsh
+/home/sparky/Desktop/SPARX_E/install/uwb_bridge/share/uwb_bridge/local_setup.dsv
+/home/sparky/Desktop/SPARX_E/install/uwb_bridge/share/uwb_bridge/package.dsv
+/home/sparky/Desktop/SPARX_E/install/uwb_bridge/share/ament_index/resource_index/packages/uwb_bridge
+/home/sparky/Desktop/SPARX_E/install/uwb_bridge/share/uwb_bridge/cmake/uwb_bridgeConfig.cmake
+/home/sparky/Desktop/SPARX_E/install/uwb_bridge/share/uwb_bridge/cmake/uwb_bridgeConfig-version.cmake
+/home/sparky/Desktop/SPARX_E/install/uwb_bridge/share/uwb_bridge/package.xml

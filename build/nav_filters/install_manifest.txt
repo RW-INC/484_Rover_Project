@@ -1,0 +1,17 @@
+/home/sparky/Desktop/SPARX_E/install/nav_filters/lib/nav_filters/auto_pub_node
+/home/sparky/Desktop/SPARX_E/install/nav_filters/lib/nav_filters/nav_node
+/home/sparky/Desktop/SPARX_E/install/nav_filters/share/ament_index/resource_index/package_run_dependencies/nav_filters
+/home/sparky/Desktop/SPARX_E/install/nav_filters/share/ament_index/resource_index/parent_prefix_path/nav_filters
+/home/sparky/Desktop/SPARX_E/install/nav_filters/share/nav_filters/environment/ament_prefix_path.sh
+/home/sparky/Desktop/SPARX_E/install/nav_filters/share/nav_filters/environment/ament_prefix_path.dsv
+/home/sparky/Desktop/SPARX_E/install/nav_filters/share/nav_filters/environment/path.sh
+/home/sparky/Desktop/SPARX_E/install/nav_filters/share/nav_filters/environment/path.dsv
+/home/sparky/Desktop/SPARX_E/install/nav_filters/share/nav_filters/local_setup.bash
+/home/sparky/Desktop/SPARX_E/install/nav_filters/share/nav_filters/local_setup.sh
+/home/sparky/Desktop/SPARX_E/install/nav_filters/share/nav_filters/local_setup.zsh
+/home/sparky/Desktop/SPARX_E/install/nav_filters/share/nav_filters/local_setup.dsv
+/home/sparky/Desktop/SPARX_E/install/nav_filters/share/nav_filters/package.dsv
+/home/sparky/Desktop/SPARX_E/install/nav_filters/share/ament_index/resource_index/packages/nav_filters
+/home/sparky/Desktop/SPARX_E/install/nav_filters/share/nav_filters/cmake/nav_filtersConfig.cmake
+/home/sparky/Desktop/SPARX_E/install/nav_filters/share/nav_filters/cmake/nav_filtersConfig-version.cmake
+/home/sparky/Desktop/SPARX_E/install/nav_filters/share/nav_filters/package.xml

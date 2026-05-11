@@ -1,0 +1,10 @@
+/home/sparky/Desktop/SPARX_E/build/uwb_bridge/CMakeFiles/uninstall.dir
+/home/sparky/Desktop/SPARX_E/build/uwb_bridge/CMakeFiles/uwb_bridge_uninstall.dir
+/home/sparky/Desktop/SPARX_E/build/uwb_bridge/CMakeFiles/uwb_bridge_node.dir
+/home/sparky/Desktop/SPARX_E/build/uwb_bridge/CMakeFiles/test.dir
+/home/sparky/Desktop/SPARX_E/build/uwb_bridge/CMakeFiles/edit_cache.dir
+/home/sparky/Desktop/SPARX_E/build/uwb_bridge/CMakeFiles/rebuild_cache.dir
+/home/sparky/Desktop/SPARX_E/build/uwb_bridge/CMakeFiles/list_install_components.dir
+/home/sparky/Desktop/SPARX_E/build/uwb_bridge/CMakeFiles/install.dir
+/home/sparky/Desktop/SPARX_E/build/uwb_bridge/CMakeFiles/install/local.dir
+/home/sparky/Desktop/SPARX_E/build/uwb_bridge/CMakeFiles/install/strip.dir
