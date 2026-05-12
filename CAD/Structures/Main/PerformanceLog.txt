@@ -1,2 +1,2 @@
-Number of Contacts: 12
-Number of contact data: 10864
+Number of Contacts: 8
+Number of contact data: 76771
